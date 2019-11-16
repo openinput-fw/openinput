@@ -1,0 +1,2 @@
+[properties]
+linker = 'stm32f103x6'

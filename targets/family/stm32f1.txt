@@ -1,0 +1,19 @@
+[binaries]
+c = '/usr/bin/arm-none-eabi-gcc'
+cpp = '/usr/bin/arm-none-eabi-g++'
+ar = '/usr/bin/arm-none-eabi-ar'
+ld = '/usr/bin/arm-none-eabi-ld'
+objcopy = '/usr/bin/arm-none-eabi-objcopy'
+strip = '/usr/bin/arm-none-eabi-strip'
+
+[host_machine]
+system = 'bare-metel'
+endian = 'little'
+cpu_family = 'arm'
+cpu = 'cortex-m3'
+
+[properties]
+c_args = ['-mcpu=cortex-m3', '-mthumb', '-DSTM32F1']
+c_link_args = ['-mcpu=cortex-m3', '-mthumb', '-DSTM32F1']
+prefix = 'arm-none-eabi'
+libopencm3_cpu = 'opencm3_stm32f1'
