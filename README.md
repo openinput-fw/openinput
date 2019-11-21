@@ -23,6 +23,8 @@ project you can simply run `ninja` with the `flash` target.
 ninja flash
 ```
 
+If you want to analyze the size of the complied elf file you can run `ninja size`.
+
 ### Dependencies
 
 This project requires libopencm3 to be installed system-wide. I will only be able

@@ -5,6 +5,7 @@ ar = '/usr/bin/arm-none-eabi-ar'
 ld = '/usr/bin/arm-none-eabi-ld'
 objcopy = '/usr/bin/arm-none-eabi-objcopy'
 strip = '/usr/bin/arm-none-eabi-strip'
+size = '/usr/bin/arm-none-eabi-size'
 
 [host_machine]
 system = 'bare-metel'
