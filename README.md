@@ -32,5 +32,5 @@ to provide techincal support for Archlinux.
 
   - Build system: [meson](https://www.archlinux.org/packages/extra/any/meson/)
   - Compiler: [arm-none-eabi-gcc](https://www.archlinux.org/packages/community/x86_64/arm-none-eabi-gcc/)
-  - libopencm3: [libopencm3-git](https://aur.archlinux.org/packages/libopencm3-git/) (AUR)
+  - libopencm3: [libopencm3](https://www.archlinux.org/packages/community/x86_64/libopencm3/)
   - Flash (optional): [stlink](https://www.archlinux.org/packages/community/x86_64/stlink/)
