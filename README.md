@@ -2,6 +2,10 @@
 
 Open source mouse firmware based on [libopencm3](https://github.com/libopencm3/libopencm3).
 
+### Supported Devices
+- Blue pill
+- Steelseries Rival 310
+
 ### Instructions
 
 ```sh
