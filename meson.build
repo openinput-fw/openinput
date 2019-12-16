@@ -1,7 +1,8 @@
 project('openinput-cm3', 'c')
 
 sources = [
-        'src/main.c'
+        'src/main.c',
+        'src/leds.c'
 ]
 
 c_flags = [
