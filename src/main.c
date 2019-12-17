@@ -1,5 +1,7 @@
 #include <libopencm3/stm32/rcc.h>
+
 #include "leds.h"
+
 
 static void clock_setup(void)
 {
@@ -11,6 +13,7 @@ int main(void)
 	clock_setup();
 
 	leds_init();
+
 
 	for(;;)
 	{
