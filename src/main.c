@@ -1,6 +1,7 @@
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/timer.h>
+#include "systick.h"
 
 static void rgb_pwm_timer_setup(int32_t timer)
 {
@@ -99,19 +100,22 @@ void set_color(int32_t timer, struct color_t *color, uint8_t r, uint8_t g, uint8
 		timer_set_oc_value(timer, TIM_OC2, color->g);
 		timer_set_oc_value(timer, TIM_OC3, color->b);
 
-		for (int ii = 0; ii < 128000; ii++)
-			__asm__("nop");
+		delay_ms(10);
 	}
 }
 
 int main(void)
 {
 	clock_setup();
+
+	systick_init();
+
 	timer_setup();
 
 	struct color_t color = {};
 
-	for (;;) {
+	for(;;)
+	{
 		set_color(TIM1, &color, 255, 0, 0);
 		set_color(TIM1, &color, 0, 255, 0);
 		set_color(TIM1, &color, 0, 0, 255);
