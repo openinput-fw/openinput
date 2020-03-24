@@ -2,6 +2,7 @@
 
 import argparse
 import os
+import sys
 import struct
 
 if __name__ == '__main__':
