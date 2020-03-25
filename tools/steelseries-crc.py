@@ -12,11 +12,11 @@ if __name__ == '__main__':
                         help='Shows debugging outputs.')
     parser.add_argument('-a', '--append',
                         action='store_true',
-                        help='Appends the crc result to the file.')
+                        help='Appends the crc result to the file (by default outputs only the crc, this prepends the frimware to the output).')
     parser.add_argument('-o', '--output', type=str,
                         help='Output file.')
     parser.add_argument('firmware', metavar='firmware.bin', type=str,
-                        help='Firmware to calculate crc.')
+                        help='Firmware to calculate crc of.')
     args = parser.parse_args()
 
     if not args.firmware or not os.path.exists(args.firmware):
@@ -40,18 +40,16 @@ if __name__ == '__main__':
     remainder_bytes = num_bytes % 4
 
     if args.verbose:
-        print('firmware length: ' + format(num_bytes))
-        print('unaligned bytes: ' + format(remainder_bytes))
-
-    if remainder_bytes != 0:
-        num_words = int((num_bytes - remainder_bytes) / 4) + 1
-    else:
-        num_words = int((num_bytes - remainder_bytes) / 4)
-
+        print(f'Firmware length: {num_bytes}')
+        print(f'Unaligned bytes: {remainder_bytes}')
+        
+    num_words = int((num_bytes - remainder_bytes) / 4)
+    
     firmware_bytes = bytearray(firmware.read(num_bytes))
-    if remainder_bytes != 0:
+    
+    if not remainder_bytes:
+        num_words += 1
         firmware_bytes.extend([0] * (4 - remainder_bytes))
-
 
     firmware_words = struct.unpack('I'*num_words, firmware_bytes)
 
@@ -69,7 +67,7 @@ if __name__ == '__main__':
     crc_bytes = struct.pack("<I", crc)
 
     if args.verbose:
-        print('calculated crc: 0x' + format(crc, '08X'))
+        print(f'calculated crc: 0x{crc:08x}')
 
     if not args.output or args.verbose:
         if args.append:
