@@ -24,7 +24,7 @@ if __name__ == '__main__':
         exit(1)
 
     if args.firmware == args.output:
-        print('output file can\'t be the same as the output file')
+        print('output file can\'t be the same as the input file')
         exit(1)
 
     try:
