@@ -23,6 +23,10 @@ if __name__ == '__main__':
         print(f'{args.firmware} doesn\'t exist', file=sys.stderr)
         exit(1)
 
+    if args.firmware == args.output:
+        print('output file can\'t be the same as the input file', file=sys.stderr)
+        exit(1)
+
     try:
         firmware = open(args.firmware, 'rb')
     except PermissionError as e:
@@ -42,12 +46,12 @@ if __name__ == '__main__':
     if args.verbose:
         print(f'Firmware length: {num_bytes}')
         print(f'Unaligned bytes: {remainder_bytes}')
-        
+
     num_words = int((num_bytes - remainder_bytes) / 4)
-    
+
     firmware_bytes = bytearray(firmware.read(num_bytes))
-    
-    if not remainder_bytes:
+
+    if remainder_bytes:
         num_words += 1
         firmware_bytes.extend([0] * (4 - remainder_bytes))
 
