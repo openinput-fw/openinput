@@ -1,3 +1,6 @@
 [submodule "src/cmsis/core"]
 	path = src/cmsis/core
 	url = https://github.com/ARM-software/CMSIS_5
+[submodule "src/stm32f1xx_hal_driver"]
+	path = src/stm32f1xx_hal_driver
+	url = https://github.com/STMicroelectronics/stm32f1xx_hal_driver

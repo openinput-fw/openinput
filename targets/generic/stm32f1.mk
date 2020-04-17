@@ -38,17 +38,17 @@ CFLAGS += \
 # SOURCES
 # ---------------------------------------
 
-ST_HAL_DRIVER_DIR = src/al/STM32F1xx_HAL_Driver
+ST_HAL_DRIVER_DIR = src/stm32f1xx_hal_driver
 CMSIS_ST_DIR = src/cmsis/st/STM32F1xx
 CMSIS_DIR = src/cmsis/core
 
 SRC_C += \
-  $(CMSIS_ST_DIR)/src/system_stm32f1xx.c \
-  $(ST_HAL_DRIVER_DIR)/src/stm32f1xx_hal.c \
-  $(ST_HAL_DRIVER_DIR)/src/stm32f1xx_hal_cortex.c \
-  $(ST_HAL_DRIVER_DIR)/src/stm32f1xx_hal_rcc.c \
-  $(ST_HAL_DRIVER_DIR)/src/stm32f1xx_hal_rcc_ex.c \
-  $(ST_HAL_DRIVER_DIR)/src/stm32f1xx_hal_gpio.c
+  $(CMSIS_ST_DIR)/Src/system_stm32f1xx.c \
+  $(ST_HAL_DRIVER_DIR)/Src/stm32f1xx_hal.c \
+  $(ST_HAL_DRIVER_DIR)/Src/stm32f1xx_hal_cortex.c \
+  $(ST_HAL_DRIVER_DIR)/Src/stm32f1xx_hal_rcc.c \
+  $(ST_HAL_DRIVER_DIR)/Src/stm32f1xx_hal_rcc_ex.c \
+  $(ST_HAL_DRIVER_DIR)/Src/stm32f1xx_hal_gpio.c
 
 SRC_S += \
   $(CMSIS_ST_DIR)/src/startup_stm32f103xb.s
@@ -56,7 +56,7 @@ SRC_S += \
 INC += \
   $(CMSIS_DIR)/CMSIS/Core/include \
   $(CMSIS_ST_DIR)/include \
-  $(ST_HAL_DRIVER_DIR)/include \
+  $(ST_HAL_DRIVER_DIR)/Inc \
 
 # ---------------------------------------
 # Tiny USB
