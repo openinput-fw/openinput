@@ -54,7 +54,7 @@ SRC_S += \
   $(CMSIS_ST_DIR)/src/startup_stm32f103xb.s
 
 INC += \
-  $(CMSIS_DIR)/include \
+  $(CMSIS_DIR)/CMSIS/Core/include \
   $(CMSIS_ST_DIR)/include \
   $(ST_HAL_DRIVER_DIR)/include \
 
