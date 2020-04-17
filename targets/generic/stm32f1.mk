@@ -39,11 +39,11 @@ CFLAGS += \
 # ---------------------------------------
 
 ST_HAL_DRIVER_DIR = src/stm32f1xx_hal_driver
-CMSIS_ST_DIR = src/cmsis/st/STM32F1xx
+CMSIS_ST_DIR = src/cmsis/device_stm32f1
 CMSIS_DIR = src/cmsis/core
 
 SRC_C += \
-  $(CMSIS_ST_DIR)/Src/system_stm32f1xx.c \
+  $(CMSIS_ST_DIR)/Source/Templates/system_stm32f1xx.c \
   $(ST_HAL_DRIVER_DIR)/Src/stm32f1xx_hal.c \
   $(ST_HAL_DRIVER_DIR)/Src/stm32f1xx_hal_cortex.c \
   $(ST_HAL_DRIVER_DIR)/Src/stm32f1xx_hal_rcc.c \
@@ -51,7 +51,7 @@ SRC_C += \
   $(ST_HAL_DRIVER_DIR)/Src/stm32f1xx_hal_gpio.c
 
 SRC_S += \
-  $(CMSIS_ST_DIR)/src/startup_stm32f103xb.s
+  $(CMSIS_ST_DIR)/Source/Templates/gcc/startup_stm32f103xb.s
 
 INC += \
   $(CMSIS_DIR)/CMSIS/Core/include \

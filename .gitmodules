@@ -7,3 +7,6 @@
 [submodule "src/tinyusb"]
 	path = src/tinyusb
 	url = https://github.com/hathach/tinyusb
+[submodule "src/cmsis/device_stm32f1"]
+	path = src/cmsis/device_stm32f1
+	url = https://github.com/STMicroelectronics/cmsis_device_f1
