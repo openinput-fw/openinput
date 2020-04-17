@@ -18,7 +18,7 @@ SRC_C += \
 	$(TUSB_SRC_DIR)/class/net/net_device.c \
 	$(TUSB_SRC_DIR)/class/usbtmc/usbtmc_device.c \
 	$(TUSB_SRC_DIR)/class/vendor/vendor_device.c \
-	$(TUSB_SRC_DIR)/portable/$(VENDOR)/$(CHIP_FAMILY)/dcd_$(CHIP_FAMILY).c
+	$(TUSB_SRC_DIR)/portable/$(TUSB_VENDOR)/$(TUSB_CHIP_FAMILY)/dcd_$(TUSB_CHIP_FAMILY).c
 
 # TinyUSB stack include
 INC += $(TUSB_SRC_DIR)

@@ -23,4 +23,6 @@ CFLAGS += -DSTM32F103xB \
 
 SRC_C += $(subst ,,$(wildcard src/target/$(TARGET)/*.c))
 
+SRC_S += $(CMSIS_ST_DIR)/Source/Templates/gcc/startup_stm32f103xb.s
+
 INC += src/target/$(TARGET)

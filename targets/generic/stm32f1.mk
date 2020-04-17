@@ -50,12 +50,9 @@ SRC_C += \
   $(ST_HAL_DRIVER_DIR)/Src/stm32f1xx_hal_rcc_ex.c \
   $(ST_HAL_DRIVER_DIR)/Src/stm32f1xx_hal_gpio.c
 
-SRC_S += \
-  $(CMSIS_ST_DIR)/Source/Templates/gcc/startup_stm32f103xb.s
-
 INC += \
-  $(CMSIS_DIR)/CMSIS/Core/include \
-  $(CMSIS_ST_DIR)/include \
+  $(CMSIS_DIR)/CMSIS/Core/Include \
+  $(CMSIS_ST_DIR)/Include \
   $(ST_HAL_DRIVER_DIR)/Inc \
 
 # ---------------------------------------
