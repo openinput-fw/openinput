@@ -14,7 +14,8 @@ LD_FILE = targets/ld/bluepill.ld
 # FLAGS
 # ---------------------------------------
 
-CFLAGS += -DSTM32F103xB
+CFLAGS += -DSTM32F103xB \
+		  -DSTM32F10X_MD
 
 # ---------------------------------------
 # SOURCES

@@ -38,35 +38,32 @@ CFLAGS += \
 # SOURCES
 # ---------------------------------------
 
-ST_HAL_DRIVER = src/al/STM32F1xx_HAL_Driver
-ST_CMSIS = src/cmsis/st/STM32F1xx
-CMSIS = src/cmsis/core
+ST_HAL_DRIVER_DIR = src/al/STM32F1xx_HAL_Driver
+CMSIS_ST_DIR = src/cmsis/st/STM32F1xx
+CMSIS_DIR = src/cmsis/core
 
 SRC_C += \
-  $(ST_CMSIS)/src/system_stm32f1xx.c \
-  $(ST_HAL_DRIVER)/src/stm32f1xx_hal.c \
-  $(ST_HAL_DRIVER)/src/stm32f1xx_hal_cortex.c \
-  $(ST_HAL_DRIVER)/src/stm32f1xx_hal_rcc.c \
-  $(ST_HAL_DRIVER)/src/stm32f1xx_hal_rcc_ex.c \
-  $(ST_HAL_DRIVER)/src/stm32f1xx_hal_gpio.c
+  $(CMSIS_ST_DIR)/src/system_stm32f1xx.c \
+  $(ST_HAL_DRIVER_DIR)/src/stm32f1xx_hal.c \
+  $(ST_HAL_DRIVER_DIR)/src/stm32f1xx_hal_cortex.c \
+  $(ST_HAL_DRIVER_DIR)/src/stm32f1xx_hal_rcc.c \
+  $(ST_HAL_DRIVER_DIR)/src/stm32f1xx_hal_rcc_ex.c \
+  $(ST_HAL_DRIVER_DIR)/src/stm32f1xx_hal_gpio.c
 
 SRC_S += \
-  $(ST_CMSIS)/src/startup_stm32f103xb.s
+  $(CMSIS_ST_DIR)/src/startup_stm32f103xb.s
 
 INC += \
-  $(CMSIS)/include \
-  $(ST_CMSIS)/include \
-  $(ST_HAL_DRIVER)/include \
+  $(CMSIS_DIR)/include \
+  $(CMSIS_ST_DIR)/include \
+  $(ST_HAL_DRIVER_DIR)/include \
 
 # ---------------------------------------
 # Tiny USB
 # ---------------------------------------
 
-VENDOR = st
-CHIP_FAMILY = stm32_fsdev
-
-# For freeRTOS port source
-FREERTOS_PORT = ARM_CM3
+TUSB_VENDOR = st
+TUSB_CHIP_FAMILY = stm32_fsdev
 
 CFLAGS += -DCFG_TUSB_MCU=OPT_MCU_STM32F1
 
