@@ -4,3 +4,6 @@
 [submodule "src/stm32f1xx_hal_driver"]
 	path = src/stm32f1xx_hal_driver
 	url = https://github.com/STMicroelectronics/stm32f1xx_hal_driver
+[submodule "src/tinyusb"]
+	path = src/tinyusb
+	url = https://github.com/hathach/tinyusb

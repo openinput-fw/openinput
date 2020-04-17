@@ -2,7 +2,7 @@
 # SOURCES
 # ---------------------------------------
 
-TUSB_SRC_DIR = src/tinyusb
+TUSB_SRC_DIR = src/tinyusb/src
 
 # TinyUSB Stack source
 SRC_C += \
