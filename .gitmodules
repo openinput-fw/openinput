@@ -1,9 +1,9 @@
-[submodule "src/cmsis/core"]
-	path = src/cmsis/core
-	url = https://github.com/ARM-software/CMSIS_5
-[submodule "src/tinyusb"]
-	path = src/tinyusb
+[submodule "external/tinyusb"]
+	path = external/tinyusb
 	url = https://github.com/hathach/tinyusb
-[submodule "src/cmsis/device_stm32f1"]
-	path = src/cmsis/device_stm32f1
+[submodule "external/cmsis-5"]
+	path = external/cmsis-5
+	url = https://github.com/ARM-software/CMSIS_5
+[submodule "external/cmsis-device-stm32f1"]
+	path = external/cmsis-device-stm32f1
 	url = https://github.com/STMicroelectronics/cmsis_device_f1
