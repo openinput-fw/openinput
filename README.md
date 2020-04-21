@@ -1,9 +1,27 @@
 # openinput-cm3
 
-Open source mouse firmware based on [libopencm3](https://github.com/libopencm3/libopencm3).
+Open source mouse/keyboard firmware.
+
+```
+.
+├── tools	# Utilities
+├── build-targets	# Meson cross-compile files
+├── src		# Source files
+│   ├── drv  # Drivers, for mcus and other devices like sensors
+│   │    ├── mcu  # Drivers for family of mcu
+│   │    ├── sensor  # Drivers for optical mouse sensors
+│   │    └── ...  # Other driver classes
+│   └── target	# Target abstraction
+│         ├── rival310 # Target specific to rival310
+│         └── stm32f1 # Generic stm32f1 family target
+└── external  # Sources from external projects like tinyusb
+```
+
+### Supported MCU Families
+- STM32F1 family
 
 ### Supported Devices
-- Blue pill
+- Bluepill
 - Steelseries Rival 310
 
 ### Instructions
