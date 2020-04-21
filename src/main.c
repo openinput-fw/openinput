@@ -1,127 +1,180 @@
-#include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/timer.h>
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2020 openinput (https://github.com/openinput-fw)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ */
 
-static void rgb_pwm_timer_setup(int32_t timer)
-{
-	timer_disable_counter(timer);
-	/*timer_reset(timer);*/
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
-	timer_set_mode(timer,
-		       TIM_CR1_CKD_CK_INT,
-		       TIM_CR1_CMS_EDGE,
-		       TIM_CR1_DIR_UP);
+#include "target.h"
+#include "tusb.h"
 
-	timer_set_prescaler(timer, 6);
-	timer_set_period(timer, 255);
+#include "usb_descriptors.h"
 
-	/* only needed for advanced timers */
-	timer_enable_break_main_output(timer);
+//--------------------------------------------------------------------
+// Enums and data types
+//--------------------------------------------------------------------
 
-	timer_enable_preload(timer);
-	timer_continuous_mode(timer);
-
-	/* configure OC (output-compare) channels */
-	timer_disable_oc_output(timer, TIM_OC1);
-	timer_disable_oc_output(timer, TIM_OC2);
-	timer_disable_oc_output(timer, TIM_OC3);
-
-	/* set to operate in PWM1 mode */
-	/* PWM1 states the output will be high when the count is less than the
-	   configur oc_value and low when higher */
-	timer_set_oc_mode(timer, TIM_OC1, TIM_OCM_PWM1);
-	timer_set_oc_mode(timer, TIM_OC2, TIM_OCM_PWM1);
-	timer_set_oc_mode(timer, TIM_OC3, TIM_OCM_PWM1);
-
-	timer_set_oc_value(timer, TIM_OC1, 0);
-	timer_set_oc_value(timer, TIM_OC2, 0);
-	timer_set_oc_value(timer, TIM_OC3, 0);
-
-	timer_enable_oc_output(timer, TIM_OC1);
-	timer_enable_oc_output(timer, TIM_OC2);
-	timer_enable_oc_output(timer, TIM_OC3);
-
-	timer_enable_counter(timer);
-}
-
-static void timer_setup(void)
-{
-	/* setup pin modes*/
-	rcc_periph_clock_enable(RCC_GPIOA);
-	rcc_periph_clock_enable(RCC_AFIO);
-
-	/* TIM1 gpio setup */
-	gpio_set_mode(GPIOA,
-		      GPIO_MODE_OUTPUT_50_MHZ,
-		      GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,
-		      GPIO8 | GPIO9 | GPIO10);
-
-	/* TIM2 gpio setup */
-	gpio_set_mode(GPIOA,
-		      GPIO_MODE_OUTPUT_50_MHZ,
-		      GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,
-		      GPIO0 | GPIO1 | GPIO2);
-
-	/* enable timers */
-	rcc_periph_clock_enable(RCC_TIM1);
-	rcc_periph_clock_enable(RCC_TIM2);
-
-	/* configure timers to generate a pwm signal to control rgb leds */
-	rgb_pwm_timer_setup(TIM1);
-	rgb_pwm_timer_setup(TIM2);
-}
-
-static void clock_setup(void)
-{
-	rcc_clock_setup_in_hse_8mhz_out_72mhz();
-}
-
-struct color_t {
-	uint8_t r;
-	uint8_t g;
-	uint8_t b;
+/* Blink pattern
+ * - 250 ms  : device not mounted
+ * - 1000 ms : device mounted
+ * - 2500 ms : device is suspended
+ */
+enum  {
+  BLINK_NOT_MOUNTED = 500,
+  BLINK_MOUNTED = 250,
+  BLINK_SUSPENDED = 2500,
 };
 
-void set_color(int32_t timer, struct color_t *color, uint8_t r, uint8_t g, uint8_t b)
-{
-	while (color->r != r || color->g != g || color->b != b)
-	{
-		if (color->r < r) color->r += 1;
-		if (color->r > r) color->r -= 1;
+//--------------------------------------------------------------------
+// Variables
+//--------------------------------------------------------------------
 
-		if (color->g < g) color->g += 1;
-		if (color->g > g) color->g -= 1;
+static uint32_t blink_interval_ms = BLINK_NOT_MOUNTED;
 
-		if (color->b < b) color->b += 1;
-		if (color->b > b) color->b -= 1;
+//--------------------------------------------------------------------
+// Function declaration
+//--------------------------------------------------------------------
 
-		timer_set_oc_value(timer, TIM_OC1, color->r);
-		timer_set_oc_value(timer, TIM_OC2, color->g);
-		timer_set_oc_value(timer, TIM_OC3, color->b);
+void leds_task(void);
+void hid_task(void);
 
-		for (int ii = 0; ii < 128000; ii++)
-			__asm__("nop");
-	}
-}
+//--------------------------------------------------------------------
+// Functions
+//--------------------------------------------------------------------
 
+/*------------- MAIN -------------*/
 int main(void)
 {
-	clock_setup();
-	timer_setup();
+  tusb_init();
 
-	struct color_t color = {};
+  while (1)
+  {
+    target_tasks();
 
-	for (;;) {
-		set_color(TIM1, &color, 255, 0, 0);
-		set_color(TIM1, &color, 0, 255, 0);
-		set_color(TIM1, &color, 0, 0, 255);
-		set_color(TIM1, &color, 0, 0, 0);
+    hid_task();
 
-		set_color(TIM2, &color, 255, 0, 0);
-		set_color(TIM2, &color, 0, 255, 0);
-		set_color(TIM2, &color, 0, 0, 255);
-		set_color(TIM2, &color, 0, 0, 0);
-	}
+    tud_task(); // tinyusb device task
 
-	return 0;
+    leds_task();
+  }
+
+  return 0;
+}
+
+/*------------- USB device callbacks -------------*/
+
+// Invoked when device is mounted
+void tud_mount_cb(void)
+{
+  blink_interval_ms = BLINK_MOUNTED;
+}
+
+// Invoked when device is unmounted
+void tud_umount_cb(void)
+{
+  blink_interval_ms = BLINK_NOT_MOUNTED;
+}
+
+// Invoked when usb bus is suspended
+void tud_suspend_cb(bool remote_wakeup_en)
+{
+  (void) remote_wakeup_en;
+  blink_interval_ms = BLINK_SUSPENDED;
+}
+
+// Invoked when usb bus is resumed
+void tud_resume_cb(void)
+{
+  blink_interval_ms = BLINK_MOUNTED;
+}
+
+/*------------- USB HID -------------*/
+
+void hid_task(void)
+{
+  /*------------- Mouse -------------*/
+  if(tud_hid_ready())
+  {
+    //
+    // Wheel Mouse
+    //
+    // Input report - 5 bytes
+    //
+    //     Byte | D7      D6      D5      D4      D3      D2      D1      D0
+    //    ------+---------------------------------------------------------------------
+    //      0   |  0       0       0    Forward  Back    Middle  Right   Left (Button)
+    //      1   |                             X
+    //      2   |                             Y
+    //      3   |                       Vertical Wheel
+    //      4   |                    Horizontal (Tilt) Wheel
+    //
+
+    uint8_t buttons = target_mouse_btns_get();
+    deltas_t deltas = target_sensor_deltas_get();
+    int8_t vertical = target_wheel_get();
+
+    tud_hid_mouse_report(REPORT_ID_MOUSE, buttons, deltas.dx, deltas.dy, vertical, 0);
+  }
+}
+
+
+// Invoked when received GET_REPORT control request
+uint16_t tud_hid_get_report_cb(uint8_t report_id, hid_report_type_t report_type, uint8_t* buffer, uint16_t reqlen)
+{
+  (void) report_id;
+  (void) report_type;
+  (void) buffer;
+  (void) reqlen;
+
+  return 0;
+}
+
+// Invoked when received SET_REPORT control request
+void tud_hid_set_report_cb(uint8_t report_id, hid_report_type_t report_type, uint8_t const* buffer, uint16_t bufsize)
+{
+  (void) report_id;
+  (void) report_type;
+  (void) buffer;
+  (void) bufsize;
+}
+
+/*------------- LED task -------------*/
+
+void leds_task(void)
+{
+  static uint64_t start_ms = 0;
+  static uint8_t led_state = 0;
+
+  // Blink every interval ms
+  if(target_ticks() - start_ms < blink_interval_ms) return; // not enough time
+  start_ms = target_ticks() ;
+
+  if(led_state)
+    target_leds_write(0, 255, 0);
+  else
+    target_leds_write(0, 55, 0);
+
+  led_state ^= 1; // toggle
 }
