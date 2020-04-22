@@ -1,4 +1,4 @@
-# openinput-cm3
+# openinput
 
 Open source mouse firmware based on [libopencm3](https://github.com/libopencm3/libopencm3).
 
@@ -14,7 +14,7 @@ meson .. --cross-file ../targets/family/stm32f1.txt --cross-file ../targets/blue
 ninja
 ```
 
-The binaries will be located at `build/openinput-cm3.bin` and `build/openinput-cm3.elf`.
+The binaries will be located at `build/openinput.bin` and `build/openinput.elf`.
 
 The `target` option selects the linker script to be used (usually located in
 `/usr/arm-none-eabi/lib/`).

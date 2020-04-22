@@ -1,4 +1,4 @@
-project('openinput-cm3', 'c')
+project('openinput', 'c')
 
 sources = [
         'src/main.c'
