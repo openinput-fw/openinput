@@ -1,0 +1,15 @@
+name: check
+on: [push, pull_request]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux
+    steps:
+      - uses: actions/checkout@v2
+      - name: Update the system and install dependencies
+        run: pacman -Syu --noconfirm --noprogressbar --needed clang
+      - name: Check with clang-format
+        run: find src -type f -name '*.h' -o -name '*.c' -exec clang-format -n --Werror {} \;
+
