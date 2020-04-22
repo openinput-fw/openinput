@@ -1,5 +1,7 @@
 # openinput-cm3
 
+<img src="assets/logo.svg" alt="" width="20%" align="right">
+
 Open source mouse firmware based on [libopencm3](https://github.com/libopencm3/libopencm3).
 
 ### Supported Devices
