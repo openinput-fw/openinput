@@ -1,5 +1,5 @@
-#include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/timer.h>
 
 static void rgb_pwm_timer_setup(int32_t timer)
@@ -7,10 +7,7 @@ static void rgb_pwm_timer_setup(int32_t timer)
 	timer_disable_counter(timer);
 	/*timer_reset(timer);*/
 
-	timer_set_mode(timer,
-		       TIM_CR1_CKD_CK_INT,
-		       TIM_CR1_CMS_EDGE,
-		       TIM_CR1_DIR_UP);
+	timer_set_mode(timer, TIM_CR1_CKD_CK_INT, TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
 
 	timer_set_prescaler(timer, 6);
 	timer_set_period(timer, 255);
@@ -51,16 +48,10 @@ static void timer_setup(void)
 	rcc_periph_clock_enable(RCC_AFIO);
 
 	/* TIM1 gpio setup */
-	gpio_set_mode(GPIOA,
-		      GPIO_MODE_OUTPUT_50_MHZ,
-		      GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,
-		      GPIO8 | GPIO9 | GPIO10);
+	gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO8 | GPIO9 | GPIO10);
 
 	/* TIM2 gpio setup */
-	gpio_set_mode(GPIOA,
-		      GPIO_MODE_OUTPUT_50_MHZ,
-		      GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,
-		      GPIO0 | GPIO1 | GPIO2);
+	gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO0 | GPIO1 | GPIO2);
 
 	/* enable timers */
 	rcc_periph_clock_enable(RCC_TIM1);
@@ -84,16 +75,21 @@ struct color_t {
 
 void set_color(int32_t timer, struct color_t *color, uint8_t r, uint8_t g, uint8_t b)
 {
-	while (color->r != r || color->g != g || color->b != b)
-	{
-		if (color->r < r) color->r += 1;
-		if (color->r > r) color->r -= 1;
+	while (color->r != r || color->g != g || color->b != b) {
+		if (color->r < r)
+			color->r += 1;
+		if (color->r > r)
+			color->r -= 1;
 
-		if (color->g < g) color->g += 1;
-		if (color->g > g) color->g -= 1;
+		if (color->g < g)
+			color->g += 1;
+		if (color->g > g)
+			color->g -= 1;
 
-		if (color->b < b) color->b += 1;
-		if (color->b > b) color->b -= 1;
+		if (color->b < b)
+			color->b += 1;
+		if (color->b > b)
+			color->b -= 1;
 
 		timer_set_oc_value(timer, TIM_OC1, color->r);
 		timer_set_oc_value(timer, TIM_OC2, color->g);
