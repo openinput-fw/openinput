@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 
 #include "target.h"
-#include "sensors.h"
 #include "truemove3.h"
 #include "systick.h"
 #include "rcc.h"

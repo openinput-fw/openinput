@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 
 #include "target.h"
-#include "sensors.h"
 #include "systick.h"
 #include "rcc.h"
 #include "nvic.h"
@@ -96,7 +95,8 @@ deltas_t target_sensor_deltas_get()
 	static uint64_t lastStateChange = 0;
 	if(systemTick > (lastStateChange + 100))
 	{
-		++state &= 0x3;
+		++state;
+		state &= 0x3;
 		lastStateChange = systemTick;
 	}
 
@@ -164,7 +164,7 @@ void init()
 	gpiocfg.port[1].MODE_CFG[7] = (IO_MODE_IN | IO_CFG_IN_FLOAT); 	// PB7
 	gpiocfg.port[1].ODR = BIT(0) | BIT(1) | BIT(2) | BIT(3) | BIT(4);	// pull-ups
 
-	gpiocfg.port[2].MODE_CFG[13] = (IO_MODE_OU | IO_CFG_OUT_2M); 	// PC13 - LED
+	gpiocfg.port[2].MODE_CFG[13] = (IO_MODE_OUT_2M | IO_CFG_OUT_GP_OD); 	// PC13 - LED
 
 	gpiocfg.port[3].MODE_CFG[0] = (IO_MODE_IN | IO_CFG_IN_FLOAT); 	// PD0 - OSC_IN
 	gpiocfg.port[3].MODE_CFG[1] = (IO_MODE_IN | IO_CFG_IN_FLOAT); 	// PD1 - OSC_OUT
