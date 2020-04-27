@@ -14,7 +14,13 @@ cpu_family = 'arm'
 cpu = 'cortex-m3'
 
 [properties]
-c_args = ['-mcpu=cortex-m3', '-mthumb', '-DSTM32F1']
-c_link_args = ['-mcpu=cortex-m3', '-mthumb', '-DSTM32F1']
-prefix = 'arm-none-eabi'
-libopencm3_cpu = 'opencm3_stm32f1'
+family = 'stm32f1'
+c_args = [
+    '-mcpu=cortex-m3',
+    '-mthumb',
+    '-mfloat-abi=soft',
+    '-ffreestanding',
+    '-DCFG_TUSB_MCU=OPT_MCU_STM32F1']
+c_link_args = [
+    '-mcpu=cortex-m3',
+    '-mthumb']

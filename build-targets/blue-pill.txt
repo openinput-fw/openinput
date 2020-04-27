@@ -1,2 +1,4 @@
 [properties]
-linker = 'stm32f103x8'
+target = 'blue-pill'
+mcu = 'STM32F103xB'
+linker = 'stm32f103cb'

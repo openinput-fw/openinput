@@ -3,6 +3,7 @@
 #ifndef _LEDS_H_
 #define _LEDS_H_
 
+#include "config.h"
 #include <stm32f1xx.h>
 #include "rcc.h"
 

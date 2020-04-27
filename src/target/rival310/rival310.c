@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
+#include "config.h"
 #include "target.h"
-#include "truemove3.h"
 #include "systick.h"
 #include "rcc.h"
 #include "nvic.h"
@@ -11,6 +11,10 @@
 #include "flash.h"
 #include "leds.h"
 #include "encoder.h"
+
+#if !defined (SENSOR_NONE)
+	#include SENSOR_INCLUDE
+#endif
 
 //--------------------------------------------------------------------
 // Forward USB interrupt events to TinyUSB IRQ Handler

@@ -3,6 +3,7 @@
 #ifndef __SPI_EEPROM_H__
 #define __SPI_EEPROM_H__
 
+#include "config.h"
 #include <stm32f1xx.h>
 #include <stdlib.h>
 #include <string.h>

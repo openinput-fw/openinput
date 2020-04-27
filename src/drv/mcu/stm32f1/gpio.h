@@ -3,6 +3,7 @@
 #ifndef __GPIO_H__
 #define __GPIO_H__
 
+#include "config.h"
 #include <stm32f1xx.h>
 #include "utils.h"
 #include "rcc.h"

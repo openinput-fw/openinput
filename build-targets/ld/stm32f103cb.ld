@@ -4,4 +4,4 @@ MEMORY
     ram  (rw)     : ORIGIN = 0x20000000, LENGTH = 0x05000
 }
 
-INCLUDE stm32f1_common.ld
+INCLUDE stm32f1-common.ld

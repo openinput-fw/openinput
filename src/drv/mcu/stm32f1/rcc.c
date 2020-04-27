@@ -57,7 +57,7 @@ void rcc_update_clocks()
             SYS_CLOCK_FREQ = HSI_VALUE;
         break;
         case RCC_CFGR_SWS_HSE:
-            SYS_CLOCK_FREQ = HSE_VALUE;
+            SYS_CLOCK_FREQ = EXT_OSC_VALUE;
         break;
         case RCC_CFGR_SWS_PLL:
         {
@@ -71,9 +71,9 @@ void rcc_update_clocks()
             else // 1 means PLL INPUT = HSE (divided by 2 if XTPRE = 1)
             {
                 if ((RCC->CFGR & RCC_CFGR_PLLXTPRE) == RCC_CFGR_PLLXTPRE_HSE_DIV2)
-                    SYS_CLOCK_FREQ = (HSE_VALUE >> 1) * pllmul;
+                    SYS_CLOCK_FREQ = (EXT_OSC_VALUE >> 1) * pllmul;
                 else
-                    SYS_CLOCK_FREQ = HSE_VALUE * pllmul;
+                    SYS_CLOCK_FREQ = EXT_OSC_VALUE * pllmul;
             }
             break;
         }

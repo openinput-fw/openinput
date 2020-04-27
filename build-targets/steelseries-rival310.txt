@@ -1,2 +1,4 @@
 [properties]
-linker = 'stm32f103x6'
+target = 'rival310'
+mcu = 'STM32F103x6'
+linker = 'stm32f103t6'

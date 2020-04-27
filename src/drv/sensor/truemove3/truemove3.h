@@ -3,6 +3,7 @@
 #ifndef __TRUEMOVE3_H__
 #define __TRUEMOVE3_H__
 
+#include "config.h"
 #include <stdlib.h>
 #include "atomic.h"
 #include "target.h"

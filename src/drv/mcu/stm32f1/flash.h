@@ -3,6 +3,7 @@
 #ifndef __FLASH_H__
 #define __FLASH_H__
 
+#include "config.h"
 #include <stm32f1xx.h>
 
 //--------------------------------------------------------------------

@@ -3,6 +3,7 @@
 #ifndef __ATOMIC_H__
 #define __ATOMIC_H__
 
+#include "config.h"
 #include <stm32f1xx.h>
 
 //--------------------------------------------------------------------
