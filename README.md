@@ -11,8 +11,7 @@ Open source mouse firmware based on [libopencm3](https://github.com/libopencm3/l
 ### Instructions
 
 ```sh
-mkdir build && cd build
-meson .. --cross-file ../targets/family/stm32f1.txt --cross-file ../targets/blue-pill.txt
+./configure.py TARGET [target options]
 ninja
 ```
 
