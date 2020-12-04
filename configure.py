@@ -149,7 +149,7 @@ class BuildSystemBuilder():
             extension = lambda file, ext: built(os.path.join(
                 'out', '.'.join(filter(None, [file, ext]))
             ))
-            binary = lambda file: extension(file, self._target.bin_extension)
+            binary_name = lambda file: extension(file, self._target.bin_extension)
 
             # declare rules
             nw.rule(
@@ -200,7 +200,7 @@ class BuildSystemBuilder():
                 self.version.replace('.', '-'),
                 'dirty' if self._is_git_dirty else None,
             ]))
-            out = binary(out_name)
+            out = binary_name(out_name)
             nw.build(out, 'link', objs)
             nw.newline()
 
