@@ -133,6 +133,9 @@ class BuildSystemBuilder():
             nw.variable('objcopy', self._tool('objcopy'))
             nw.variable('size', self._tool('size'))
             nw.variable('c_flags', self._target.c_flags)
+            nw.variable('c_include_flags', ' '.join([
+                f'-I{path}' for path in self._target.include
+            ]))
             nw.variable('ld_flags', self._target.ld_flags)
             nw.newline()
 
@@ -151,7 +154,7 @@ class BuildSystemBuilder():
             # declare rules
             nw.rule(
                 'cc',
-                command='$cc -MMD -MT $out -MF $out.d $c_flags -c $in -o $out',
+                command='$cc -MMD -MT $out -MF $out.d $c_flags $c_include_flags -c $in -o $out',
                 depfile='$out.d',
                 deps='gcc',
                 description='CC $out',
