@@ -1,12 +1,10 @@
 # SPDX-License-Identifier: MIT
 
 import argparse
-import collections
 import os
 import os.path
-import platform
 
-from typing import Dict, List, Optional, Sequence, Set, Union
+from typing import List, Optional, Union
 
 
 abs_root = os.path.dirname(os.path.dirname(__file__))
@@ -25,15 +23,18 @@ def rel_platform(name: str) -> str:
     assert path
     return path
 
+
 def rel_target(name: str) -> str:
     path = os.path.join('targets', name)
     assert path
     return path
 
+
 def abs_platform(name: str) -> str:
     path = os.path.join(abs_platforms, name)
     assert path
     return path
+
 
 def abs_target(name: str) -> str:
     path = os.path.join(abs_targets, name)
@@ -79,7 +80,7 @@ class BuildConfiguration():
 
         self.source: List[str] = []
         self.include = [
-            os.path.join(rel_platform('generic'), 'platform-hid.h')
+            rel_platform('generic'),
         ]
 
     @property

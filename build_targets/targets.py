@@ -1,12 +1,10 @@
 # SPDX-License-Identifier: MIT
 
 import argparse
-import collections
 import os
 import os.path
-import platform
 
-from typing import Any, Dict, List, Optional, Sequence, Set, Union
+from typing import Any, Optional
 
 from . import BuildConfigurationError, abs_target, families
 

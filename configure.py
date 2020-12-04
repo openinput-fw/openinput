@@ -2,11 +2,7 @@
 # SPDX-License-Identifier: MIT
 
 import argparse
-import collections
-import enum
 import functools
-import glob
-import importlib
 import os
 import os.path
 import shutil
@@ -15,7 +11,7 @@ import sys
 import traceback
 import warnings
 
-from typing import Any, Dict, List, Optional, Set, TextIO, Type, Union
+from typing import Any, Dict, List, Optional, TextIO, Type, Union
 
 import build_targets
 import build_targets.targets
