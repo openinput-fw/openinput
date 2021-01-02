@@ -27,7 +27,7 @@ class DeviceInfo(object):
     def __str__(self) -> str:
         if self.vid is not None and self.pid is not None:
             return f'DeviceInfo({hex(self.bus)}, {hex(self.vid)}, {hex(self.pid)})'
-        return f'DeviceInfo(unknown)'
+        return 'DeviceInfo(unknown)'
 
 
 class IOCTL(object):

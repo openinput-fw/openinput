@@ -3,7 +3,6 @@
 import argparse
 import os
 import sys
-import time
 
 from typing import List
 
@@ -63,7 +62,7 @@ class SteelseriesProtocol:
         return ljust([0x01], 64)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # noqa: C901
     parser = argparse.ArgumentParser(description='SteelSeries fimware update')
     parser.add_argument('-v', '--verbose',
                         action='store_true',

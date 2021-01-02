@@ -5,14 +5,15 @@ import os
 import sys
 import struct
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # noqa: C901
     parser = argparse.ArgumentParser(description='SteelSeries crc calculation')
     parser.add_argument('-v', '--verbose',
                         action='store_true',
                         help='Shows debugging outputs.')
     parser.add_argument('-a', '--append',
                         action='store_true',
-                        help='Appends the crc result to the file (by default outputs only the crc, this prepends the firmware to the output).')
+                        help='Appends the crc result to the file'
+                             '(by default outputs only the crc, this prepends the firmware to the output).')
     parser.add_argument('-o', '--output', type=str,
                         help='Output file.')
     parser.add_argument('firmware', metavar='firmware.bin', type=str,
