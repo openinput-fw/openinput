@@ -2,5 +2,4 @@
 
 int hid_send()
 {
-
 }
