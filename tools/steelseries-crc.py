@@ -2,8 +2,9 @@
 
 import argparse
 import os
-import sys
 import struct
+import sys
+
 
 if __name__ == '__main__':  # noqa: C901
     parser = argparse.ArgumentParser(description='SteelSeries crc calculation')
@@ -69,7 +70,7 @@ if __name__ == '__main__':  # noqa: C901
                 crc = (crc << 1)
         crc &= 0xFFFFFFFF
 
-    crc_bytes = struct.pack("<I", crc)
+    crc_bytes = struct.pack('<I', crc)
 
     if args.verbose:
         print(f'calculated crc: 0x{crc:08x}')

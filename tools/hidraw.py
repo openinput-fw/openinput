@@ -9,6 +9,7 @@ import time
 
 from typing import BinaryIO, List, Optional, Union
 
+
 '''
 Writing Python wrappers for C APIs is usually hard, and it is the case of
 ioctl(s). I tried to write a simple to use and somewhat readable pytyhonic
