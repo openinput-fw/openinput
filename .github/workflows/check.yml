@@ -1,15 +1,24 @@
 name: check
-on: [push, pull_request]
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
-  check:
+  pre-commit:
     runs-on: ubuntu-latest
     container:
       image: archlinux
     steps:
-      - uses: actions/checkout@v2
-      - name: Update the system and install dependencies
-        run: pacman -Syu --noconfirm --noprogressbar --needed clang
-      - name: Check with clang-format
-        run: find src -type f -name '*.h' -o -name '*.c' -exec clang-format -n --Werror {} \;
+    - name: Update the system and install dependencies
+      run: pacman -Syu --noconfirm --noprogressbar --needed clang git python-pip
 
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Run pre-commit
+      uses: pre-commit/action@v2.0.0
