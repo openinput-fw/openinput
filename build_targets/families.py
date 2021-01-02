@@ -72,4 +72,4 @@ class STM32F1Family(BuildConfiguration):
             '--specs=nosys.specs',
         ]
 
-        #self.source += self.platform_files()
+        # self.source += self.platform_files()
