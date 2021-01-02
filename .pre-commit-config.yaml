@@ -1,4 +1,24 @@
 repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v3.4.0
+  hooks:
+  - id: check-ast
+  - id: check-builtin-literals
+  - id: check-merge-conflict
+  - id: check-yaml
+  - id: check-toml
+  - id: debug-statements
+  - id: double-quote-string-fixer
+  - id: end-of-file-fixer
+  - id: trailing-whitespace
+- repo: https://github.com/pre-commit/mirrors-isort
+  rev: master
+  hooks:
+  - id: isort
+- repo: https://gitlab.com/pycqa/flake8
+  rev: 3.8.4
+  hooks:
+  - id: flake8
 - repo: https://github.com/pocc/pre-commit-hooks
   rev: v1.1.1
   hooks:
