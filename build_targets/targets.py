@@ -4,7 +4,7 @@ import argparse
 import os
 import os.path
 
-from typing import Any, Optional
+from typing import Any, Dict, List
 
 from . import BuildConfigurationError, abs_target, families
 
@@ -19,53 +19,43 @@ def _removesuffix(string: str, suffix: str) -> str:
 class LinuxUHIDTarget(families.NativeFamily, families.LinuxUHIDFamily):
     name = 'linux-uhid'
 
-    def __init__(self, debug: bool = False, **kwargs: Any) -> None:
-        super().__init__(
-            debug,
-            cross_toolchain=None,
-            **kwargs,
-        )
-
-        self.source += self.target_files(
+    def source(self) -> List[str]:
+        return self.target_files(
             'main.c',
         )
 
 
 class STM31F1GenericTarget(families.STM32F1Family):
     name = 'stm32f1-generic'
-    configs = list(map(
-        lambda f: _removesuffix(f, '.h'),
-        os.listdir(os.path.join(abs_target(name), 'config'))
-    ))
 
-    def __init__(
-        self,
-        debug: bool = False,
-        *,
-        config: Optional[str] = None,
-        **kwargs: Any,
-    ) -> None:
-        super().__init__(
-            debug,
-            cross_toolchain='arm-none-eabi',
-            **kwargs,
-        )
-
-        if not config:
+    def init(self, args: Dict[str, Any]) -> None:
+        if 'config' not in args:
             raise BuildConfigurationError(
                 f'No configuration for {self.name}, '
                 'please specify one with --config'
             )
-        if config not in self.configs:
-            raise BuildConfigurationError(f'Unknown configuration for {self.name}: {config}')
 
-        self.source += self.target_files(
+        self.config = args['config']
+        if self.config not in self.configs():
+            raise BuildConfigurationError(f'Unknown configuration for {self.name}: {self.config}')
+
+    def source(self) -> List[str]:
+        return self.target_files(
             'main.c',
         )
 
-        self.include += self.platform_files(
-            os.path.join('config', f'{config}.h'),
+    def include(self) -> List[str]:
+        return self.platform_files(
+            os.path.join('config', f'{self.config}.h'),
         )
+
+    @classmethod
+    def configs(cls) -> List[str]:
+        config_path = os.path.join(abs_target(cls.name), 'config')
+        return [
+            config.removesuffix('.h')
+            for config in os.listdir(config_path)
+        ]
 
     @classmethod
     def parser_append_group(cls, parser: argparse.ArgumentParser) -> None:
@@ -75,7 +65,7 @@ class STM31F1GenericTarget(families.STM32F1Family):
             '-c',
             type=str,
             metavar='CONFIG',
-            choices=cls.configs,
+            choices=cls.configs(),
             help='device configuration name',
             required=True,
         )
