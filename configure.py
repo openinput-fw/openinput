@@ -17,6 +17,9 @@ import build_targets
 import build_targets.targets
 
 
+_MIN_PYTHON_VERSION = (3, 9)
+
+
 # disable colors if we're not in a TTY
 if sys.stdout.isatty():
     _RESET = '\33[0m'
@@ -288,6 +291,12 @@ class BuildSystemBuilder():
 
 
 if __name__ == '__main__':
+    if sys.version_info < _MIN_PYTHON_VERSION:
+        _error(
+            f'Unsupported Python version: {".".join(map(str, sys.version_info[:3]))}... '
+            f'You need at least Python {".".join(map(str, _MIN_PYTHON_VERSION))}.'
+        )
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--builddir',
