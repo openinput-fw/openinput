@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import logging
 import os
 import os.path
 import typing
@@ -76,6 +77,8 @@ class _BuildConfiguration():
         cross_toolchain: Union[Optional[str], bool] = False,
         linker_script: Optional[str] = None,
     ) -> None:
+        self.__log = logging.getLogger(self.__class__.__name__)
+
         # cross_toolchain == None: native
         # cross_toolchain == False: not specified
         if isinstance(cross_toolchain, bool):  # .-.
@@ -104,14 +107,17 @@ class _BuildConfiguration():
         '''
         for _cls in reversed(self.__class__.__mro__):  # __mro__ holds the inheritance chain
             cls = typing.cast(Type[_BuildConfiguration], _cls)
+            self.__log.debug(f'iterating over {cls}...')
             # call init, if defined
             if cls in self._init_calls:
+                self.__log.debug('calling init')
                 self._init_calls[cls](self)
             # append settings, if defined
             if hasattr(cls, '_setting_calls') and cls._setting_calls is not None:
                 for setting in ('source', 'include', 'c_flags', 'ld_flags'):
                     if setting in cls._setting_calls:
                         self._settings[setting] += cls._setting_calls[setting](self)
+                        self.__log.debug(f'appending {setting}, new value: {self._settings[setting]}')
 
     @property
     def main(self) -> str:
