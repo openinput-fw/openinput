@@ -25,7 +25,7 @@ class LinuxUHIDTarget(families.NativeFamily, families.LinuxUHIDFamily):
         )
 
 
-class STM31F1GenericTarget(families.STM32F1Family):
+class STM32F1GenericTarget(families.STM32F1Family):
     name = 'stm32f1-generic'
 
     def init(self, args: Dict[str, Any]) -> None:
