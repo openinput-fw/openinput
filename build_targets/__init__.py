@@ -1,10 +1,13 @@
 # SPDX-License-Identifier: MIT
 
+from __future__ import annotations
+
 import argparse
 import os
 import os.path
+import typing
 
-from typing import List, Optional, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 
 
 abs_root = os.path.dirname(os.path.dirname(__file__))
@@ -46,12 +49,26 @@ class BuildConfigurationError(Exception):
     pass
 
 
-class BuildConfiguration():
+class _BuildConfiguration():
+    # default attributes
     name: Optional[str] = None
     platform: Optional[str] = None
     bin_extension: Optional[str] = None
     generate_bin = False
     generate_hex = True
+
+    # type hints
+    _settings: Dict[str, List[str]]
+
+    # internal , see _BuildConfigurationMeta
+    _setting_calls: Optional[Dict[
+        str,
+        Callable[[_BuildConfiguration], List[str]]
+    ]] = None
+    _init_calls: Dict[
+        Type[_BuildConfiguration],
+        Callable[[_BuildConfiguration], None]
+    ] = {}
 
     def __init__(
         self,
@@ -65,10 +82,13 @@ class BuildConfiguration():
             raise BuildConfigurationError('No toolchain specified')
         self.cross_toolchain = cross_toolchain
 
-        self.c_flags = [
-            '-Os',
-        ]
-        self.ld_flags = []
+        # initialize settings
+        self._settings = {
+            'source': [],
+            'include': [rel_platform('generic')],
+            'c_flags': ['-Os'],
+            'ld_flags': [],
+        }
 
         # add linker script to ld_flags
         if linker_script:
@@ -78,10 +98,20 @@ class BuildConfiguration():
                 f'-T{linker_script}',
             ]
 
-        self.source: List[str] = []
-        self.include = [
-            rel_platform('generic'),
-        ]
+        '''
+        do the magic init stuff... iterate of inheritnance chain, call init()
+        for each class and append the settings
+        '''
+        for _cls in reversed(self.__class__.__mro__):  # __mro__ holds the inheritance chain
+            cls = typing.cast(Type[_BuildConfiguration], _cls)
+            # call init, if defined
+            if cls in self._init_calls:
+                self._init_calls[cls](self)
+            # append settings, if defined
+            if hasattr(cls, '_setting_calls') and cls._setting_calls is not None:
+                for setting in ('source', 'include', 'c_flags', 'ld_flags'):
+                    if setting in cls._setting_calls:
+                        self._settings[setting] += cls._setting_calls[setting](self)
 
     @property
     def main(self) -> str:
@@ -114,3 +144,86 @@ class BuildConfiguration():
             ),
             files,
         ))
+
+    # settings properties
+
+    @property
+    def source(self) -> List[str]:
+        return self._settings['source']
+
+    @source.setter
+    def source(self, value: List[str]) -> None:
+        self._settings['source'] = value
+
+    @property
+    def include(self) -> List[str]:
+        return self._settings['include']
+
+    @include.setter
+    def include(self, value: List[str]) -> None:
+        self._settings['include'] = value
+
+    @property
+    def c_flags(self) -> List[str]:
+        return self._settings['c_flags']
+
+    @c_flags.setter
+    def c_flags(self, value: List[str]) -> None:
+        self._settings['c_flags'] = value
+
+    @property
+    def ld_flags(self) -> List[str]:
+        return self._settings['ld_flags']
+
+    @ld_flags.setter
+    def ld_flags(self, value: List[str]) -> None:
+        self._settings['ld_flags'] = value
+
+
+class _BuildConfigurationMeta(type):
+    '''
+    This metaclass complements _BuildConfiguration. It has two jobs,
+
+    1) Save the setting method (source, include, etc.) defined in the class into
+    the _setting_calls dictionary. The methods will be removed from the object
+    and saved into the dictionary for later use. This allows us to have each
+    class define the methods they want, without overriding the parent methods
+    and without having to deal with super().
+    The goal here is simple, make adding new targets and build configurations as
+    easy as possible. We expect people not very familiarized with Python to have
+    to do it.
+
+    2) Similarly, save the init method into the _init_calls dictionary. The
+    method will be removed from the object.
+    The goal of defining a init() method is to allow users to some customization
+    and/or value calculations before doing anything else. This is essentially a
+    boiled down, and easier to use version of __init__(), as __init__() proved
+    to be very clunky and not at all beginner friendly. We just want to allow
+    people to define their target and move on!
+
+    I know metaclasses are a pain for contributors, mainly because most people
+    are not comfortable with them, but the
+    '''
+
+    def __new__(mcs, name: str, bases: Tuple[Any], dic: Dict[str, Any]):  # type: ignore
+        # save setting callbacks into _settings dictionary
+        dic['_setting_calls'] = {}
+        for setting in ('source', 'include', 'c_flags', 'ld_flags'):
+            if setting in dic:
+                dic['_setting_calls'][setting] = dic.pop(setting)
+
+        # get init method, if defined
+        init = dic.pop('init', None)
+
+        # create the class
+        cls = super().__new__(mcs, name, bases, dic)
+
+        # append init method to _init list
+        if init:
+            cls._init_calls[cls] = init  # type: ignore
+
+        return cls
+
+
+class BuildConfiguration(_BuildConfiguration, metaclass=_BuildConfigurationMeta):
+    pass
