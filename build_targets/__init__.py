@@ -8,7 +8,7 @@ import os
 import os.path
 import typing
 
-from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type
 
 
 abs_root = os.path.dirname(os.path.dirname(__file__))
@@ -55,6 +55,7 @@ class _BuildConfiguration():
     name: Optional[str] = None
     platform: Optional[str] = None
     bin_extension: Optional[str] = None
+    toolchain: Optional[str] = None
     generate_bin = False
     generate_hex = True
 
@@ -68,22 +69,22 @@ class _BuildConfiguration():
     ]] = None
     _init_calls: Dict[
         Type[_BuildConfiguration],
-        Callable[[_BuildConfiguration], None]
+        Callable[
+            [_BuildConfiguration, Dict[str, Any]],
+            None,
+        ],
     ] = {}
 
     def __init__(
         self,
         debug: bool = False,
-        cross_toolchain: Union[Optional[str], bool] = False,
+        toolchain: Optional[str] = None,
         linker_script: Optional[str] = None,
+        **kwargs: Any,
     ) -> None:
         self.__log = logging.getLogger(self.__class__.__name__)
 
-        # cross_toolchain == None: native
-        # cross_toolchain == False: not specified
-        if isinstance(cross_toolchain, bool):  # .-.
-            raise BuildConfigurationError('No toolchain specified')
-        self.cross_toolchain = cross_toolchain
+        self.debug = debug
 
         # initialize settings
         self._settings = {
@@ -111,13 +112,18 @@ class _BuildConfiguration():
             # call init, if defined
             if cls in self._init_calls:
                 self.__log.debug('calling init')
-                self._init_calls[cls](self)
+                self._init_calls[cls](self, kwargs)
             # append settings, if defined
             if hasattr(cls, '_setting_calls') and cls._setting_calls is not None:
                 for setting in ('source', 'include', 'c_flags', 'ld_flags'):
                     if setting in cls._setting_calls:
                         self._settings[setting] += cls._setting_calls[setting](self)
                         self.__log.debug(f'appending {setting}, new value: {self._settings[setting]}')
+
+        if toolchain is not None:
+            self.toolchain = toolchain
+        if self.toolchain is None:
+            raise BuildConfigurationError('No toolchain specified')
 
     @property
     def main(self) -> str:
