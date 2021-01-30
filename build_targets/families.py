@@ -2,74 +2,74 @@
 
 import os
 import os.path
-import platform
 
-from typing import Any
+from typing import Any, Dict, List
 
 from . import BuildConfiguration
 
 
 class NativeFamily(BuildConfiguration):
-    platform = 'native'
-    bin_extension = 'exe' if os.name == 'nt' else ''
+    def init(self, args: Dict[str, Any]) -> None:
+        self.platform = 'native'
+        self.toolchain = ''  # native
+        self.bin_extension = 'exe' if os.name == 'nt' else ''
 
-    def __init__(self, debug: bool = False, **kwargs: Any) -> None:
-        super().__init__(debug, **kwargs)
-
-        self.cpu_family = platform.machine()
-
-        self.c_flags += [
+    def c_flags(self) -> List[str]:
+        flags = [
             '-pipe',
             '-fno-plt',
             '-O2',
         ]
 
-        self.ld_flags += [
-            '-Wl,--sort-common,--as-needed,-z,relro,-z,now',
-        ]
-
-        if debug:
-            self.c_flags += [
+        if self.debug:
+            flags += [
                 '-g',
                 '-fvar-tracking-assignments',
             ]
 
+        return flags
+
+    def ld_flags(self) -> List[str]:
+        return [
+            '-Wl,--sort-common,--as-needed,-z,relro,-z,now',
+        ]
+
 
 class LinuxUHIDFamily(BuildConfiguration):
-    platform = 'linux-uhid'
+    def init(self, args: Dict[str, Any]) -> None:
+        self.platform = 'linux-uhid'
 
-    def __init__(self, debug: bool = False, **kwargs: Any) -> None:
-        super().__init__(debug, **kwargs)
-
-        self.source += self.platform_files(
+    def source(self) -> List[str]:
+        return self.platform_files(
             'hid.c',
         )
 
-        self.include += self.platform_files(
+    def include(self) -> List[str]:
+        return self.platform_files(
             'hid.h',
         )
 
 
 class STM32F1Family(BuildConfiguration):
     platform = 'stm32f1'
-    bin_extension = 'elf'
-    generate_bin = True
-    generate_hex = True
 
-    def __init__(self, debug: bool = False, **kwargs: Any) -> None:
-        super().__init__(debug, **kwargs)
+    def init(self, args: Dict[str, Any]) -> None:
+        self.toolchain = 'arm-none-eabi'
+        self.bin_extension = 'elf'
+        self.generate_bin = True
+        self.generate_hex = True
 
-        self.cpu_family = 'stm32f1'
-
-        self.c_flags += [
-            '-mcpu=cortex-m3',
+    def c_flags(self) -> List[str]:
+        return [
+            '-march=armv7-m',
+            '-mtune=cortex-m3',
             '-mthumb',
         ]
 
-        self.ld_flags += [
-            '-mcpu=cortex-m3',
+    def ld_flags(self) -> List[str]:
+        return [
+            '-march=armv7-m',
+            '-mtune=cortex-m3',
             '-mthumb',
             '--specs=nosys.specs',
         ]
-
-        # self.source += self.platform_files()
