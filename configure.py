@@ -71,7 +71,6 @@ class BuildSystemBuilder():
         self,
         cli_args: List[str],
         target: str,
-        cross_toolchain: str,
         builddir: str = 'build',
         **kwargs: Any,
     ) -> None:
@@ -86,11 +85,6 @@ class BuildSystemBuilder():
         if target not in self.get_targets():
             raise ValueError(f'Target not found: {target}')
         self._target = self.get_targets()[target](**kwargs)
-
-        # get toolchain
-        self._cross_toolchain: Optional[str] = cross_toolchain
-        if not self._cross_toolchain:
-            self._cross_toolchain = self._target.cross_toolchain
         self._validate_toolchain()
 
         # misc variables
@@ -104,7 +98,8 @@ class BuildSystemBuilder():
 
         self._builddir = builddir
 
-        self._tool = lambda x: '-'.join(filter(None, [self._cross_toolchain, x]))
+        # construct tool name, eg. arm-none-eabi-gcc, gcc...
+        self._tool = lambda x: '-'.join(filter(None, [self._target.toolchain, x]))
 
     def write_ninja(self, file: str = 'build.ninja') -> None:
         # delayed import to provide better UX
@@ -237,7 +232,7 @@ class BuildSystemBuilder():
 
         for name, var in {
             'target': self._target.name,
-            'cross-toolchain': self._cross_toolchain or 'native',
+            'toolchain': self._target.toolchain or 'native',
             'c_flags': ' '.join(self._target.c_flags) or '(empty)',
             'ld_flags': ' '.join(self._target.ld_flags) or '(empty)',
         }.items():
@@ -268,7 +263,7 @@ class BuildSystemBuilder():
         return target
 
     def _validate_toolchain(self) -> None:
-        prefix = self._cross_toolchain
+        prefix = self._target.toolchain
         if prefix and prefix.endswith('-'):
             warnings.warn(f"Specified '{prefix}' as the cross toolchain prefix, did you mean '{prefix[:-1]}'?")
         for tool in self._REQUIRED_TOOLS:
@@ -302,10 +297,10 @@ if __name__ == '__main__':
         help="build directory (defaults to 'build/{target}')",
     )
     parser.add_argument(
-        '--cross-toolchain',
-        '-c',
+        '--toolchain',
+        '-t',
         type=str,
-        help='override cross toolchain prefix (eg. arm-none-eabi)',
+        help='override toolchain prefix (eg. arm-none-eabi)',
     )
     target_subparsers = parser.add_subparsers(
         dest='target',
