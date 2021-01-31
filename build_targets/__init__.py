@@ -141,7 +141,7 @@ class _BuildConfiguration():
         return list(map(
             lambda f: os.path.join(
                 rel_platform(self.platform),  # type: ignore
-                os.pathsep.join(f.split('/'))
+                *f.split('/'),
             ),
             files,
         ))
@@ -152,7 +152,7 @@ class _BuildConfiguration():
         return list(map(
             lambda f: os.path.join(
                 rel_target(self.name),  # type: ignore
-                os.pathsep.join(f.split('/'))
+                *f.split('/'),
             ),
             files,
         ))
