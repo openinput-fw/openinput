@@ -81,8 +81,7 @@ class BuildSystemBuilder():
 
         # get target
         if not target:
-            # ask for target if it was not specified
-            target = self._ask_target()
+            raise ValueError('Invalid target: empty target')
         if target == 'linux-uhid' and sys.platform != 'linux':
             raise ValueError('linux-uhid target is only available on Linux')
         if target not in self.get_targets():
@@ -247,24 +246,6 @@ class BuildSystemBuilder():
         except FileNotFoundError:
             return None
 
-    def _ask_target(self) -> str:
-        print('Available targets:')
-        targets_list = list(self.get_targets().keys())
-        for i, available_target in enumerate(targets_list):
-            print(f'{available_target:>32} ({i})')
-        while True:
-            select = input('Select target (default=linux-uhid): ')
-            if not select:
-                target = 'linux-uhid'
-                break
-            try:
-                target = targets_list[int(select)]
-                break
-            except (ValueError, IndexError):
-                print('Invalid option!')
-        print()
-        return target
-
     def _validate_toolchain(self) -> None:
         prefix = self._target.toolchain
         if prefix and prefix.endswith('-'):
@@ -288,6 +269,25 @@ class BuildSystemBuilder():
         _add(build_targets.BuildConfiguration)
 
         return targets_dict
+
+
+def _ask_target() -> str:
+    print('Available targets:')
+    targets_list = list(BuildSystemBuilder.get_targets().keys())
+    for i, available_target in enumerate(targets_list):
+        print(f'{available_target:>32} ({i})')
+    while True:
+        select = input('Select target (default=linux-uhid): ')
+        if not select:
+            target = 'linux-uhid'
+            break
+        try:
+            target = targets_list[int(select)]
+            break
+        except (ValueError, IndexError):
+            print('Invalid option!')
+    print()
+    return target
 
 
 if __name__ == '__main__':
@@ -315,7 +315,6 @@ if __name__ == '__main__':
         dest='target',
         help='target firmware',
         metavar='TARGET',
-        required=True,
     )
 
     # register arguments from targets
@@ -325,6 +324,10 @@ if __name__ == '__main__':
         cls.parser_append_group(target_parser)
 
     args = parser.parse_args()
+
+    if not args.target:
+        # ask for target if it was not specified
+        args = parser.parse_args([_ask_target()])
 
     try:
         builder = BuildSystemBuilder(sys.argv[1:], **vars(args))
