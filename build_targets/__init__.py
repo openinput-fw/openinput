@@ -114,6 +114,9 @@ class _BuildConfiguration():
             if cls in self._init_calls:
                 self.__log.debug('calling init')
                 self._init_calls[cls](self, kwargs)
+            # append platform directory to include
+            if self.platform and rel_platform(self.platform) not in self.include:
+                self.include.append(rel_platform(self.platform))
             # append settings, if defined
             if hasattr(cls, '_setting_calls') and cls._setting_calls is not None:
                 for setting in ('source', 'include', 'include_files', 'c_flags', 'ld_flags'):
