@@ -13,6 +13,8 @@ class NativeFamily(BuildConfiguration):
         self.platform = 'native'
         self.toolchain = ''  # native
         self.bin_extension = 'exe' if os.name == 'nt' else ''
+        self.generate_bin = False
+        self.generate_hex = False
 
     def c_flags(self) -> List[str]:
         flags = [
