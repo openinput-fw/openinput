@@ -57,7 +57,7 @@ class _BuildConfiguration():
     platform: Optional[str] = None
     bin_extension: Optional[str] = None
     toolchain: Optional[str] = None
-    generate_bin = False
+    generate_bin = True
     generate_hex = True
 
     # type hints
