@@ -124,20 +124,6 @@ class BuildSystemBuilder():
             nw.variable('ninja_required_version', '1.3')
             nw.newline()
 
-            # declare variables
-            nw.variable('root', self._root)
-            nw.variable('builddir', self._builddir)
-            nw.variable('cc', self._tool('gcc'))
-            nw.variable('ar', self._tool('ar'))
-            nw.variable('objcopy', self._tool('objcopy'))
-            nw.variable('size', self._tool('size'))
-            nw.variable('c_flags', self._target.c_flags)
-            nw.variable('c_include_flags', ' '.join([
-                f'-I{path}' for path in self._target.include
-            ]))
-            nw.variable('ld_flags', self._target.ld_flags)
-            nw.newline()
-
             # helper functions
             src = lambda f: os.path.join('$root', 'src', f)
             built = lambda f: os.path.join('$builddir', f)
@@ -149,6 +135,20 @@ class BuildSystemBuilder():
                 'out', '.'.join(filter(None, [file, ext]))
             ))
             binary_name = lambda file: extension(file, self._target.bin_extension)
+
+            # declare variables
+            nw.variable('root', self._root)
+            nw.variable('builddir', self._builddir)
+            nw.variable('cc', self._tool('gcc'))
+            nw.variable('ar', self._tool('ar'))
+            nw.variable('objcopy', self._tool('objcopy'))
+            nw.variable('size', self._tool('size'))
+            nw.variable('c_flags', self._target.c_flags)
+            nw.variable('c_include_flags', ' '.join([
+                f'-I{src(path)}' for path in self._target.include
+            ]))
+            nw.variable('ld_flags', self._target.ld_flags)
+            nw.newline()
 
             # declare rules
             nw.rule(
