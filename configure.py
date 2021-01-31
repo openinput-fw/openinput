@@ -169,7 +169,7 @@ class BuildSystemBuilder():
             nw.newline()
             nw.rule(
                 'link',
-                command='$cc $ld_flags -o $out $in $libs',
+                command='$cc -o $out $in $ld_flags',
                 description='LINK $out',
             )
             nw.newline()
