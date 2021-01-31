@@ -44,11 +44,6 @@ class LinuxUHIDFamily(BuildConfiguration):
             'hid.c',
         )
 
-    def include(self) -> List[str]:
-        return self.platform_files(
-            'hid.h',
-        )
-
 
 class STM32F1Family(BuildConfiguration):
     platform = 'stm32f1'
