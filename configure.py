@@ -253,6 +253,8 @@ class BuildSystemBuilder():
                 'include_files': self._target.include_files,
             }.items():
                 print('{:>24}:'.format(name))
+                if not entries:
+                    print(' ' * 26 + '(empty)')
                 for entry in entries:
                     print(' ' * 26 + entry)
 
