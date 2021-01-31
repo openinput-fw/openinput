@@ -6,6 +6,7 @@ import argparse
 import logging
 import os
 import os.path
+import subprocess
 import typing
 
 from typing import Any, Callable, Dict, List, Optional, Tuple, Type
@@ -139,6 +140,8 @@ class _BuildConfiguration():
     def parser_append_group(parser: argparse.ArgumentParser) -> None:
         pass
 
+    # helpers
+
     def platform_files(self, *files: str) -> List[str]:
         if not self.platform:
             raise TypeError('Trying to get platform files from a non-platform configuration')
@@ -160,6 +163,32 @@ class _BuildConfiguration():
             ),
             files,
         ))
+
+    def _pkgconf(self, *args: str) -> List[str]:
+        try:
+            return subprocess.check_output(
+                ['pkgconf', '--keep-system-libs', *args],
+            ).decode().strip().split()
+        except FileNotFoundError:
+            raise BuildConfigurationError('pkgconf not found, it is required to resolve dependencies')
+
+    def pkgconf_libs(self, *args: str) -> List[str]:
+        try:
+            return self._pkgconf('--libs', *args)
+        except subprocess.CalledProcessError:
+            raise BuildConfigurationError(
+                'Could not resolve ld_flags for the following dependencies with pkgconf: ' +
+                ', '.join(args)
+            )
+
+    def pkgconf_cflags(self, *args: str) -> List[str]:
+        try:
+            return self._pkgconf('--cflags', *args)
+        except subprocess.CalledProcessError:
+            raise BuildConfigurationError(
+                'Could not resolve c_flags for the following dependencies with pkgconf: ' +
+                ', '.join(args)
+            )
 
     # settings properties
 
