@@ -178,6 +178,7 @@ class BuildSystemBuilder():
                     command='$objcopy -O binary $in $out',
                     description='BIN $out',
                 )
+                nw.newline()
 
             if self._target.generate_hex:
                 nw.rule(
@@ -185,6 +186,7 @@ class BuildSystemBuilder():
                     command='$objcopy -O ihex $in $out',
                     description='HEX $out',
                 )
+                nw.newline()
 
             # compile sources into objects
             objs = []
