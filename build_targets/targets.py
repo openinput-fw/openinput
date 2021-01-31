@@ -44,8 +44,8 @@ class STM32F1GenericTarget(families.STM32F1Family):
             'main.c',
         )
 
-    def include(self) -> List[str]:
-        return self.platform_files(
+    def include_files(self) -> List[str]:
+        return self.target_files(
             os.path.join('config', f'{self.config}.h'),
         )
 
