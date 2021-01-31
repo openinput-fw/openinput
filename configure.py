@@ -146,6 +146,8 @@ class BuildSystemBuilder():
             nw.variable('c_flags', self._target.c_flags)
             nw.variable('c_include_flags', ' '.join([
                 f'-I{src(path)}' for path in self._target.include
+            ] + [
+                f'-include {src(path)}' for path in self._target.include_files
             ]))
             nw.variable('ld_flags', self._target.ld_flags)
             nw.newline()
@@ -248,6 +250,7 @@ class BuildSystemBuilder():
             for name, entries in {
                 'source': self._target.source,
                 'include': self._target.include,
+                'include_files': self._target.include_files,
             }.items():
                 print('{:>24}:'.format(name))
                 for entry in entries:

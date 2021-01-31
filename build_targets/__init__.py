@@ -90,6 +90,7 @@ class _BuildConfiguration():
         self._settings = {
             'source': [],
             'include': [rel_platform('generic')],
+            'include_files': [],
             'c_flags': ['-Os'],
             'ld_flags': [],
         }
@@ -115,7 +116,7 @@ class _BuildConfiguration():
                 self._init_calls[cls](self, kwargs)
             # append settings, if defined
             if hasattr(cls, '_setting_calls') and cls._setting_calls is not None:
-                for setting in ('source', 'include', 'c_flags', 'ld_flags'):
+                for setting in ('source', 'include', 'include_files', 'c_flags', 'ld_flags'):
                     if setting in cls._setting_calls:
                         self._settings[setting] += cls._setting_calls[setting](self)
                         self.__log.debug(f'appending {setting}, new value: {self._settings[setting]}')
@@ -176,6 +177,14 @@ class _BuildConfiguration():
         self._settings['include'] = value
 
     @property
+    def include_files(self) -> List[str]:
+        return self._settings['include_files']
+
+    @include_files.setter
+    def include_files(self, value: List[str]) -> None:
+        self._settings['include_files'] = value
+
+    @property
     def c_flags(self) -> List[str]:
         return self._settings['c_flags']
 
@@ -220,7 +229,7 @@ class _BuildConfigurationMeta(type):
     def __new__(mcs, name: str, bases: Tuple[Any], dic: Dict[str, Any]):  # type: ignore
         # save setting callbacks into _settings dictionary
         dic['_setting_calls'] = {}
-        for setting in ('source', 'include', 'c_flags', 'ld_flags'):
+        for setting in ('source', 'include', 'include_files', 'c_flags', 'ld_flags'):
             if setting in dic:
                 dic['_setting_calls'][setting] = dic.pop(setting)
 
