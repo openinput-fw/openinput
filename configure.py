@@ -211,7 +211,7 @@ class BuildSystemBuilder():
             if self._target.generate_bin:
                 nw.build(extension(out_name, 'bin'), 'bin', out)
                 nw.newline()
-            if self._target.generate_bin:
+            if self._target.generate_hex:
                 nw.build(extension(out_name, 'hex'), 'hex', out)
                 nw.newline()
 
