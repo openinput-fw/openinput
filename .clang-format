@@ -25,7 +25,7 @@ ContinuationIndentWidth: 8
 DerivePointerAlignment: false
 DisableFormat: false
 
-IncludeBlocks: Regroup
+IncludeBlocks: Preserve
 IndentCaseLabels: true
 IndentPPDirectives: None
 IndentWidth: 8
