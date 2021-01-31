@@ -75,9 +75,11 @@ class BuildSystemBuilder():
         cli_args: List[str],
         target: str,
         builddir: str = 'build',
+        debug: bool = False,
         **kwargs: Any,
     ) -> None:
         self._cli_args = cli_args
+        self._debug = debug
 
         # get target
         if not target:
@@ -240,6 +242,15 @@ class BuildSystemBuilder():
         }.items():
             print('{:>24}: {}'.format(name, var))
 
+        if self._debug:
+            for name, entries in {
+                'source': self._target.source,
+                'include': self._target.include,
+            }.items():
+                print('{:>24}:'.format(name))
+                for entry in entries:
+                    print(' ' * 26 + entry)
+
     def _is_git_dirty(self) -> Optional[bool]:
         try:
             return bool(subprocess.check_output(['git', 'diff', '--stat']).decode().strip())
@@ -310,6 +321,12 @@ if __name__ == '__main__':
         '-t',
         type=str,
         help='override toolchain prefix (eg. arm-none-eabi)',
+    )
+    parser.add_argument(
+        '--debug',
+        '-d',
+        action='store_true',
+        help='output extra debug information',
     )
     target_subparsers = parser.add_subparsers(
         dest='target',
