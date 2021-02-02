@@ -92,7 +92,7 @@ class _BuildConfiguration():
             'source': [],
             'include': [rel_platform('generic')],
             'include_files': [],
-            'c_flags': ['-Os'],
+            'c_flags': [],
             'ld_flags': [],
         }
 
