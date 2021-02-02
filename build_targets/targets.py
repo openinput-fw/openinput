@@ -24,6 +24,14 @@ class LinuxUHIDTarget(families.NativeFamily, families.LinuxUHIDFamily):
             'main.c',
         )
 
+    def c_flags(self) -> List[str]:
+        return self.pkgconf_cflags('readline')
+
+    def ld_flags(self) -> List[str]:
+        return self.pkgconf_libs('readline') + [
+            '-pthread',
+        ]
+
 
 class STM32F1GenericTarget(families.STM32F1Family):
     name = 'stm32f1-generic'
