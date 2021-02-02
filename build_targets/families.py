@@ -47,7 +47,8 @@ class LinuxUHIDFamily(BuildConfiguration):
 
     def source(self) -> List[str]:
         return self.platform_files(
-            'hid.c',
+            'hal/hid.c',
+            'uhid.c',
         )
 
 
