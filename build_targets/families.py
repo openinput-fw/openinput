@@ -58,6 +58,7 @@ class STM32F1Family(BuildConfiguration):
 
     def c_flags(self) -> List[str]:
         return [
+            '-Os',
             '-march=armv7-m',
             '-mtune=cortex-m3',
             '-mthumb',
