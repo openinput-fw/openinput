@@ -125,7 +125,8 @@ class BuildSystemBuilder():
             nw.newline()
 
             # helper functions
-            src = lambda f: os.path.join('$root', 'src', f)
+            src_dir = os.path.join('$root', 'src')
+            src = lambda f: os.path.join(src_dir, f)
             built = lambda f: os.path.join('$builddir', f)
             remove_ext = lambda file: file.split('.')[0]
             cc = lambda file, **kwargs: nw.build(
@@ -148,6 +149,8 @@ class BuildSystemBuilder():
                 f'-I{src(path)}' for path in self._target.include
             ] + [
                 f'-include {src(path)}' for path in self._target.include_files
+            ] + [
+                f'-I{src_dir}',
             ]))
             nw.variable('ld_flags', self._target.ld_flags)
             nw.newline()
