@@ -21,6 +21,8 @@ class NativeFamily(BuildConfiguration):
             '-pipe',
             '-fno-plt',
             '-O2',
+            '-fsanitize=address',
+            '-g',
         ]
 
         if self.debug:
@@ -34,6 +36,8 @@ class NativeFamily(BuildConfiguration):
     def ld_flags(self) -> List[str]:
         return [
             '-Wl,--sort-common,--as-needed,-z,relro,-z,now',
+            '-fsanitize=address',
+            '-g',
         ]
 
 
