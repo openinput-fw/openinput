@@ -66,7 +66,6 @@ static char *usage = "commands:\n"
 
 struct uhid_dispatch_args_t {
 	struct hid_interface_t uhid;
-	int epoll;
 	int *exit;
 };
 
@@ -78,7 +77,7 @@ void *uhid_dispatch(void *thread_args)
 
 	while (!*args->exit) {
 		/* handle incoming packets */
-		event_count = epoll_wait(args->epoll, args->uhid.epoll_events, MAX_EPOLL_EVENTS, 100);
+		event_count = uhid_wait_for_events(args->uhid, 100);
 
 		for (size_t i = 0; i < event_count; i++) {
 			uhid_read_event(args->uhid, &event);
@@ -107,12 +106,8 @@ int main(void)
 {
 	struct hid_interface_t uhid;
 	struct output_report report;
-	struct uhid_event event;
 	struct uhid_create2_req create;
 
-	int epoll;
-	size_t event_count;
-	struct epoll_event epoll_event;
 	pthread_t uhid_dispatch_thread;
 	struct uhid_dispatch_args_t args;
 	int uhid_dispatch_exit = 0;
@@ -143,37 +138,11 @@ int main(void)
 	if (ret)
 		goto exit;
 
-	/* create epoll */
-	epoll = epoll_create1(0);
-	if (epoll == -1) {
-		fprintf(stderr, "error: failed to open epoll fd (%m)\n");
-		ret = -errno;
-		goto exit;
-	}
-
-	/* register uhid fd in epoll */
-	epoll_event.events = EPOLLIN;
-	epoll_event.data.fd = uhid.uhid_fd;
-	ret = epoll_ctl(epoll, EPOLL_CTL_ADD, uhid.uhid_fd, &epoll_event);
-	if (ret) {
-		fprintf(stderr, "error: failed to register uhid fd in epoll (%m)\n");
-		ret = -errno;
-		goto exit;
-	}
-
 	/* wait for the kernel to respond to the uhid creation request */
-	for (;;) {
-		event_count = epoll_wait(epoll, uhid.epoll_events, 1, 3000);
-		uhid_read_event(uhid, &event);
-		if (event.type == UHID_START)
-			break;
-		else
-			printf("got unexpected uhid event: %d\n", event.type);
-	}
+	uhid_wait_for_kernel_start(uhid);
 
 	/* start uhid dispatch thread */
 	args.uhid = uhid;
-	args.epoll = epoll;
 	args.exit = &uhid_dispatch_exit;
 	pthread_create(&uhid_dispatch_thread, NULL, uhid_dispatch, &args);
 
@@ -261,7 +230,7 @@ exit:
 	pthread_join(uhid_dispatch_thread, NULL);
 
 	free(line);
-	close(epoll);
+	close(uhid.epoll_fd);
 	close(uhid.uhid_fd);
 
 	return ret;
