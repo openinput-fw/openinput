@@ -1,0 +1,35 @@
+name: build
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - linux-uhid
+    steps:
+    - name: Update the system and install dependencies
+      run: pacman -Syu --noconfirm --noprogressbar --needed python-pip ninja gcc pkgconf readline git
+
+    - name: Install ninja_syntax
+      run: pip install ninja_syntax
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Configure
+      run: ./configure.py ${{ matrix.target }}
+
+    - name: Build
+      run: ninja
