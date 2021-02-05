@@ -90,6 +90,7 @@ class BuildSystemBuilder():
             raise ValueError(f'Target not found: {target}')
         self._target = self.get_targets()[target](**kwargs)
         self._validate_toolchain()
+        self._target.version = self.version
 
         # misc variables
 
@@ -144,7 +145,7 @@ class BuildSystemBuilder():
             nw.variable('ar', self._tool('ar'))
             nw.variable('objcopy', self._tool('objcopy'))
             nw.variable('size', self._tool('size'))
-            nw.variable('c_flags', self._target.c_flags)
+            nw.variable('c_flags', self._target.c_flags + self._target.vendor_c_flags)
             nw.variable('c_include_flags', ' '.join([
                 f'-I{src(path)}' for path in self._target.include
             ] + [
@@ -244,7 +245,7 @@ class BuildSystemBuilder():
         for name, var in {
             'target': self._target.name,
             'toolchain': self._target.toolchain or 'native',
-            'c_flags': ' '.join(self._target.c_flags) or '(empty)',
+            'c_flags': ' '.join(self._target.c_flags + self._target.vendor_c_flags) or '(empty)',
             'ld_flags': ' '.join(self._target.ld_flags) or '(empty)',
         }.items():
             print('{:>24}: {}'.format(name, var))

@@ -84,6 +84,9 @@ class _BuildConfiguration():
         **kwargs: Any,
     ) -> None:
         self.__log = logging.getLogger(self.__class__.__name__)
+        self._max_len_fw_strings = 29
+        self._vendor = 'openinput-git'
+        self._version = 'UNKOWN'
 
         self.debug = debug
 
@@ -233,6 +236,33 @@ class _BuildConfiguration():
     @ld_flags.setter
     def ld_flags(self, value: List[str]) -> None:
         self._settings['ld_flags'] = value
+
+    @property
+    def vendor(self) -> str:
+        return self._vendor
+
+    @vendor.setter
+    def vendor(self, value: str) -> None:
+        if len(value) > self._max_len_fw_strings:
+            raise ValueError()
+        self._vendor = value
+
+    @property
+    def version(self) -> str:
+        return self._version
+
+    @version.setter
+    def version(self, value: str) -> None:
+        if len(value) > self._max_len_fw_strings:
+            raise ValueError()
+        self._version = value
+
+    @property
+    def vendor_c_flags(self) -> List[str]:
+        return [
+            fr'-DOI_VENDOR=\"{self.vendor}\"',
+            fr'-DOI_VERSION=\"{self.version}\"',
+        ]
 
 
 class _BuildConfigurationMeta(type):
