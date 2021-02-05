@@ -56,6 +56,7 @@ int protocol_is_supported(struct protocol_config_t config, u16 function);
 
 void protocol_dispatch(struct protocol_config_t config, u8 *buffer, size_t buffer_size);
 
+void protocol_send_report(struct protocol_config_t config, struct oi_report_t msg);
 void protocol_send_error(struct protocol_config_t config, struct oi_report_t msg, struct protocol_error_t error);
 
 /* protocol functions */
