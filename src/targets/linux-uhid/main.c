@@ -17,6 +17,8 @@
 
 #include "hal/hid.h"
 #include "platform/linux-uhid/uhid.h"
+#include "protocol/protocol.h"
+#include "protocol/reports.h"
 
 #define OI_MOUSE_REPORT_ID 0x01
 
@@ -70,6 +72,7 @@ static char *usage = "commands:\n"
 
 struct uhid_dispatch_args_t {
 	struct hid_interface_t uhid;
+	struct protocol_config_t config;
 	int *exit;
 };
 
@@ -87,7 +90,7 @@ void *uhid_dispatch(void *thread_args)
 			uhid_read_event(args->uhid, &event);
 			switch (event.type) {
 				case UHID_OUTPUT:
-					/* TODO */
+					protocol_dispatch(args->config, event.u.output.data, event.u.output.size);
 					break;
 				case UHID_GET_REPORT:
 					/* TODO */
@@ -115,6 +118,11 @@ int main(void)
 	pthread_t uhid_dispatch_thread;
 	struct uhid_dispatch_args_t args;
 	int uhid_dispatch_exit = 0;
+	unsigned int rdesc_size = 0;
+
+	u16 supported_functions[] = {0x0000, 0x0001};
+	struct protocol_config_t config = {
+		"openinput Linux UHID Device", supported_functions, sizeof(supported_functions) / sizeof(u16), &uhid};
 
 	char *line = NULL;
 	char *arg = NULL;
@@ -132,9 +140,12 @@ int main(void)
 
 	/* create uhid device */
 	memset(&create, 0, sizeof(create));
-	strcpy(create.name, "OpenInput Linux UHID Device");
-	memcpy(create.rd_data, rdesc, sizeof(rdesc));
-	create.rd_size = sizeof(rdesc);
+	strcpy(create.name, config.device_name);
+	memcpy(create.rd_data, oi_rdesc, sizeof(oi_rdesc)); /* protocol report descriptor */
+	rdesc_size += sizeof(oi_rdesc);
+	memcpy(create.rd_data + rdesc_size, rdesc, sizeof(rdesc)); /* mouse report descriptor */
+	rdesc_size += sizeof(rdesc);
+	create.rd_size = rdesc_size;
 	create.bus = 0x02;
 	create.vendor = 0x9999;
 	create.product = 0x9999;
@@ -147,6 +158,7 @@ int main(void)
 
 	/* start uhid dispatch thread */
 	args.uhid = uhid;
+	args.config = config;
 	args.exit = &uhid_dispatch_exit;
 	pthread_create(&uhid_dispatch_thread, NULL, uhid_dispatch, &args);
 
