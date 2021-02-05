@@ -3,17 +3,6 @@
 #include "protocol/reports.h"
 #include "util/types.h"
 
-struct protocol_config_t {
-	char *device_name;
-	u16 *supported_functions;
-	size_t supported_functions_lenght;
-	void *hid_interface;
-};
-
-int protocol_is_supported(struct protocol_config_t config, u16 function);
-
-void protocol_dispatch(struct protocol_config_t config, u8 *buffer, size_t buffer_size);
-
 #define FN(page, function) (page << 8) + function
 
 /* version */
@@ -37,6 +26,37 @@ void protocol_dispatch(struct protocol_config_t config, u8 *buffer, size_t buffe
 /* info page (0x00) functions */
 #define OI_FUNCTION_VERSION 0x00
 #define OI_FUNCTION_FW_INFO 0x01
+
+/* error page (0xFF) */
+#define OI_ERROR_INVALID_VALUE 0x01
+#define OI_ERROR_CUSTOM	       0xFE
+
+struct protocol_config_t {
+	char *device_name;
+	u16 *supported_functions;
+	size_t supported_functions_lenght;
+	void *hid_interface;
+};
+
+struct protocol_error_t {
+	u8 id;
+	union {
+		/* 0x01 - Invalid value */
+		struct {
+			u8 position;
+		} invalid_value;
+		/* 0xFE - Custom error */
+		struct {
+			char description[29];
+		};
+	} args;
+};
+
+int protocol_is_supported(struct protocol_config_t config, u16 function);
+
+void protocol_dispatch(struct protocol_config_t config, u8 *buffer, size_t buffer_size);
+
+void protocol_send_error(struct protocol_config_t config, struct oi_report_t msg, struct protocol_error_t error);
 
 /* protocol functions */
 void protocol_info_version(struct protocol_config_t config, struct oi_report_t msg);
