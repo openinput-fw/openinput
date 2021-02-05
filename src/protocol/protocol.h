@@ -3,8 +3,6 @@
 #include "protocol/reports.h"
 #include "util/types.h"
 
-#define FN(page, function) (page << 8) + function
-
 /* version */
 #define OI_PROTOCOL_VERSION_MAJOR 0
 #define OI_PROTOCOL_VERSION_MINOR 0
@@ -32,10 +30,13 @@
 #define OI_ERROR_UNSUPPORTED_FUNCTION 0x02
 #define OI_ERROR_CUSTOM		      0xFE
 
+struct supported_functions_t {
+	u8 *info;
+};
+
 struct protocol_config_t {
 	char *device_name;
-	u16 *supported_functions;
-	size_t supported_functions_lenght;
+	struct supported_functions_t functions;
 	void *hid_interface;
 };
 
@@ -53,7 +54,7 @@ struct protocol_error_t {
 	} args;
 };
 
-int protocol_is_supported(struct protocol_config_t config, u16 function);
+int protocol_is_supported(struct protocol_config_t config, u8 function_page, u8 function);
 
 void protocol_dispatch(struct protocol_config_t config, u8 *buffer, size_t buffer_size);
 

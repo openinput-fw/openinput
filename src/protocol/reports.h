@@ -6,7 +6,8 @@
 
 struct oi_report_t {
 	u8 id;
-	u16 function;
+	u8 function_page;
+	u8 function;
 	u8 data[29];
 } __attribute__((__packed__));
 
