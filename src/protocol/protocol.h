@@ -63,3 +63,4 @@ void protocol_send_error(struct protocol_config_t config, struct oi_report_t msg
 
 /* protocol functions */
 void protocol_info_version(struct protocol_config_t config, struct oi_report_t msg);
+void protocol_info_fw_info(struct protocol_config_t config, struct oi_report_t msg);
