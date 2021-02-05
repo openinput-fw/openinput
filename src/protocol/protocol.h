@@ -28,8 +28,9 @@
 #define OI_FUNCTION_FW_INFO 0x01
 
 /* error page (0xFF) */
-#define OI_ERROR_INVALID_VALUE 0x01
-#define OI_ERROR_CUSTOM	       0xFE
+#define OI_ERROR_INVALID_VALUE	      0x01
+#define OI_ERROR_UNSUPPORTED_FUNCTION 0x02
+#define OI_ERROR_CUSTOM		      0xFE
 
 struct protocol_config_t {
 	char *device_name;
