@@ -89,7 +89,9 @@ class _BuildConfiguration():
 
         # initialize settings
         self._settings = {
-            'source': [],
+            'source': [
+                'protocol/protocol.c',
+            ],
             'include': [rel_platform('generic')],
             'include_files': [],
             'c_flags': [],
