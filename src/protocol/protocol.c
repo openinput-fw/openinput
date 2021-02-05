@@ -65,6 +65,16 @@ void protocol_send_report(struct protocol_config_t config, struct oi_report_t ms
 	}
 }
 
+void protocol_send_error(struct protocol_config_t config, struct oi_report_t msg, struct protocol_error_t error)
+{
+	msg.data[0] = (msg.function & 0xFF00) >> 8;
+	msg.data[1] = msg.function & 0x00FF;
+	memcpy(msg.data + 2, &error.args, sizeof(msg.data - 2));
+	msg.function = FN(OI_PAGE_ERROR, error.id);
+
+	protocol_send_report(config, msg);
+}
+
 /*
  * 0x00 - info
  */
