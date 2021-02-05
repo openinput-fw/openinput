@@ -11,10 +11,24 @@
 
 #include <stdio.h>
 
-int protocol_is_supported(struct protocol_config_t config, u16 function)
+u8 *protocol_get_functions(struct protocol_config_t config, u8 function_page, size_t *functions_size)
 {
-	for (size_t i = 0; i < config.supported_functions_lenght; i++)
-		if (config.supported_functions[i] == function)
+	switch (function_page) {
+		case OI_PAGE_INFO:
+			*functions_size = sizeof(config.functions.info);
+			return config.functions.info;
+	}
+
+	return NULL;
+}
+
+int protocol_is_supported(struct protocol_config_t config, u8 function_page, u8 function)
+{
+	size_t functions_size;
+	u8 *functions = protocol_get_functions(config, function_page, &functions_size);
+
+	for (size_t i = 0; i < sizeof(functions); i++)
+		if (functions[i] == function)
 			return 1;
 	return 0;
 }
@@ -36,15 +50,20 @@ void protocol_dispatch(struct protocol_config_t config, u8 *buffer, size_t buffe
 	if (msg.id == OI_REPORT_LONG && buffer_size != OI_REPORT_LONG_SIZE)
 		return;
 
-	if (!protocol_is_supported(config, msg.function)) {
+	if (!protocol_is_supported(config, msg.function_page, msg.function)) {
 		protocol_send_error(config, msg, unsupported_error);
 		return;
 	}
 
-	switch (msg.function) {
-		case FN(OI_PAGE_INFO, OI_FUNCTION_VERSION):
-			protocol_info_version(config, msg);
-			break;
+	switch (msg.function_page) {
+		case OI_PAGE_INFO:
+			switch (msg.function) {
+				case OI_FUNCTION_VERSION:
+					protocol_info_version(config, msg);
+					break;
+				default:
+					break;
+			}
 
 		default:
 			break;
@@ -69,10 +88,11 @@ void protocol_send_report(struct protocol_config_t config, struct oi_report_t ms
 
 void protocol_send_error(struct protocol_config_t config, struct oi_report_t msg, struct protocol_error_t error)
 {
-	msg.data[0] = (msg.function & 0xFF00) >> 8;
-	msg.data[1] = msg.function & 0x00FF;
+	msg.data[0] = msg.function_page;
+	msg.data[1] = msg.function;
 	memcpy(msg.data + 2, &error.args, sizeof(msg.data - 2));
-	msg.function = FN(OI_PAGE_ERROR, error.id);
+	msg.function_page = OI_PAGE_ERROR;
+	msg.function = error.id;
 
 	protocol_send_report(config, msg);
 }
