@@ -22,6 +22,7 @@ int protocol_is_supported(struct protocol_config_t config, u16 function)
 void protocol_dispatch(struct protocol_config_t config, u8 *buffer, size_t buffer_size)
 {
 	struct oi_report_t msg;
+	struct protocol_error_t unsupported_error = {.id = OI_ERROR_UNSUPPORTED_FUNCTION};
 	int ret;
 
 	if (buffer_size < 1)
@@ -35,9 +36,10 @@ void protocol_dispatch(struct protocol_config_t config, u8 *buffer, size_t buffe
 	if (msg.id == OI_REPORT_LONG && buffer_size != OI_REPORT_LONG_SIZE)
 		return;
 
-	if (!protocol_is_supported(config, msg.function))
-		/* TODO: send error*/
+	if (!protocol_is_supported(config, msg.function)) {
+		protocol_send_error(config, msg, unsupported_error);
 		return;
+	}
 
 	switch (msg.function) {
 		case FN(OI_PAGE_INFO, OI_FUNCTION_VERSION):
