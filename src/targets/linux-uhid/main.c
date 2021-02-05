@@ -18,13 +18,16 @@
 #include "hal/hid.h"
 #include "platform/linux-uhid/uhid.h"
 
-static u8 rdesc[] = {
+#define OI_MOUSE_REPORT_ID 0x01
+
+static const u8 rdesc[] = {
 	/* clang-format off */
 	0x05, 0x01,	/* USAGE_PAGE (Generic Desktop) */
 	0x09, 0x02,	/* USAGE (Mouse) */
 	0xa1, 0x01,	/* COLLECTION (Application) */
 	0x09, 0x01,		/* USAGE (Pointer) */
 	0xa1, 0x00,		/* COLLECTION (Physical) */
+	0x85, 0x01,			/* REPORT_ID (0x01) */
 	0x05, 0x01,			/* USAGE_PAGE (Generic Desktop) */
 	0x09, 0x30,			/* USAGE (X) */
 	0x09, 0x31,			/* USAGE (Y) */
@@ -51,6 +54,7 @@ static u8 rdesc[] = {
 };
 
 struct output_report {
+	u8 id;
 	s8 x;
 	s8 y;
 	s8 wheel;
@@ -207,6 +211,7 @@ int main(void)
 
 			/* fill report */
 			memset(&report, 0, sizeof(report));
+			report.id = OI_MOUSE_REPORT_ID;
 			if (axis == 'X')
 				report.x = value;
 			else if (axis == 'Y')
