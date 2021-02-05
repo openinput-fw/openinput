@@ -146,7 +146,7 @@ int main(void)
 	memcpy(create.rd_data + rdesc_size, rdesc, sizeof(rdesc)); /* mouse report descriptor */
 	rdesc_size += sizeof(rdesc);
 	create.rd_size = rdesc_size;
-	create.bus = 0x02;
+	create.bus = 0x03;
 	create.vendor = 0x9999;
 	create.product = 0x9999;
 	ret = uhid_create(uhid, create);
