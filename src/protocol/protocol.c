@@ -61,6 +61,9 @@ void protocol_dispatch(struct protocol_config_t config, u8 *buffer, size_t buffe
 				case OI_FUNCTION_VERSION:
 					protocol_info_version(config, msg);
 					break;
+				case OI_FUNCTION_FW_INFO:
+					protocol_info_fw_info(config, msg);
+					break;
 				default:
 					break;
 			}
@@ -107,6 +110,27 @@ void protocol_info_version(struct protocol_config_t config, struct oi_report_t m
 	msg.data[0] = OI_PROTOCOL_VERSION_MAJOR;
 	msg.data[1] = OI_PROTOCOL_VERSION_MINOR;
 	msg.data[2] = OI_PROTOCOL_VERSION_PATCH;
+
+	protocol_send_report(config, msg);
+}
+
+void protocol_info_fw_info(struct protocol_config_t config, struct oi_report_t msg)
+{
+	struct protocol_error_t error = {.id = OI_ERROR_INVALID_VALUE};
+
+	msg.id = OI_REPORT_LONG;
+	switch (msg.data[0]) {
+		case 0: /* fw vendor */
+			snprintf(msg.data, sizeof(msg.data), "%s", OI_VENDOR);
+			break;
+		case 1: /* fw version */
+			snprintf(msg.data, sizeof(msg.data), "%s", OI_VERSION);
+			break;
+		default:
+			error.args.invalid_value.position = 0;
+			protocol_send_error(config, msg, error);
+			return;
+	}
 
 	protocol_send_report(config, msg);
 }
