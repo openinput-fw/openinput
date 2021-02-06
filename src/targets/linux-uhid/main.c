@@ -120,15 +120,13 @@ int main(void)
 	int uhid_dispatch_exit = 0;
 	unsigned int rdesc_size = 0;
 
-	struct supported_functions_t functions = {
-		/* clang-format off */
-		.info = (u8[]) {
-			OI_FUNCTION_VERSION,
-			OI_FUNCTION_FW_INFO
-		}
-		/* clang-format on */
+	struct protocol_config_t config;
+	/* clang-format off */
+	u8 info_functions[] = {
+		OI_FUNCTION_VERSION,
+		OI_FUNCTION_FW_INFO
 	};
-	struct protocol_config_t config = {"openinput Linux UHID Device", functions, &uhid};
+	/* clang-format on */
 
 	char *line = NULL;
 	char *arg = NULL;
@@ -138,6 +136,12 @@ int main(void)
 
 	char axis;
 	int value;
+
+	memset(&config, 0, sizeof(config));
+	config.device_name = "openinput Linux UHID Device";
+	config.hid_interface = &uhid;
+	config.functions[INFO] = info_functions;
+	config.functions_size[INFO] = sizeof(info_functions);
 
 	/* open uhid fd */
 	ret = uhid_open(&uhid);

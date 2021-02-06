@@ -30,13 +30,28 @@
 #define OI_ERROR_UNSUPPORTED_FUNCTION 0x02
 #define OI_ERROR_CUSTOM		      0xFE
 
-struct supported_functions_t {
-	u8 *info;
+/* supported functions enum */
+enum supported_pages_index {
+	INFO,
+	GIMMICKS,
+	DEBUG,
+	PAGE_COUNT /* this will hold the number of supported function pages */
 };
+
+static const u8 supported_pages[] = {
+	/* clang-format off */
+	OI_PAGE_INFO,
+	OI_PAGE_GIMMICKS,
+	OI_PAGE_DEBUG
+	/* clang-format on */
+};
+
+_Static_assert(sizeof(supported_pages) == PAGE_COUNT, "invalid size");
 
 struct protocol_config_t {
 	char *device_name;
-	struct supported_functions_t functions;
+	u8 *functions[PAGE_COUNT];
+	u8 functions_size[PAGE_COUNT];
 	void *hid_interface;
 };
 
