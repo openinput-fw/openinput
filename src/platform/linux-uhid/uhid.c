@@ -67,8 +67,6 @@ int uhid_read_event(struct hid_interface_t interface, struct uhid_event *event)
 	int ret;
 
 	memset(event, 0, sizeof(*event));
-	//printf("event %d\n", interface.epoll_events[i].events);
-	//printf("reading fd %d\n", interface.epoll_events[i].data.fd);
 	ret = read(interface.uhid_fd, event, sizeof(*event));
 	if (ret == -1) {
 		fprintf(stderr, "error: failed to read uhid event from epoll (%m)\n");
