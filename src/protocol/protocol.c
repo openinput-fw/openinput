@@ -7,9 +7,21 @@
 #include "protocol/reports.h"
 
 #include "hal/hid.h"
+#include "util/data.h"
 #include "util/types.h"
 
 #include <stdio.h>
+
+void protocol_get_functions_pages(struct protocol_config_t config, u8 *pages, u8 *pages_size)
+{
+	u8 index = 0;
+
+	for (u8 i = 0; i < PAGE_COUNT; i++)
+		if (config.functions[i] != NULL && config.functions_size[i] != 0)
+			pages[index++] = supported_pages[i];
+		else
+			--(*pages_size);
+}
 
 u8 *protocol_get_functions(struct protocol_config_t config, u8 function_page, size_t *functions_size)
 {
@@ -63,6 +75,12 @@ void protocol_dispatch(struct protocol_config_t config, u8 *buffer, size_t buffe
 					break;
 				case OI_FUNCTION_FW_INFO:
 					protocol_info_fw_info(config, msg);
+					break;
+				case OI_FUNCTION_SUPPORTED_FUNCTION_PAGES:
+					protocol_info_supported_function_pages(config, msg);
+					break;
+				case OI_FUNCTION_SUPPORTED_FUNCTIONS:
+					protocol_info_supported_functions(config, msg);
 					break;
 				default:
 					break;
@@ -134,6 +152,54 @@ void protocol_info_fw_info(struct protocol_config_t config, struct oi_report_t m
 			protocol_send_error(config, msg, error);
 			return;
 	}
+
+	protocol_send_report(config, msg);
+}
+
+void protocol_info_supported_function_pages(struct protocol_config_t config, struct oi_report_t msg)
+{
+	struct protocol_error_t error = {.id = OI_ERROR_INVALID_VALUE};
+	u8 copy_size;
+	u8 pages[PAGE_COUNT];
+	u8 pages_size = sizeof(pages);
+	u8 start_index = msg.data[0];
+
+	protocol_get_functions_pages(config, pages, &pages_size);
+
+	if (start_index >= pages_size) {
+		error.args.invalid_value.position = 0;
+		protocol_send_error(config, msg, error);
+		return;
+	}
+
+	msg.id = OI_REPORT_LONG;
+	copy_size = min(sizeof(msg.data) - 1, pages_size - start_index);
+	msg.data[0] = copy_size;
+	msg.data[1] = pages_size - start_index - copy_size;
+	memcpy(msg.data + 2, pages + start_index, copy_size);
+
+	protocol_send_report(config, msg);
+}
+
+void protocol_info_supported_functions(struct protocol_config_t config, struct oi_report_t msg)
+{
+	struct protocol_error_t error = {.id = OI_ERROR_INVALID_VALUE};
+	u8 copy_size;
+	size_t functions_size;
+	u8 *functions = protocol_get_functions(config, msg.data[0], &functions_size);
+	u8 start_index = msg.data[1];
+
+	if (start_index >= functions_size) {
+		error.args.invalid_value.position = 1;
+		protocol_send_error(config, msg, error);
+		return;
+	}
+
+	msg.id = OI_REPORT_LONG;
+	copy_size = min(sizeof(msg.data) - 1, functions_size - start_index);
+	msg.data[0] = copy_size;
+	msg.data[1] = functions_size - start_index - copy_size;
+	memcpy(msg.data + 2, functions + start_index, copy_size);
 
 	protocol_send_report(config, msg);
 }
