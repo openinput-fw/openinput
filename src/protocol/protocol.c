@@ -34,6 +34,13 @@ u8 *protocol_get_functions(struct protocol_config_t config, u8 function_page, si
 	return NULL;
 }
 
+u8 protocol_get_smallest_report_id(size_t args_size)
+{
+	if (args_size <= OI_REPORT_SHORT_DATA_MAX_SIZE - 2)
+		return OI_REPORT_SHORT;
+	return OI_REPORT_LONG;
+}
+
 int protocol_is_supported(struct protocol_config_t config, u8 function_page, u8 function)
 {
 	size_t functions_size;
@@ -172,8 +179,8 @@ void protocol_info_supported_function_pages(struct protocol_config_t config, str
 		return;
 	}
 
-	msg.id = OI_REPORT_LONG;
 	copy_size = min(sizeof(msg.data) - 1, pages_size - start_index);
+	msg.id = protocol_get_smallest_report_id(copy_size);
 	msg.data[0] = copy_size;
 	msg.data[1] = pages_size - start_index - copy_size;
 	memcpy(msg.data + 2, pages + start_index, copy_size);
@@ -195,8 +202,8 @@ void protocol_info_supported_functions(struct protocol_config_t config, struct o
 		return;
 	}
 
-	msg.id = OI_REPORT_LONG;
 	copy_size = min(sizeof(msg.data) - 1, functions_size - start_index);
+	msg.id = protocol_get_smallest_report_id(copy_size);
 	msg.data[0] = copy_size;
 	msg.data[1] = functions_size - start_index - copy_size;
 	memcpy(msg.data + 2, functions + start_index, copy_size);
