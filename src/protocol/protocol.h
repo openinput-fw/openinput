@@ -6,7 +6,7 @@
 /* version */
 #define OI_PROTOCOL_VERSION_MAJOR 0
 #define OI_PROTOCOL_VERSION_MINOR 0
-#define OI_PROTOCOL_VERSION_PATCH 0
+#define OI_PROTOCOL_VERSION_PATCH 1
 
 /* reports */
 #define OI_REPORT_SHORT	     0x20
