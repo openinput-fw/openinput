@@ -2,11 +2,12 @@
 
 <img src="assets/logo.svg" alt="" width="20%" align="right">
 
-Open source mouse firmware based on [libopencm3](https://github.com/libopencm3/libopencm3).
+Open source input device firmware.
 
 ### Supported Devices
 - Blue pill
 - Steelseries Rival 310
+- Linux UHID (mainly for testing/emulation)
 
 ### Instructions
 
@@ -15,27 +16,16 @@ Open source mouse firmware based on [libopencm3](https://github.com/libopencm3/l
 ninja
 ```
 
-The binaries will be located at `build/openinput.bin` and `build/openinput.elf`.
-
-The `target` option selects the linker script to be used (usually located in
-`/usr/arm-none-eabi/lib/`).
-
-
-If you want to flash them using the `st-flash` utility from the [stlink](https://github.com/texane/stlink)
-project you can simply run `ninja` with the `flash` target.
-
-```
-ninja flash
-```
-
-If you want to analyze the size of the complied elf file you can run `ninja size`.
+The binaries will be located at `build/`.
 
 ### Dependencies
 
-This project requires libopencm3 to be installed system-wide. I will only be able
-to provide techincal support for Archlinux.
+- Build system
+  - [`ninja_syntax`](https://pypi.org/project/ninja_syntax) (`pip install ninja_syntax`)
+  - [`ninja`](https://github.com/ninja-build/ninja) (`pacman -S ninja`)
+- Compiler
+  - GCC for the target architecture (eg. `pacman -S arm-none-eabi-gcc`)
 
-  - Build system: [meson](https://www.archlinux.org/packages/extra/any/meson/)
-  - Compiler: [arm-none-eabi-gcc](https://www.archlinux.org/packages/community/x86_64/arm-none-eabi-gcc/)
-  - libopencm3: [libopencm3](https://www.archlinux.org/packages/community/x86_64/libopencm3/)
-  - Flash (optional): [stlink](https://www.archlinux.org/packages/community/x86_64/stlink/)
+Currently, official support is only available for Arch Linux. If you are running into
+trouble, consider using a docker container with the
+[`archlinux` image](https://hub.docker.com/_/archlinux).
