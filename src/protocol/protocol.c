@@ -13,12 +13,12 @@
 
 u8 *protocol_get_functions(struct protocol_config_t config, u8 function_page, size_t *functions_size)
 {
-	switch (function_page) {
-		case OI_PAGE_INFO:
-			*functions_size = sizeof(config.functions.info);
-			return config.functions.info;
+	for (size_t i = 0; i < sizeof(supported_pages); i++) {
+		if (supported_pages[i] == function_page) {
+			*functions_size = config.functions_size[i];
+			return config.functions[i];
+		}
 	}
-
 	return NULL;
 }
 
@@ -27,7 +27,7 @@ int protocol_is_supported(struct protocol_config_t config, u8 function_page, u8 
 	size_t functions_size;
 	u8 *functions = protocol_get_functions(config, function_page, &functions_size);
 
-	for (size_t i = 0; i < sizeof(functions); i++)
+	for (size_t i = 0; i < functions_size; i++)
 		if (functions[i] == function)
 			return 1;
 	return 0;
