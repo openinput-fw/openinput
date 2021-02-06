@@ -124,7 +124,9 @@ int main(void)
 	/* clang-format off */
 	u8 info_functions[] = {
 		OI_FUNCTION_VERSION,
-		OI_FUNCTION_FW_INFO
+		OI_FUNCTION_FW_INFO,
+		OI_FUNCTION_SUPPORTED_FUNCTION_PAGES,
+		OI_FUNCTION_SUPPORTED_FUNCTIONS
 	};
 	/* clang-format on */
 

@@ -22,8 +22,10 @@
 #define OI_PAGE_ERROR		 0xFF
 
 /* info page (0x00) functions */
-#define OI_FUNCTION_VERSION 0x00
-#define OI_FUNCTION_FW_INFO 0x01
+#define OI_FUNCTION_VERSION		     0x00
+#define OI_FUNCTION_FW_INFO		     0x01
+#define OI_FUNCTION_SUPPORTED_FUNCTION_PAGES 0x02
+#define OI_FUNCTION_SUPPORTED_FUNCTIONS	     0x03
 
 /* error page (0xFF) */
 #define OI_ERROR_INVALID_VALUE	      0x01
@@ -79,3 +81,5 @@ void protocol_send_error(struct protocol_config_t config, struct oi_report_t msg
 /* protocol functions */
 void protocol_info_version(struct protocol_config_t config, struct oi_report_t msg);
 void protocol_info_fw_info(struct protocol_config_t config, struct oi_report_t msg);
+void protocol_info_supported_function_pages(struct protocol_config_t config, struct oi_report_t msg);
+void protocol_info_supported_functions(struct protocol_config_t config, struct oi_report_t msg);
