@@ -126,6 +126,9 @@ void protocol_info_fw_info(struct protocol_config_t config, struct oi_report_t m
 		case 1: /* fw version */
 			snprintf(msg.data, sizeof(msg.data), "%s", OI_VERSION);
 			break;
+		case 2: /* device name */
+			snprintf(msg.data, sizeof(msg.data), "%s", config.device_name);
+			break;
 		default:
 			error.args.invalid_value.position = 0;
 			protocol_send_error(config, msg, error);
