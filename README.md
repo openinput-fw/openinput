@@ -4,7 +4,7 @@
 
 Open source input device firmware.
 
-### Supported Devices
+### Supported Targets
 - Blue pill
 - Steelseries Rival 310
 - Linux UHID (mainly for testing/emulation)
