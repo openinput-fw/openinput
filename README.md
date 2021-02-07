@@ -29,3 +29,7 @@ The binaries will be located at `build/`.
 Currently, official support is only available for Arch Linux. If you are running into
 trouble, consider using a docker container with the
 [`archlinux` image](https://hub.docker.com/_/archlinux).
+
+### License
+
+The openinput firmware is licensed under the permissive [MIT](LICENSE) license.
