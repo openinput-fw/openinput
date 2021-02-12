@@ -25,3 +25,4 @@ repos:
     - id: clang-format
       args: [-i, -Werror]
     - id: clang-tidy
+      args: [-extra-arg=-Isrc, -extra-arg=-DOI_VENDOR="", -extra-arg=-DOI_VERSION=""]
