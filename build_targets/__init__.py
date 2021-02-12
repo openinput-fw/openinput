@@ -96,7 +96,7 @@ class _BuildConfiguration():
             'source': [
                 'protocol/protocol.c',
             ],
-            'include': [rel_platform('generic')],
+            'include': [],
             'include_files': [],
             'c_flags': [],
             'ld_flags': [],
