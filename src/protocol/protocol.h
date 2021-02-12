@@ -49,11 +49,9 @@ enum supported_pages_index {
 };
 
 static const u8 supported_pages[] = {
-	/* clang-format off */
 	OI_PAGE_INFO,
 	OI_PAGE_GIMMICKS,
-	OI_PAGE_DEBUG
-	/* clang-format on */
+	OI_PAGE_DEBUG,
 };
 
 _Static_assert(sizeof(supported_pages) == PAGE_COUNT, "invalid size");

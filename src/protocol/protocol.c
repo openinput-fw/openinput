@@ -58,7 +58,9 @@ int protocol_is_supported(struct protocol_config_t config, u8 function_page, u8 
 void protocol_dispatch(struct protocol_config_t config, u8 *buffer, size_t buffer_size)
 {
 	struct oi_report_t msg;
-	struct protocol_error_t unsupported_error = {.id = OI_ERROR_UNSUPPORTED_FUNCTION};
+	struct protocol_error_t unsupported_error = {
+		.id = OI_ERROR_UNSUPPORTED_FUNCTION,
+	};
 	int ret;
 
 	if (buffer_size < 1)
@@ -168,7 +170,9 @@ void protocol_info_fw_info(struct protocol_config_t config, struct oi_report_t m
 
 void protocol_info_supported_function_pages(struct protocol_config_t config, struct oi_report_t msg)
 {
-	struct protocol_error_t error = {.id = OI_ERROR_INVALID_VALUE};
+	struct protocol_error_t error = {
+		.id = OI_ERROR_INVALID_VALUE,
+	};
 	u8 copy_size;
 	u8 pages[PAGE_COUNT];
 	u8 pages_size = sizeof(pages);
@@ -193,7 +197,9 @@ void protocol_info_supported_function_pages(struct protocol_config_t config, str
 
 void protocol_info_supported_functions(struct protocol_config_t config, struct oi_report_t msg)
 {
-	struct protocol_error_t error = {.id = OI_ERROR_INVALID_VALUE};
+	struct protocol_error_t error = {
+		.id = OI_ERROR_INVALID_VALUE,
+	};
 	u8 copy_size;
 	size_t functions_size;
 	u8 *functions = protocol_get_functions(config, msg.data[0], &functions_size);

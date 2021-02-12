@@ -9,7 +9,10 @@
 
 struct hid_hal_t uhid_hal_init(struct uhid_data_t *data)
 {
-	struct hid_hal_t hal = {.send = uhid_hal_hid_send, .drv_data = data};
+	struct hid_hal_t hal = {
+		.send = uhid_hal_hid_send,
+		.drv_data = data,
+	};
 	return hal;
 }
 

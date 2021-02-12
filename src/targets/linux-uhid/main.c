@@ -129,14 +129,12 @@ int main(void)
 
 	struct hid_hal_t hid_hal;
 	struct protocol_config_t config;
-	/* clang-format off */
 	u8 info_functions[] = {
 		OI_FUNCTION_VERSION,
 		OI_FUNCTION_FW_INFO,
 		OI_FUNCTION_SUPPORTED_FUNCTION_PAGES,
-		OI_FUNCTION_SUPPORTED_FUNCTIONS
+		OI_FUNCTION_SUPPORTED_FUNCTIONS,
 	};
-	/* clang-format on */
 
 	char *line = NULL;
 	char *arg = NULL;
