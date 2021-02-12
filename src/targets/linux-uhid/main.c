@@ -91,10 +91,7 @@ void *uhid_dispatch(void *thread_args)
 		event_count = uhid_wait_for_events(args->uhid, 100);
 
 		for (size_t i = 0; i < event_count; i++) {
-			if (args->uhid.epoll_events[i].events != EPOLLIN)
-				continue;
-			if (uhid_read_event(args->uhid, &event))
-				continue;
+			uhid_read_event(args->uhid, &event);
 			switch (event.type) {
 				case UHID_OUTPUT:
 					protocol_dispatch(args->config, event.u.output.data, event.u.output.size);

@@ -90,10 +90,7 @@ void uhid_wait_for_kernel_start(struct uhid_data_t data)
 	struct uhid_event event;
 	for (;;) {
 		event_count = epoll_wait(data.epoll_fd, data.epoll_events, 1, 3000);
-		if (data.epoll_events[0].events != EPOLLIN)
-			continue;
-		if (uhid_read_event(data, &event))
-			continue;
+		uhid_read_event(data, &event);
 		if (event.type == UHID_START)
 			break;
 	}
