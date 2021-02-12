@@ -107,10 +107,10 @@ void protocol_send_report(struct protocol_config_t config, struct oi_report_t ms
 
 	switch (msg.id) {
 		case OI_REPORT_SHORT:
-			ret = hid_send(config.hid_interface, (u8 *) &msg, OI_REPORT_SHORT_SIZE);
+			ret = config.hid_hal.send(config.hid_hal, (u8 *) &msg, OI_REPORT_SHORT_SIZE);
 			break;
 		case OI_REPORT_LONG:
-			ret = hid_send(config.hid_interface, (u8 *) &msg, OI_REPORT_LONG_SIZE);
+			ret = config.hid_hal.send(config.hid_hal, (u8 *) &msg, OI_REPORT_LONG_SIZE);
 			break;
 		default:
 			break;

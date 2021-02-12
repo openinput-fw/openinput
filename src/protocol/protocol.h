@@ -3,6 +3,7 @@
  * SPDX-FileCopyrightText: 2021 Filipe Laíns <lains@riseup.net>
  */
 
+#include "hal/hid.h"
 #include "protocol/reports.h"
 #include "util/types.h"
 
@@ -61,7 +62,7 @@ struct protocol_config_t {
 	char *device_name;
 	u8 *functions[PAGE_COUNT];
 	u8 functions_size[PAGE_COUNT];
-	void *hid_interface;
+	struct hid_hal_t hid_hal;
 };
 
 struct protocol_error_t {

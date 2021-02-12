@@ -19,6 +19,7 @@
 #include "readline/readline.h"
 
 #include "hal/hid.h"
+#include "platform/linux-uhid/hal/hid.h"
 #include "platform/linux-uhid/uhid.h"
 #include "protocol/protocol.h"
 #include "protocol/reports.h"
@@ -74,7 +75,7 @@ static char *usage = "commands:\n"
 		     "\texit               \t\texit the program\n";
 
 struct uhid_dispatch_args_t {
-	struct hid_interface_t uhid;
+	struct uhid_data_t uhid;
 	struct protocol_config_t config;
 	int *exit;
 };
@@ -117,7 +118,7 @@ void *uhid_dispatch(void *thread_args)
 
 int main(void)
 {
-	struct hid_interface_t uhid;
+	struct uhid_data_t uhid;
 	struct output_report report;
 	struct uhid_create2_req create;
 
@@ -126,6 +127,7 @@ int main(void)
 	int uhid_dispatch_exit = 0;
 	unsigned int rdesc_size = 0;
 
+	struct hid_hal_t hid_hal;
 	struct protocol_config_t config;
 	/* clang-format off */
 	u8 info_functions[] = {
@@ -145,9 +147,10 @@ int main(void)
 	char axis;
 	int value;
 
+	/* create protocol config */
 	memset(&config, 0, sizeof(config));
 	config.device_name = "openinput Linux UHID Device";
-	config.hid_interface = &uhid;
+	config.hid_hal = uhid_hal_init(&uhid);
 	config.functions[INFO] = info_functions;
 	config.functions_size[INFO] = sizeof(info_functions);
 

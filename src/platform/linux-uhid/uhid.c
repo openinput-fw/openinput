@@ -14,9 +14,9 @@
 #include "uhid.h"
 #include "util/types.h"
 
-static int uhid_write(struct hid_interface_t interface, struct uhid_event event)
+static int uhid_write(struct uhid_data_t data, struct uhid_event event)
 {
-	size_t ret = write(interface.uhid_fd, &event, sizeof(event));
+	size_t ret = write(data.uhid_fd, &event, sizeof(event));
 	if (ret < 0) {
 		fprintf(stderr, "error: couldn't write to uhid (%m)\n");
 		return -errno;
@@ -27,28 +27,28 @@ static int uhid_write(struct hid_interface_t interface, struct uhid_event event)
 	return 0;
 }
 
-int uhid_open(struct hid_interface_t *interface)
+int uhid_open(struct uhid_data_t *data)
 {
 	struct epoll_event epoll_event;
 
 	/* open uhid fd */
-	interface->uhid_fd = open("/dev/uhid", O_RDWR | O_CLOEXEC);
-	if (interface->uhid_fd == -1) {
+	data->uhid_fd = open("/dev/uhid", O_RDWR | O_CLOEXEC);
+	if (data->uhid_fd == -1) {
 		fprintf(stderr, "error: cannot open uhid (%m)\n");
 		return -errno;
 	}
 
 	/* create epoll */
-	interface->epoll_fd = epoll_create1(0);
-	if (interface->epoll_fd == -1) {
+	data->epoll_fd = epoll_create1(0);
+	if (data->epoll_fd == -1) {
 		fprintf(stderr, "error: failed to open epoll fd (%m)\n");
 		return -errno;
 	}
 
 	/* register uhid fd in epoll */
 	epoll_event.events = EPOLLIN;
-	epoll_event.data.fd = interface->uhid_fd;
-	if (epoll_ctl(interface->epoll_fd, EPOLL_CTL_ADD, interface->uhid_fd, &epoll_event)) {
+	epoll_event.data.fd = data->uhid_fd;
+	if (epoll_ctl(data->epoll_fd, EPOLL_CTL_ADD, data->uhid_fd, &epoll_event)) {
 		fprintf(stderr, "error: failed to register uhid fd in epoll (%m)\n");
 		return -errno;
 	}
@@ -56,21 +56,21 @@ int uhid_open(struct hid_interface_t *interface)
 	return 0;
 }
 
-int uhid_create(struct hid_interface_t interface, struct uhid_create2_req request)
+int uhid_create(struct uhid_data_t data, struct uhid_create2_req request)
 {
 	struct uhid_event event = {UHID_CREATE2, .u.create2 = request};
-	int ret = uhid_write(interface, event);
+	int ret = uhid_write(data, event);
 	if (ret)
 		fprintf(stderr, "failed to create uhid device\n");
 	return ret;
 }
 
-int uhid_read_event(struct hid_interface_t interface, struct uhid_event *event)
+int uhid_read_event(struct uhid_data_t data, struct uhid_event *event)
 {
 	int ret;
 
 	memset(event, 0, sizeof(*event));
-	ret = read(interface.uhid_fd, event, sizeof(*event));
+	ret = read(data.uhid_fd, event, sizeof(*event));
 	if (ret == -1) {
 		fprintf(stderr, "error: failed to read uhid event from epoll (%m)\n");
 		return -errno;
@@ -84,27 +84,27 @@ int uhid_read_event(struct hid_interface_t interface, struct uhid_event *event)
 	return 0;
 }
 
-void uhid_wait_for_kernel_start(struct hid_interface_t interface)
+void uhid_wait_for_kernel_start(struct uhid_data_t data)
 {
 	int event_count;
 	struct uhid_event event;
 	for (;;) {
-		event_count = epoll_wait(interface.epoll_fd, interface.epoll_events, 1, 3000);
-		if (interface.epoll_events[0].events != EPOLLIN)
+		event_count = epoll_wait(data.epoll_fd, data.epoll_events, 1, 3000);
+		if (data.epoll_events[0].events != EPOLLIN)
 			continue;
-		if (uhid_read_event(interface, &event))
+		if (uhid_read_event(data, &event))
 			continue;
 		if (event.type == UHID_START)
 			break;
 	}
 }
 
-int uhid_wait_for_events(struct hid_interface_t interface, int timeout)
+int uhid_wait_for_events(struct uhid_data_t data, int timeout)
 {
-	return epoll_wait(interface.epoll_fd, interface.epoll_events, MAX_EPOLL_EVENTS, timeout);
+	return epoll_wait(data.epoll_fd, data.epoll_events, MAX_EPOLL_EVENTS, timeout);
 }
 
-int uhid_send(struct hid_interface_t interface, u8 *buffer, size_t buffer_len)
+int uhid_send(struct uhid_data_t data, u8 *buffer, size_t buffer_len)
 {
 	int ret;
 	struct uhid_event event = {
@@ -118,7 +118,7 @@ int uhid_send(struct hid_interface_t interface, u8 *buffer, size_t buffer_len)
 		return -EINVAL;
 	}
 
-	ret = uhid_write(interface, event);
+	ret = uhid_write(data, event);
 	if (ret)
 		fprintf(stderr, "failed to send report to device\n");
 	return ret;
