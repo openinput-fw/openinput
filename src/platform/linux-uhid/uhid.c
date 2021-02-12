@@ -90,7 +90,10 @@ void uhid_wait_for_kernel_start(struct hid_interface_t interface)
 	struct uhid_event event;
 	for (;;) {
 		event_count = epoll_wait(interface.epoll_fd, interface.epoll_events, 1, 3000);
-		uhid_read_event(interface, &event);
+		if (interface.epoll_events[0].events != EPOLLIN)
+			continue;
+		if (uhid_read_event(interface, &event))
+			continue;
 		if (event.type == UHID_START)
 			break;
 	}
