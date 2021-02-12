@@ -2,7 +2,7 @@
 
 <img src="assets/logo.svg" alt="" width="20%" align="right">
 
-Open source input device firmware.
+Open source firmware for input devices.
 
 ### Supported Targets
 - Blue pill
