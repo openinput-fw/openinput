@@ -1,6 +1,6 @@
 # openinput
 
-<img src="assets/logo.svg" alt="" width="20%" align="right">
+<img src="docs/assets/logo.svg" alt="" width="20%" align="right">
 
 Open source firmware for input devices.
 
