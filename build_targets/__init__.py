@@ -10,7 +10,7 @@ import os.path
 import subprocess
 import typing
 
-from typing import Any, Callable, Dict, List, Optional, Tuple, Type
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 
 
 abs_root = os.path.dirname(os.path.dirname(__file__))
@@ -52,27 +52,47 @@ class BuildConfigurationError(Exception):
     pass
 
 
-class _BuildConfiguration():
+class _SettingsDict(typing.TypedDict):
+    source: List[str]
+    include: List[str]
+    include_files: List[str]
+    c_flags: List[str]
+    ld_flags: List[str]
+    external_include: List[str]
+    dependencies: List[BuildDependency]
+
+
+_setting_keys = (
+    'source',
+    'include',
+    'include_files',
+    'c_flags',
+    'ld_flags',
+    'dependencies',
+    'external_include',
+)
+
+
+class _BuildConfigurationBase():
     # default attributes
     name: Optional[str] = None
     platform: Optional[str] = None
     bin_extension: Optional[str] = None
-    toolchain: Optional[str] = None
     generate_bin = True
     generate_hex = True
 
     # type hints
-    _settings: Dict[str, List[str]]
+    _settings: _SettingsDict
 
     # internal , see _BuildConfigurationMeta
     _setting_calls: Optional[Dict[
         str,
-        Callable[[_BuildConfiguration], List[str]]
+        Callable[[_BuildConfigurationBase], List[Union[str, BuildDependency]]]
     ]] = None
     _init_calls: Dict[
-        Type[_BuildConfiguration],
+        Type[_BuildConfigurationBase],
         Callable[
-            [_BuildConfiguration, Dict[str, Any]],
+            [_BuildConfigurationBase, Dict[str, Any]],
             None,
         ],
     ] = {}
@@ -80,7 +100,6 @@ class _BuildConfiguration():
     def __init__(
         self,
         debug: bool = False,
-        toolchain: Optional[str] = None,
         linker_script: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
@@ -93,13 +112,13 @@ class _BuildConfiguration():
 
         # initialize settings
         self._settings = {
-            'source': [
-                'protocol/protocol.c',
-            ],
+            'source': [],
             'include': [],
             'include_files': [],
             'c_flags': [],
             'ld_flags': [],
+            'dependencies': [],
+            'external_include': [],
         }
 
         # add linker script to ld_flags
@@ -115,7 +134,7 @@ class _BuildConfiguration():
         for each class and append the settings
         '''
         for _cls in reversed(self.__class__.__mro__):  # __mro__ holds the inheritance chain
-            cls = typing.cast(Type[_BuildConfiguration], _cls)
+            cls = typing.cast(Type[_BuildConfigurationBase], _cls)
             self.__log.debug(f'iterating over {cls}...')
             # call init, if defined
             if cls in self._init_calls:
@@ -123,15 +142,10 @@ class _BuildConfiguration():
                 self._init_calls[cls](self, kwargs)
             # append settings, if defined
             if hasattr(cls, '_setting_calls') and cls._setting_calls is not None:
-                for setting in ('source', 'include', 'include_files', 'c_flags', 'ld_flags'):
+                for setting in _setting_keys:
                     if setting in cls._setting_calls:
-                        self._settings[setting] += cls._setting_calls[setting](self)
-                        self.__log.debug(f'appending {setting}, new value: {self._settings[setting]}')
-
-        if toolchain is not None:
-            self.toolchain = toolchain
-        if self.toolchain is None:
-            raise BuildConfigurationError('No toolchain specified')
+                        self._settings[setting] += cls._setting_calls[setting](self)  # type: ignore
+                        self.__log.debug(f'appending {setting}, new value: {self._settings.get(setting)}')
 
     @property
     def main(self) -> str:
@@ -291,7 +305,7 @@ class _BuildConfigurationMeta(type):
     def __new__(mcs, name: str, bases: Tuple[Any], dic: Dict[str, Any]):  # type: ignore
         # save setting callbacks into _settings dictionary
         dic['_setting_calls'] = {}
-        for setting in ('source', 'include', 'include_files', 'c_flags', 'ld_flags'):
+        for setting in _setting_keys:
             if setting in dic:
                 dic['_setting_calls'][setting] = dic.pop(setting)
 
@@ -308,5 +322,58 @@ class _BuildConfigurationMeta(type):
         return cls
 
 
+class _BuildConfiguration(_BuildConfigurationBase):
+    toolchain: Optional[str] = None
+
+    def __init__(
+        self,
+        debug: bool = False,
+        toolchain: Optional[str] = None,
+        linker_script: Optional[str] = None,
+        **kwargs: Any,
+    ):
+        super().__init__(debug, linker_script, **kwargs)
+
+        self.source += [
+            'protocol/protocol.c',
+        ]
+
+        # some dependencies require us to define headers, let's add the target path to their include flags
+        assert self.name
+        for dependency in self.dependencies:
+            dependency.include += [
+                os.path.join('src', 'targets', self.name),
+            ]
+
+        if toolchain is not None:
+            self.toolchain = toolchain
+        if self.toolchain is None:
+            raise BuildConfigurationError('No toolchain specified')
+
+    @property
+    def dependencies(self) -> List[BuildDependency]:
+        return self._settings['dependencies']
+
+    @dependencies.setter
+    def dependencies(self, value: List[BuildDependency]) -> None:
+        self._settings['dependencies'] = value
+
+
 class BuildConfiguration(_BuildConfiguration, metaclass=_BuildConfigurationMeta):
+    pass
+
+
+class _BuildDependency(_BuildConfigurationBase):
+    name: str
+
+    @property
+    def external_include(self) -> List[str]:
+        return self._settings['external_include']
+
+    @external_include.setter
+    def external_include(self, value: List[str]) -> None:
+        self._settings['external_include'] = value
+
+
+class BuildDependency(_BuildDependency, metaclass=_BuildConfigurationMeta):
     pass

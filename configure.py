@@ -134,6 +134,9 @@ class BuildSystemBuilder():
             cc = lambda file, **kwargs: nw.build(
                 built(f'{remove_ext(file)}.o'), 'cc', src(file), **kwargs
             )
+            cc_abs = lambda file, **kwargs: nw.build(
+                built(f'{remove_ext(file)}.o'), 'cc', file, **kwargs
+            )
             extension = lambda file, ext: built(os.path.join(
                 'out', '.'.join(filter(None, [file, ext]))
             ))
@@ -153,6 +156,10 @@ class BuildSystemBuilder():
                 f'-include {src(path)}' for path in self._target.include_files
             ] + [
                 f'-I{src_dir}',
+            ] + [
+                f'-I{path}'
+                for dependency in self._target.dependencies
+                for path in dependency.external_include
             ]))
             nw.variable('ld_flags', self._target.ld_flags)
             nw.newline()
@@ -195,13 +202,27 @@ class BuildSystemBuilder():
                 )
                 nw.newline()
 
-            # compile sources into objects
             objs = []
+
+            # compile dependency sources into objects
+            for dependency in self._target.dependencies:
+                nw.comment(f'{dependency.name} objects')
+                nw.newline()
+                c_include_flags = [f'-I{path}' for path in dependency.include]
+                for file in set(dependency.source):
+                    objs += cc_abs(file, variables=[('c_include_flags', c_include_flags)])
+                nw.newline()
+
+            # compile target sources into objects
+            nw.comment('target objects')
+            nw.newline()
             for file in set(self._target.source):
                 objs += cc(file)
             nw.newline()
 
             # create executable
+            nw.comment('target')
+            nw.newline()
             out_name = '-'.join(filter(None, [
                 'openinput',
                 self._target.name,
@@ -248,8 +269,10 @@ class BuildSystemBuilder():
             'toolchain': self._target.toolchain or 'native',
             'c_flags': ' '.join(self._target.c_flags + self._target.vendor_c_flags) or '(empty)',
             'ld_flags': ' '.join(self._target.ld_flags) or '(empty)',
+            'dependencies': ''.join([dependency.name for dependency in self._target.dependencies]) or None
         }.items():
-            print('{:>24}: {}'.format(name, var))
+            if var:
+                print('{:>24}: {}'.format(name, var))
 
         if self._debug:
             for name, entries in {
