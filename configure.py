@@ -206,6 +206,8 @@ class BuildSystemBuilder():
 
             # compile dependency sources into objects
             for dependency in self._target.dependencies:
+                if not dependency.source:
+                    continue
                 nw.comment(f'{dependency.name} objects')
                 nw.newline()
                 c_include_flags = [f'-I{path}' for path in dependency.include]
