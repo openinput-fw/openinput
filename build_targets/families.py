@@ -6,7 +6,8 @@ import os.path
 
 from typing import Any, Dict, List
 
-from . import BuildConfiguration
+from . import BuildConfiguration, BuildDependency
+from .dependencies import TinyUSBDependency
 
 
 class NativeFamily(BuildConfiguration):
@@ -76,4 +77,9 @@ class STM32F1Family(BuildConfiguration):
             '-mtune=cortex-m3',
             '-mthumb',
             '--specs=nosys.specs',
+        ]
+
+    def dependencies(self) -> List[BuildDependency]:
+        return [
+            TinyUSBDependency(),
         ]
