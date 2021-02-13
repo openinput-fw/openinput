@@ -28,6 +28,7 @@ The binaries will be located at `build/`.
 - Build system
   - [`ninja_syntax`](https://pypi.org/project/ninja_syntax) (`pip install ninja_syntax`)
   - [`ninja`](https://github.com/ninja-build/ninja) (`pacman -S ninja`)
+  - [`pkgconf`](https://github.com/pkgconf/pkgconf) (`pacman -S pkgconf`)
 - Compiler
   - GCC for the target architecture (eg. `pacman -S arm-none-eabi-gcc`)
 
