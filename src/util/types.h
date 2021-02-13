@@ -3,6 +3,8 @@
  * SPDX-FileCopyrightText: 2021 Filipe Laíns <lains@riseup.net>
  */
 
+#pragma once
+
 #include <stddef.h>
 #include <stdint.h>
 

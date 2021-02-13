@@ -3,6 +3,8 @@
  * SPDX-FileCopyrightText: 2021 Filipe Laíns <lains@riseup.net>
  */
 
+#pragma once
+
 #include "hal/hid.h"
 #include "protocol/reports.h"
 #include "util/types.h"
