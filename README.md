@@ -23,6 +23,9 @@ ninja
 
 The binaries will be located at `build/`.
 
+Please see the [documentation](https://openinput.readthedocs.io/en/latest/)
+for more details.
+
 ### Dependencies
 
 - Build system
