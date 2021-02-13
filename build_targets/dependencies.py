@@ -4,7 +4,7 @@
 import os.path
 import pathlib
 
-from typing import List
+from typing import Dict, List
 
 from . import BuildDependency
 
@@ -32,4 +32,26 @@ class TinyUSBDependency(BuildDependency):
     def external_include(self) -> List[str]:
         return [
             rel_external('tinyusb', 'src'),
+        ]
+
+
+class CMSISDependency(BuildDependency):
+    name = 'cmsis-5'
+
+    def init(self, settings: Dict[str, str]) -> None:
+        self._components = settings['components']
+
+    def external_include(self) -> List[str]:
+        return [
+            rel_external(self.name, 'CMSIS', component, 'Include')
+            for component in self._components
+        ]
+
+
+class CMSISDeviceSTM32F1Dependency(BuildDependency):
+    name = 'cmsis-device-stm32f1'
+
+    def external_include(self) -> List[str]:
+        return [
+            rel_external(self.name, 'Include'),
         ]
