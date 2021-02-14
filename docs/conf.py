@@ -48,9 +48,12 @@ exclude_patterns = []
 # a list of builtin themes.
 #
 html_theme = 'furo'
-html_title = ''
+html_title = 'openinput'
 html_logo = 'assets/logo.svg'
 html_favicon = 'assets/logo.svg'
+html_theme_options = {
+    'sidebar_hide_name': True,
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
