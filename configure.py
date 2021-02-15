@@ -92,6 +92,8 @@ class BuildSystemBuilder():
         self._target = self.get_targets()[target](**kwargs)
         self._validate_toolchain()
         self._target.version = self.version
+        if self._is_git_dirty:
+            self._target.version += '.dirty'
 
         # misc variables
 
