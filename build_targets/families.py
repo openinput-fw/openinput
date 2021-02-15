@@ -63,6 +63,11 @@ class STM32F1Family(BuildConfiguration):
         self.generate_bin = True
         self.generate_hex = True
 
+    def source(self) -> List[str]:
+        return self.platform_files(
+            'rcc.c',
+        )
+
     def c_flags(self) -> List[str]:
         return [
             '-Os',
