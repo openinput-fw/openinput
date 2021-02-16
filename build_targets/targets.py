@@ -48,6 +48,8 @@ class STM32F1GenericTarget(families.STM32F1Family):
         if self.config not in self.configs():
             raise BuildConfigurationError(f'Unknown configuration for {self.name}: {self.config}')
 
+        self.linker_script = os.path.join(self.name, f'{self.config}.ld')
+
     def source(self) -> List[str]:
         return self.target_files(
             'main.c',

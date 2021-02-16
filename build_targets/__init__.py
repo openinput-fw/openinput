@@ -121,13 +121,7 @@ class _BuildConfigurationBase():
             'external_include': [],
         }
 
-        # add linker script to ld_flags
-        if linker_script:
-            linker_scripts_dir = os.path.join(abs_root, 'build-targets', 'linker')
-            self.ld_flags += [
-                f'-L{linker_scripts_dir}',
-                f'-T{linker_script}',
-            ]
+        self.linker_script = linker_script
 
         '''
         do the magic init stuff... iterate of inheritnance chain, call init()
@@ -146,6 +140,16 @@ class _BuildConfigurationBase():
                     if setting in cls._setting_calls:
                         self._settings[setting] += cls._setting_calls[setting](self)  # type: ignore
                         self.__log.debug(f'appending {setting}, new value: {self._settings.get(setting)}')
+
+        # add linker script to ld_flags
+        if self.linker_script:
+            linker_scripts_dir = os.path.join('build-targets', 'linker')
+            if not os.path.isfile(p := os.path.join(linker_scripts_dir, self.linker_script)):
+                raise FileNotFoundError(f'Linker script not found: {p}')
+            self.ld_flags += [
+                f'-L{linker_scripts_dir}',
+                f'-T{self.linker_script}',
+            ]
 
     @property
     def main(self) -> str:
