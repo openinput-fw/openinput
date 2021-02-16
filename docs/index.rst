@@ -34,7 +34,7 @@ a `libratbag`_ driver.
    - Linux UHID target |:+1:|
    - Steelseries Rival 310 target |:hammer:|
    - Custom hardware target (supporting USB full speed - 8kHz report rate)
-   - Wireless target (device + receiver)
+   - Custom wireless target (device + receiver)
 
    - libratbag_ driver (allows use in piper_) |:+1:|
    - fwupd_ plugin (firmware updates)
