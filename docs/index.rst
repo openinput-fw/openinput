@@ -26,7 +26,7 @@ support for the Steelseries Rival 310.
 
 The protocol is also a work in progress. The base format and basic function
 discovery functions are defined, implemented in the firmware and implemented in
-a WIP `libratbag driver`_.
+a `libratbag`_ driver.
 
 
 .. admonition:: Roadmap
@@ -36,7 +36,7 @@ a WIP `libratbag driver`_.
    - Custom hardware target (supporting USB full speed - 8kHz report rate)
    - Wireless target (device + receiver)
 
-   - libratbag_ driver (allows use in piper_) |:hammer:|
+   - libratbag_ driver (allows use in piper_) |:+1:|
    - fwupd_ plugin (firmware updates)
 
    - Linux driver for native functions (battery reporting, etc.)
@@ -107,7 +107,6 @@ After this, you should have you shiny new object in ``build/out``.
    Protocol Definition <https://github.com/openinput-fw/openinput-protocol>
 
 
-.. _libratbag driver: https://github.com/libratbag/libratbag/pull/1128
 .. _libratbag: https://github.com/libratbag/libratbag
 .. _piper: https://github.com/libratbag/piper
 .. _fwupd: https://github.com/fwupd/fwupd
