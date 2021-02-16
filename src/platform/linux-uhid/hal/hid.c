@@ -7,7 +7,7 @@
 #include "platform/linux-uhid/hal/hid.h"
 #include "platform/linux-uhid/uhid.h"
 
-struct hid_hal_t uhid_hal_init(struct uhid_data_t *data)
+struct hid_hal_t uhid_hid_hal_init(struct uhid_data_t *data)
 {
 	struct hid_hal_t hal = {
 		.send = uhid_hal_hid_send,

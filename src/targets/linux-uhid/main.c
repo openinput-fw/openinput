@@ -145,7 +145,7 @@ int main(void)
 	/* create protocol config */
 	memset(&config, 0, sizeof(config));
 	config.device_name = "openinput Linux UHID Device";
-	config.hid_hal = uhid_hal_init(&uhid);
+	config.hid_hal = uhid_hid_hal_init(&uhid);
 	config.functions[INFO] = info_functions;
 	config.functions_size[INFO] = sizeof(info_functions);
 
