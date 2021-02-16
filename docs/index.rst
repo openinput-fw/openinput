@@ -11,7 +11,7 @@ configuration drivers to firmware updates to overall reliability.
 
 We hope to enable the community share and develop their creativity by allowing
 them to build and tinker with devices without having to worry about troublesome
-technical issues like software support, etc. *openinput* provides a underlying
+technical issues like software support, etc. *openinput* provides the underlying
 framework required to make all this possible.
 
 
