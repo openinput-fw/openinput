@@ -1,0 +1,37 @@
+# build system
+configure.py	@FFY00
+build-targets/	@FFY00
+
+# HAL
+src/hal/	@FFY00
+
+# util
+src/util/	@FFY00
+
+# protocol
+src/protocol/	@FFY00
+
+# divers
+src/driver/	@perigoso
+
+# platforms
+src/platform/linux-uhid/	@FFY00
+src/platform/stm32f1/		@perigoso @FFY00
+
+# targets
+src/targets/linux-uhid/		@FFY00
+src/targets/stm32f1-generic/	@perigoso @FFY00
+
+# docs
+README.md	@FFY00
+docs/		@FFY00
+
+# CI
+.github/			@FFY00
+.clang-format			@FFY00
+.pre-commit-config.yaml		@FFY00
+.readthedocs.yml		@FFY00
+setup.cfg			@FFY00
+
+# Python
+*.py		@FFY00
