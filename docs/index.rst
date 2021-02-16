@@ -61,11 +61,12 @@ dependencies required to run the build system.
 - ninja_ (``pacman -S ninja``)
 - pkgconf_ (``pacman -S pkgconf``) (for native targets)
 
-You will also need a copy of the GCC compiler for your target arquitecture.
+You will also need a copy of the GCC compiler, binutils and a standard C library
+for your target arquitecture.
 
-- Native compiler (``pacman -S gcc``)
+- Native (``pacman -S gcc binutils glibc``)
    - Linux UHID (``linux-uhid``)
-- ``arm-none-eabi`` (``pacman -S arm-none-eabi-gcc``)
+- ``arm-none-eabi`` (``pacman -S arm-none-eabi-gcc arm-none-eabi-bintuils arm-none-eabi-newlib``)
    - STM32F1 (``stm32f1-generic``)
       - Bluepill
       - Steelseries Rival 310
