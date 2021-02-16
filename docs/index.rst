@@ -72,7 +72,7 @@ for your target arquitecture.
       - Steelseries Rival 310
 
 Some targets might also depend on external projects, which are included as git
-submodules. You will need to 
+submodules. You will need to fetch the submodules.
 
 
 .. code-block:: console
