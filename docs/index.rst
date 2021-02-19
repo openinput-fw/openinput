@@ -62,7 +62,7 @@ dependencies required to run the build system.
 - pkgconf_ (``pacman -S pkgconf``) (for native targets)
 
 You will also need a copy of the GCC compiler, binutils and a standard C library
-for your target arquitecture.
+for your target architecture.
 
 - Native (``pacman -S gcc binutils glibc``)
    - Linux UHID (``linux-uhid``)
