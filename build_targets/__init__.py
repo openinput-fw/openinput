@@ -143,7 +143,7 @@ class _BuildConfigurationBase():
 
         # add linker script to ld_flags
         if self.linker_script:
-            linker_scripts_dir = os.path.join('build-targets', 'linker')
+            linker_scripts_dir = os.path.join('build_targets', 'linker')
             if not os.path.isfile(p := os.path.join(linker_scripts_dir, self.linker_script)):
                 raise FileNotFoundError(f'Linker script not found: {p}')
             self.ld_flags += [
