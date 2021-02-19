@@ -273,7 +273,7 @@ class BuildSystemBuilder():
             'toolchain': self._target.toolchain or 'native',
             'c_flags': ' '.join(self._target.c_flags + self._target.vendor_c_flags) or '(empty)',
             'ld_flags': ' '.join(self._target.ld_flags) or '(empty)',
-            'dependencies': ''.join([dependency.name for dependency in self._target.dependencies]) or None
+            'dependencies': ' '.join([dependency.name for dependency in self._target.dependencies]) or None
         }.items():
             if var:
                 print('{:>24}: {}'.format(name, var))
