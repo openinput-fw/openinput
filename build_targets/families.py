@@ -65,6 +65,7 @@ class STM32F1Family(BuildConfiguration):
 
     def source(self) -> List[str]:
         return self.platform_files(
+            'gpio.c',
             'rcc.c',
             'startup.c',
         )
