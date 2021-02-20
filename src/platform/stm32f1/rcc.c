@@ -61,7 +61,8 @@ void rcc_init(enum stm32f1_external_clock_value clock)
 	}
 
 	RCC->CR |= RCC_CR_HSEON | RCC_CR_CSSON; /* enable HSE and CSS */
-	while (!(RCC->CR & RCC_CR_HSERDY)) continue; /* wait for HSE to be ready */
+	while (!(RCC->CR & RCC_CR_HSERDY)) /* wait for HSE to be ready */
+		continue;
 
 	RCC->CFGR &= ~RCC_CFGR_PLLXTPRE; /* don't divide in PLLXTPRE */
 
@@ -73,7 +74,8 @@ void rcc_init(enum stm32f1_external_clock_value clock)
 	/* set system clock switch to receive from the PLL */
 	REG_SET(RCC->CFGR, RCC_CFGR_SW, RCC_CFGR_SW_PLL);
 	/* wait for the system clock source to be the PLL */
-	while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL) continue;
+	while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL)
+		continue;
 
 	REG_SET(RCC->CFGR, RCC_CFGR_HPRE, RCC_CFGR_HPRE_DIV1); /* set AHB prescaler to /1 */
 	REG_SET(RCC->CFGR, RCC_CFGR_PPRE1, RCC_CFGR_PPRE1_DIV2); /* set APB1 prescaler to /2 */
@@ -83,7 +85,8 @@ void rcc_init(enum stm32f1_external_clock_value clock)
 	RCC->CR &= ~RCC_CR_HSION; /* disable HSI */
 
 	RCC->CSR |= RCC_CSR_LSION; /* enable LSI */
-	while (!(RCC->CSR & RCC_CSR_LSIRDY)) continue; /* wait for LSI to be ready */
+	while (!(RCC->CSR & RCC_CSR_LSIRDY)) /* wait for LSI to be ready */
+		continue;
 }
 
 void rcc_update_clock_tree()

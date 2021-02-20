@@ -29,7 +29,8 @@ extern u32 _end;
 /* Functions */
 void _default_isr()
 {
-	while (1) continue;
+	while (1)
+		continue;
 }
 
 void __attribute__((weak)) __libc_init_array()
@@ -66,7 +67,8 @@ void _reset_isr()
 	main();
 
 	__disable_irq();
-	while (1) continue;
+	while (1)
+		continue;
 }
 
 /* Vector table */
