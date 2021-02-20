@@ -5,8 +5,9 @@
 
 #pragma once
 
-#define min(a, b) (((a) < (b)) ? (a) : (b))
-#define max(a, b) (((a) > (b)) ? (a) : (b))
+#define min(a, b)   (((a) < (b)) ? (a) : (b))
+#define max(a, b)   (((a) > (b)) ? (a) : (b))
+#define sizeof_t(a) (sizeof(a) ? sizeof(a) / sizeof(a[0]) : 0)
 
 #define BIT(x) (1 << (x))
 
