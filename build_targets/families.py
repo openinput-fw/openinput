@@ -65,9 +65,10 @@ class STM32F1Family(BuildConfiguration):
 
     def source(self) -> List[str]:
         return self.platform_files(
-            'rcc.c',
             'startup.c',
+            'exceptions.c',
             'flash.c',
+            'rcc.c',
         )
 
     def c_flags(self) -> List[str]:
