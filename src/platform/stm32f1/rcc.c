@@ -7,7 +7,10 @@
 
 #include "platform/stm32f1/rcc.h"
 #include "util/data.h"
-#include "util/types.h"
+
+#define HSI_VALUE 8000000UL
+
+static struct rcc_clock_tree_t rcc_clock_tree;
 
 /*
  * Setup the clock using the HSE (external clock) and set SYSCLK to 72MHz.
@@ -70,7 +73,7 @@ void rcc_init(enum stm32f1_external_clock_value clock)
 	/* set system clock switch to receive from the PLL */
 	REG_SET(RCC->CFGR, RCC_CFGR_SW, RCC_CFGR_SW_PLL);
 	/* wait for the system clock source to be the PLL */
-	while((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL) continue;
+	while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL) continue;
 
 	REG_SET(RCC->CFGR, RCC_CFGR_HPRE, RCC_CFGR_HPRE_DIV1); /* set AHB prescaler to /1 */
 	REG_SET(RCC->CFGR, RCC_CFGR_PPRE1, RCC_CFGR_PPRE1_DIV2); /* set APB1 prescaler to /2 */
@@ -80,5 +83,136 @@ void rcc_init(enum stm32f1_external_clock_value clock)
 	RCC->CR &= ~RCC_CR_HSION; /* disable HSI */
 
 	RCC->CSR |= RCC_CSR_LSION; /* enable LSI */
-	while(!(RCC->CSR & RCC_CSR_LSIRDY)) continue; /* wait for LSI to be ready */
+	while (!(RCC->CSR & RCC_CSR_LSIRDY)) continue; /* wait for LSI to be ready */
+}
+
+void rcc_update_clock_tree()
+{
+	/* Determine system clock */
+	switch (RCC->CFGR & RCC_CFGR_SWS) {
+		case RCC_CFGR_SWS_HSI:
+			rcc_clock_tree.sys_clock_freq = HSI_VALUE;
+			break;
+		case RCC_CFGR_SWS_HSE:
+			rcc_clock_tree.sys_clock_freq = EXTERNAL_CLOCK_VALUE;
+			break;
+		case RCC_CFGR_SWS_PLL: {
+			u32 pllmul = ((RCC->CFGR & RCC_CFGR_PLLMULL) >> 18) + 2;
+			u32 pllsrc = RCC->CFGR & RCC_CFGR_PLLSRC;
+
+			if (pllsrc == 0) /* 0 means PLL INPUT = HSI / 2 */
+			{
+				rcc_clock_tree.sys_clock_freq = (HSI_VALUE >> 1) * pllmul;
+			} else /* 1 means PLL INPUT = HSE, HSE divided by 2 if XTPRE = 1 */
+			{
+				if ((RCC->CFGR & RCC_CFGR_PLLXTPRE) == RCC_CFGR_PLLXTPRE_HSE_DIV2)
+					rcc_clock_tree.sys_clock_freq = (EXTERNAL_CLOCK_VALUE >> 1) * pllmul;
+				else
+					rcc_clock_tree.sys_clock_freq = EXTERNAL_CLOCK_VALUE * pllmul;
+			}
+			break;
+		}
+	}
+
+	/* Determine AHB clock */
+	switch (RCC->CFGR & RCC_CFGR_HPRE) {
+		case RCC_CFGR_HPRE_DIV1:
+			rcc_clock_tree.ahb_clock_freq = rcc_clock_tree.sys_clock_freq;
+			break;
+		case RCC_CFGR_HPRE_DIV2:
+			rcc_clock_tree.ahb_clock_freq = rcc_clock_tree.sys_clock_freq >> 1;
+			break;
+		case RCC_CFGR_HPRE_DIV4:
+			rcc_clock_tree.ahb_clock_freq = rcc_clock_tree.sys_clock_freq >> 2;
+			break;
+		case RCC_CFGR_HPRE_DIV8:
+			rcc_clock_tree.ahb_clock_freq = rcc_clock_tree.sys_clock_freq >> 3;
+			break;
+		case RCC_CFGR_HPRE_DIV16:
+			rcc_clock_tree.ahb_clock_freq = rcc_clock_tree.sys_clock_freq >> 4;
+			break;
+		case RCC_CFGR_HPRE_DIV64:
+			rcc_clock_tree.ahb_clock_freq = rcc_clock_tree.sys_clock_freq >> 6;
+			break;
+		case RCC_CFGR_HPRE_DIV128:
+			rcc_clock_tree.ahb_clock_freq = rcc_clock_tree.sys_clock_freq >> 7;
+			break;
+		case RCC_CFGR_HPRE_DIV256:
+			rcc_clock_tree.ahb_clock_freq = rcc_clock_tree.sys_clock_freq >> 8;
+			break;
+		case RCC_CFGR_HPRE_DIV512:
+			rcc_clock_tree.ahb_clock_freq = rcc_clock_tree.sys_clock_freq >> 9;
+			break;
+	}
+
+	/* Determine APB1 clock */
+	switch (RCC->CFGR & RCC_CFGR_PPRE1) {
+		case RCC_CFGR_PPRE1_DIV1:
+			rcc_clock_tree.apb1_clock_freq = rcc_clock_tree.ahb_clock_freq;
+			break;
+		case RCC_CFGR_PPRE1_DIV2:
+			rcc_clock_tree.apb1_clock_freq = rcc_clock_tree.ahb_clock_freq >> 1;
+			break;
+		case RCC_CFGR_PPRE1_DIV4:
+			rcc_clock_tree.apb1_clock_freq = rcc_clock_tree.ahb_clock_freq >> 2;
+			break;
+		case RCC_CFGR_PPRE1_DIV8:
+			rcc_clock_tree.apb1_clock_freq = rcc_clock_tree.ahb_clock_freq >> 3;
+			break;
+		case RCC_CFGR_PPRE1_DIV16:
+			rcc_clock_tree.apb1_clock_freq = rcc_clock_tree.ahb_clock_freq >> 4;
+			break;
+	}
+
+	/* Determine APB2 clock */
+	switch (RCC->CFGR & RCC_CFGR_PPRE2) {
+		case RCC_CFGR_PPRE2_DIV1:
+			rcc_clock_tree.apb2_clock_freq = rcc_clock_tree.ahb_clock_freq;
+			break;
+		case RCC_CFGR_PPRE2_DIV2:
+			rcc_clock_tree.apb2_clock_freq = rcc_clock_tree.ahb_clock_freq >> 1;
+			break;
+		case RCC_CFGR_PPRE2_DIV4:
+			rcc_clock_tree.apb2_clock_freq = rcc_clock_tree.ahb_clock_freq >> 2;
+			break;
+		case RCC_CFGR_PPRE2_DIV8:
+			rcc_clock_tree.apb2_clock_freq = rcc_clock_tree.ahb_clock_freq >> 3;
+			break;
+		case RCC_CFGR_PPRE2_DIV16:
+			rcc_clock_tree.apb2_clock_freq = rcc_clock_tree.ahb_clock_freq >> 4;
+			break;
+	}
+
+	/* Determine APB1 TIM clock */
+	if ((RCC->CFGR & RCC_CFGR_PPRE1) == RCC_CFGR_PPRE1_DIV1)
+		rcc_clock_tree.apb1_tim_clock_freq = rcc_clock_tree.apb1_clock_freq;
+	else
+		rcc_clock_tree.apb1_tim_clock_freq = rcc_clock_tree.apb1_clock_freq >> 1;
+
+	/* Determine APB2 TIM clock */
+	if ((RCC->CFGR & RCC_CFGR_PPRE2) == RCC_CFGR_PPRE2_DIV1)
+		rcc_clock_tree.apb2_tim_clock_freq = rcc_clock_tree.apb2_clock_freq;
+	else
+		rcc_clock_tree.apb2_tim_clock_freq = rcc_clock_tree.apb2_clock_freq >> 1;
+
+	/* Determine ADC clock */
+	switch (RCC->CFGR & RCC_CFGR_ADCPRE) {
+		case RCC_CFGR_ADCPRE_DIV2:
+			rcc_clock_tree.adc_clock_freq = rcc_clock_tree.apb2_clock_freq >> 1;
+			break;
+		case RCC_CFGR_ADCPRE_DIV4:
+			rcc_clock_tree.adc_clock_freq = rcc_clock_tree.apb2_clock_freq >> 2;
+			break;
+		case RCC_CFGR_ADCPRE_DIV6:
+			rcc_clock_tree.adc_clock_freq = rcc_clock_tree.apb2_clock_freq / 6;
+			break;
+		case RCC_CFGR_ADCPRE_DIV8:
+			rcc_clock_tree.adc_clock_freq = rcc_clock_tree.apb2_clock_freq >> 3;
+			break;
+	}
+}
+
+struct rcc_clock_tree_t rcc_get_clock_tree()
+{
+	return rcc_clock_tree;
 }
