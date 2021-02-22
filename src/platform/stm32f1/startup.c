@@ -5,6 +5,8 @@
 
 #include <stm32f1xx.h>
 
+#include "util/types.h"
+
 /* Stack pointer */
 extern void _estack(); /* Not a function, just to be compatible with the vector table array */
 
