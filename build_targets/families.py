@@ -71,17 +71,33 @@ class STM32F1Family(BuildConfiguration):
     def c_flags(self) -> List[str]:
         return [
             '-Os',
+            '-nostdlib',
+            '-nostartfiles',
+            '-ffunction-sections',
+            '-fdata-sections',
             '-march=armv7-m',
             '-mtune=cortex-m3',
             '-mthumb',
+            '-mfloat-abi=soft',
+            '-ffreestanding',
         ]
 
     def ld_flags(self) -> List[str]:
         return [
+            '-lm',
+            '-lc',
+            '-lgcc',
+            '-lnosys',
+            '-nostdlib',
+            '-nostartfiles',
+            '-fdata-sections',
+            '-ffunction-sections',
+            '--specs=nano.specs',
+            '--specs=nosys.specs',
+            '-Wl,--gc-sections',
             '-march=armv7-m',
             '-mtune=cortex-m3',
             '-mthumb',
-            '--specs=nosys.specs',
         ]
 
     def dependencies(self) -> List[BuildDependency]:
