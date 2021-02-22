@@ -7,6 +7,7 @@
 
 #include "platform/stm32f1/flash.h"
 #include "platform/stm32f1/rcc.h"
+#include "platform/stm32f1/systick.h"
 
 int main()
 {
@@ -14,4 +15,6 @@ int main()
 
 	rcc_init(EXTERNAL_CLOCK_VALUE);
 	rcc_update_clock_tree();
+
+	systick_init();
 }
