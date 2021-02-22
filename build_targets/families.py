@@ -69,6 +69,7 @@ class STM32F1Family(BuildConfiguration):
             'exceptions.c',
             'flash.c',
             'rcc.c',
+            'systick.c',
         )
 
     def c_flags(self) -> List[str]:
