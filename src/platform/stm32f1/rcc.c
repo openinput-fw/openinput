@@ -70,15 +70,18 @@ void rcc_init(enum stm32f1_external_clock_value clock)
 
 	RCC->CFGR &= ~RCC_CFGR_USBPRE; /* set USB prescaler to /1.5 */
 
-	/* set system clock switch to receive from the PLL */
-	REG_SET(RCC->CFGR, RCC_CFGR_SW, RCC_CFGR_SW_PLL);
-	/* wait for the system clock source to be the PLL */
-	while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL) continue;
-
 	REG_SET(RCC->CFGR, RCC_CFGR_HPRE, RCC_CFGR_HPRE_DIV1); /* set AHB prescaler to /1 */
 	REG_SET(RCC->CFGR, RCC_CFGR_PPRE1, RCC_CFGR_PPRE1_DIV2); /* set APB1 prescaler to /2 */
 	REG_SET(RCC->CFGR, RCC_CFGR_PPRE2, RCC_CFGR_PPRE1_DIV2); /* set APB2 prescaler to /2 */
 	REG_SET(RCC->CFGR, RCC_CFGR_ADCPRE, RCC_CFGR_ADCPRE_DIV8); /* set ADC prescaler to /8 */
+
+	RCC->CR |= RCC_CR_PLLON; /* enable PLL */
+	while (!(RCC->CR & RCC_CR_PLLRDY)) continue; /* wait for PLL to be ready */
+
+	/* set system clock switch to receive from the PLL */
+	REG_SET(RCC->CFGR, RCC_CFGR_SW, RCC_CFGR_SW_PLL);
+	/* wait for the system clock source to be the PLL */
+	while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL) continue;
 
 	RCC->CR &= ~RCC_CR_HSION; /* disable HSI */
 
