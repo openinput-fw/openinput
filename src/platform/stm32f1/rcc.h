@@ -8,8 +8,8 @@
 #include "util/types.h"
 
 enum stm32f1_external_clock_value {
-	STM32F1_CLOCK_8MHZ,
-	STM32F1_CLOCK_12MHZ,
+	STM32F1_CLOCK_8MHZ = 8000000U,
+	STM32F1_CLOCK_12MHZ = 12000000U,
 };
 
 struct rcc_clock_tree_t {
