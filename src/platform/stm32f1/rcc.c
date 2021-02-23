@@ -87,6 +87,8 @@ void rcc_init(enum stm32f1_external_clock_value clock)
 
 	RCC->CSR |= RCC_CSR_LSION; /* enable LSI */
 	while (!(RCC->CSR & RCC_CSR_LSIRDY)) continue; /* wait for LSI to be ready */
+
+	rcc_update_clock_tree();
 }
 
 void rcc_update_clock_tree()

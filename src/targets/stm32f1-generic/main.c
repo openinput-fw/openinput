@@ -14,7 +14,6 @@ int main()
 	flash_latency_config(72000000);
 
 	rcc_init(EXTERNAL_CLOCK_VALUE);
-	rcc_update_clock_tree();
 
 	systick_init();
 }
