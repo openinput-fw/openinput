@@ -71,6 +71,7 @@ class STM32F1Family(BuildConfiguration):
             'rcc.c',
             'systick.c',
             'gpio.c',
+            'spi.c',
         )
 
     def c_flags(self) -> List[str]:
