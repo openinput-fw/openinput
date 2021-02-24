@@ -71,6 +71,7 @@ class STM32F1Family(BuildConfiguration):
             'rcc.c',
             'systick.c',
             'gpio.c',
+            'hal/spi.c',
             'spi.c',
         )
 
