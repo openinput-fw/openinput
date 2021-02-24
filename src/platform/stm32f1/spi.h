@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include <stm32f1xx.h>
-
 #include "platform/stm32f1/gpio.h"
 
 #define SPI_MSB_FIRST 0
@@ -29,20 +27,14 @@ enum spi_interface_no {
 #endif
 };
 
-struct spi_drv_data_t {
+struct spi_device_t {
 	struct gpio_pin_t cs_gpio;
 	u8 cs_inverted;
-	SPI_TypeDef *interface;
+	void *interface;
 };
 
-int spi_init(
-	struct spi_drv_data_t *drv_data,
-	enum spi_interface_no interface_no,
-	enum spi_mode mode,
-	u32 frequency,
-	u8 bit_order,
-	struct gpio_pin_t cs_gpio,
-	u8 cs_inverted);
-void spi_select(struct spi_drv_data_t drv_data, u8 state);
-u8 spi_transfer_byte(struct spi_drv_data_t drv_data, const u8 data);
-void spi_transfer(struct spi_drv_data_t drv_data, const u8 *src, u32 size, u8 *dst);
+void spi_init_interface(enum spi_interface_no interface_no, enum spi_mode mode, u32 frequency, u8 bit_order);
+struct spi_device_t spi_init_device(enum spi_interface_no interface_no, struct gpio_pin_t cs_gpio, u8 cs_inverted);
+void spi_select(struct spi_device_t device, u8 state);
+u8 spi_transfer_byte(struct spi_device_t device, const u8 data);
+void spi_transfer(struct spi_device_t device, const u8 *src, u32 size, u8 *dst);

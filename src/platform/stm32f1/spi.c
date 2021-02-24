@@ -3,22 +3,18 @@
  * SPDX-FileCopyrightText: 2021 Rafael Silva <silvagracarafael@gmail.com>
  */
 
-#include "platform/stm32f1/spi.h"
+#include <stm32f1xx.h>
+
 #include "platform/stm32f1/gpio.h"
 #include "platform/stm32f1/rcc.h"
+#include "platform/stm32f1/spi.h"
 #include "util/types.h"
 
-int spi_init(
-	struct spi_drv_data_t *drv_data,
-	enum spi_interface_no interface_no,
-	enum spi_mode mode,
-	u32 frequency,
-	u8 bit_order,
-	struct gpio_pin_t cs_gpio,
-	u8 cs_inverted)
+void spi_init_interface(enum spi_interface_no interface_no, enum spi_mode mode, u32 frequency, u8 bit_order)
 {
 	struct rcc_clock_tree_t clock_tree = rcc_get_clock_tree();
 	u32 src_clck;
+	SPI_TypeDef *interface;
 
 	switch (interface_no) {
 		case SPI_INTERFACE_1:
@@ -29,7 +25,7 @@ int spi_init(
 
 			src_clck = clock_tree.apb2_clock_freq;
 
-			drv_data->interface = SPI1;
+			interface = SPI1;
 			break;
 
 #if defined(SPI2)
@@ -41,7 +37,7 @@ int spi_init(
 
 			src_clck = clock_tree.apb1_clock_freq;
 
-			drv_data->interface = SPI2;
+			interface = SPI2;
 			break;
 #endif
 
@@ -54,17 +50,13 @@ int spi_init(
 
 			src_clck = clock_tree.apb1_clock_freq;
 
-			drv_data->interface = SPI3;
+			interface = SPI3;
 			break;
 #endif
-
-		default:
-			return -1;
-			break;
 	}
 
 	/* Calculate clock divider */
-	u32 divider = frequency / src_clck;
+	u32 divider = src_clck / frequency;
 
 	if (divider <= 2)
 		divider = 0; /* divide by 2 */
@@ -84,45 +76,70 @@ int spi_init(
 		divider = 7; /* divide by 256 */
 
 	/* configure SPI */
-	drv_data->interface->I2SCFGR = 0x0000; /* SPI mode enabled I2S mode disabled*/
+	interface->I2SCFGR = 0x0000; /* SPI mode enabled I2S mode disabled*/
 
-	drv_data->interface->CR2 = 0x00000000;
-	drv_data->interface->CR1 =
-		mode | SPI_CR1_MSTR | (divider << 3) | SPI_CR1_SPE | (bit_order << 7) | SPI_CR1_SSI | SPI_CR1_SSM;
-
-	drv_data->cs_gpio = cs_gpio;
-	drv_data->cs_inverted = !!cs_inverted;
-
-	return 0;
+	interface->CR2 = 0x00000000;
+	interface->CR1 = mode | SPI_CR1_MSTR | (divider << SPI_CR1_BR_Pos) | SPI_CR1_SPE |
+			 (bit_order << SPI_CR1_LSBFIRST_Pos) | SPI_CR1_SSI | SPI_CR1_SSM;
 }
 
-void spi_select(struct spi_drv_data_t drv_data, u8 state)
+struct spi_device_t spi_init_device(enum spi_interface_no interface_no, struct gpio_pin_t cs_gpio, u8 cs_inverted)
+{
+	void *interface;
+
+	switch (interface_no) {
+		case SPI_INTERFACE_1:
+			interface = SPI1;
+			break;
+
+#if defined(SPI2)
+		case SPI_INTERFACE_2:
+			interface = SPI2;
+			break;
+#endif
+
+#if defined(SPI3)
+		case SPI_INTERFACE_3:
+			interface = SPI3;
+			break;
+#endif
+	}
+
+	struct spi_device_t device = {
+		.interface = interface,
+		.cs_gpio = cs_gpio,
+		.cs_inverted = !!cs_inverted,
+	};
+	return device;
+}
+
+void spi_select(struct spi_device_t device, u8 state)
 {
 	/* state 1 = selected, active low unless cs_inverted is set */
-	gpio_set(drv_data.cs_gpio, (!state) ^ drv_data.cs_inverted);
+	gpio_set(device.cs_gpio, (!state) ^ device.cs_inverted);
 }
 
-u8 spi_transfer_byte(struct spi_drv_data_t drv_data, const u8 data)
+u8 spi_transfer_byte(struct spi_device_t device, const u8 data)
 {
-	while (!(drv_data.interface->SR & SPI_SR_TXE)) continue;
+	while (!(((SPI_TypeDef *) device.interface)->SR & SPI_SR_TXE)) continue;
 
-	drv_data.interface->DR = data;
+	((SPI_TypeDef *) device.interface)->DR = data;
 
-	while (!(drv_data.interface->SR & SPI_SR_RXNE)) continue;
+	while (!(((SPI_TypeDef *) device.interface)->SR & SPI_SR_RXNE)) continue;
 
-	return (u8) drv_data.interface->DR;
+	return (u8)((SPI_TypeDef *) device.interface)->DR;
 }
 
-void spi_transfer(struct spi_drv_data_t drv_data, const u8 *src, u32 size, u8 *dst)
+void spi_transfer(struct spi_device_t device, const u8 *src, u32 size, u8 *dst)
 {
 	if (src) {
 		while (size--) {
 			if (dst)
-				*(dst++) = spi_transfer_byte(drv_data, *(src++));
+				*(dst++) = spi_transfer_byte(device, *(src++));
 			else
-				spi_transfer_byte(drv_data, *(src++));
+				spi_transfer_byte(device, *(src++));
 		}
 	} else if (dst) {
-		while (size--) *(dst++) = spi_transfer_byte(drv_data, 0x00);
+		while (size--) *(dst++) = spi_transfer_byte(device, 0x00);
 	}
 }
