@@ -49,7 +49,7 @@ class CMSISDependency(BuildDependency):
 
 
 class CMSISDeviceSTM32F1Dependency(BuildDependency):
-    name = 'cmsis-device-stm32f1'
+    name = 'cmsis-dfp-stm32f1'
 
     def external_include(self) -> List[str]:
         return [

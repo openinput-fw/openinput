@@ -3,7 +3,7 @@
 	url = https://github.com/hathach/tinyusb
 [submodule "external/cmsis-5"]
 	path = external/cmsis-5
-	url = https://github.com/ARM-software/CMSIS_5
-[submodule "external/cmsis-device-stm32f1"]
-	path = external/cmsis-device-stm32f1
-	url = https://github.com/STMicroelectronics/cmsis_device_f1
+	url = https://github.com/cmsis-packs/cmsis-5
+[submodule "external/cmsis-dfp-stm32f1"]
+	path = external/cmsis-dfp-stm32f1
+	url = https://github.com/cmsis-packs/cmsis-dfp-stm32f1
