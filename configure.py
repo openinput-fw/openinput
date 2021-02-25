@@ -212,9 +212,11 @@ class BuildSystemBuilder():
                     continue
                 nw.comment(f'{dependency.name} objects')
                 nw.newline()
-                c_include_flags = [f'-I{path}' for path in dependency.include]
+                c_include_flags = {
+                    f'-I{path}' for path in dependency.include + dependency.dependencies_include
+                }
                 for file in set(dependency.source):
-                    objs += cc_abs(file, variables=[('c_include_flags', c_include_flags)])
+                    objs += cc_abs(file, variables=[('c_include_flags', list(c_include_flags))])
                 nw.newline()
 
             # compile target sources into objects
