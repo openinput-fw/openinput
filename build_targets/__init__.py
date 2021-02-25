@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import itertools
 import logging
 import os
 import os.path
@@ -101,6 +102,7 @@ class _BuildConfigurationBase():
         self,
         debug: bool = False,
         linker_script: Optional[str] = None,
+        dependencies: Optional[List[BuildDependency]] = None,
         **kwargs: Any,
     ) -> None:
         self.__log = logging.getLogger(self.__class__.__name__)
@@ -117,7 +119,7 @@ class _BuildConfigurationBase():
             'include_files': [],
             'c_flags': [],
             'ld_flags': [],
-            'dependencies': [],
+            'dependencies': dependencies or [],
             'external_include': [],
         }
 
@@ -280,6 +282,14 @@ class _BuildConfigurationBase():
             fr'-DOI_VERSION=\"{self.version}\"',
         ]
 
+    @property
+    def dependencies(self) -> List[BuildDependency]:
+        return self._settings['dependencies']
+
+    @dependencies.setter
+    def dependencies(self, value: List[BuildDependency]) -> None:
+        self._settings['dependencies'] = value
+
 
 class _BuildConfigurationMeta(type):
     '''
@@ -354,14 +364,6 @@ class _BuildConfiguration(_BuildConfigurationBase):
         if self.toolchain is None:
             raise BuildConfigurationError('No toolchain specified')
 
-    @property
-    def dependencies(self) -> List[BuildDependency]:
-        return self._settings['dependencies']
-
-    @dependencies.setter
-    def dependencies(self, value: List[BuildDependency]) -> None:
-        self._settings['dependencies'] = value
-
 
 class BuildConfiguration(_BuildConfiguration, metaclass=_BuildConfigurationMeta):
     pass
@@ -377,6 +379,12 @@ class _BuildDependency(_BuildConfigurationBase):
     @external_include.setter
     def external_include(self, value: List[str]) -> None:
         self._settings['external_include'] = value
+
+    @property
+    def dependencies_include(self) -> List[str]:
+        return list(itertools.chain.from_iterable([
+            dependency.external_include for dependency in self.dependencies
+        ]))
 
 
 class BuildDependency(_BuildDependency, metaclass=_BuildConfigurationMeta):
