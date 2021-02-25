@@ -108,8 +108,10 @@ class STM32F1Family(BuildConfiguration):
         ]
 
     def dependencies(self) -> List[BuildDependency]:
-        return [
+        cmsis_deps = [
             CMSISDependency(components=['Core']),
             CMSISDeviceSTM32F1Dependency(),
-            TinyUSBDependency(),
+        ]
+        return cmsis_deps + [
+            TinyUSBDependency(dependencies=cmsis_deps),
         ]
