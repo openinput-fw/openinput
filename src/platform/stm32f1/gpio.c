@@ -8,13 +8,23 @@
 
 #include "platform/stm32f1/gpio.h"
 #include "util/data.h"
-#include "util/types.h"
 
 /*
  * resolves to the base address of the GPIO peripheral
  * 0x00000400 is the size/offset of each GPIO peripheral in memory
  */
 #define _GPIO(port) ((GPIO_TypeDef *) (GPIOA_BASE + ((port & 0b11) * 0x00000400UL)))
+
+/* initiates all pins to a safe known state, inputs pull down */
+void gpio_init_config(struct gpio_config_t *config)
+{
+	for (u8 port = 0; port < 4; port++) {
+		config->port[port].ODR = 0;
+		for (u8 pin = 0; pin < 16; pin++) {
+			config->port[port].MODE_CNF[pin] = GPIO_MODE_INPUT | GPIO_CNF_INPUT_PULL;
+		}
+	}
+}
 
 void gpio_apply_config(struct gpio_config_t config)
 {
@@ -65,6 +75,14 @@ void gpio_apply_config(struct gpio_config_t config)
 	for (size_t i = 0; i < 8; i++) GPIOD->CRL |= config.port[GPIO_PORT_D].MODE_CNF[i] << (i * 4);
 	for (size_t i = 0; i < 8; i++) GPIOD->CRH |= config.port[GPIO_PORT_D].MODE_CNF[8 + i] << (i * 4);
 	GPIOD->ODR = config.port[GPIO_PORT_D].ODR & 0xFFFF;
+
+	/* AFIO */
+	RCC->APB2RSTR |= RCC_APB2RSTR_AFIORST; // Reset peripheral
+	RCC->APB2RSTR &= ~RCC_APB2RSTR_AFIORST;
+	RCC->APB2ENR |= RCC_APB2ENR_AFIOEN; // Enable AFIO peripheral clock
+
+	/* Pin Remapping */
+	AFIO->MAPR = AFIO_MAPR_SWJ_CFG_JTAGDISABLE;
 }
 
 void gpio_setup_pin(struct gpio_config_t *config, struct gpio_pin_t pin, u8 mode_cnf, u8 out)

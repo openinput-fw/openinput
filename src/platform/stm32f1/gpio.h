@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "util/types.h"
+
 /* CNF input values*/
 #define GPIO_CNF_INPUT_ANALOG	(0b00 << 2)
 #define GPIO_CNF_INPUT_FLOATING (0b01 << 2)
@@ -41,6 +43,7 @@ struct gpio_config_t {
 	struct gpio_port_config_t port[4];
 };
 
+void gpio_init_config(struct gpio_config_t *config);
 void gpio_apply_config(struct gpio_config_t config);
 void gpio_setup_pin(struct gpio_config_t *config, struct gpio_pin_t pin, u8 mode_cnf, u8 out);
 void gpio_set(struct gpio_pin_t pin, u8 out);
