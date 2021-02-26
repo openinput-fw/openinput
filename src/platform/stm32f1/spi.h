@@ -6,6 +6,7 @@
 #pragma once
 
 #include "platform/stm32f1/gpio.h"
+#include "util/types.h"
 
 #define SPI_MSB_FIRST 0
 #define SPI_LSB_FIRST 1
