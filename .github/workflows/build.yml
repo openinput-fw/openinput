@@ -29,6 +29,8 @@ jobs:
 
     - name: Checkout
       uses: actions/checkout@v2
+      with:
+        submodules: true
 
     - name: Configure
       run: ./configure.py ${{ matrix.target }}
