@@ -109,7 +109,7 @@ class BuildSystemBuilder():
         # construct tool name, eg. arm-none-eabi-gcc, gcc...
         self._tool = lambda x: '-'.join(filter(None, [self._target.toolchain, x]))
 
-    def write_ninja(self, file: str = 'build.ninja') -> None:
+    def write_ninja(self, file: str = 'build.ninja') -> None:  # noqa: C901
         # delayed import to provide better UX
         try:
             import ninja_syntax
