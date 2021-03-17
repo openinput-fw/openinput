@@ -70,11 +70,12 @@ class STM32F1Family(BuildConfiguration):
             'flash.c',
             'rcc.c',
             'systick.c',
+            'hal/ticks.c',
             'gpio.c',
             'usb.c',
             'usb_descriptors.c',
-            'hal/spi.c',
             'spi.c',
+            'hal/spi.c',
         )
 
     def c_flags(self) -> List[str]:
