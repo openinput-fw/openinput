@@ -215,6 +215,12 @@ class BuildSystemBuilder():
                 c_include_flags = {
                     f'-I{path}' for path in dependency.include + dependency.dependencies_include
                 }
+                c_include_flags.update({
+                    f'-include {src(path)}' for path in dependency.include_files
+                })
+                c_include_flags.update({
+                    f'-I{src_dir}',
+                })
                 for file in set(dependency.source):
                     objs += cc_abs(file, variables=[('c_include_flags', list(c_include_flags))])
                 nw.newline()

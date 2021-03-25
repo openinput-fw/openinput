@@ -7,7 +7,7 @@ import os.path
 
 from typing import Any, Dict, List
 
-from . import BuildConfigurationError, abs_target, families
+from . import BuildConfigurationError, abs_target, dependencies, families
 
 
 def _removesuffix(string: str, suffix: str) -> str:
@@ -49,6 +49,13 @@ class STM32F1GenericTarget(families.STM32F1Family):
             raise BuildConfigurationError(f'Unknown configuration for {self.name}: {self.config}')
 
         self.linker_script = os.path.join(self.name, f'{self.config}.ld')
+
+        assert isinstance(self.dependencies, list)
+        for dependency in self.dependencies:
+            if isinstance(dependency, dependencies.TinyUSBDependency):
+                dependency.include_files += self.target_files(
+                    os.path.join('config', f'{self.config}.h'),
+                )
 
     def source(self) -> List[str]:
         return self.target_files(
