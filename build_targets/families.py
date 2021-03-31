@@ -74,6 +74,7 @@ class STM32F1Family(BuildConfiguration):
             'gpio.c',
             'usb.c',
             'usb_descriptors.c',
+            'hal/hid.c',
             'spi.c',
             'hal/spi.c',
         )

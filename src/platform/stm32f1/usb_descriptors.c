@@ -104,7 +104,7 @@ const u8 desc_configuration[] = {
 	0x05,			/* DESCRIPTOR TYPE (Endpoint) */
 	0x81,			/* ENDPOINT ADDRESS (Endpoint 1, IN) */
 	0x03,			/* ATTRIBUTES (Interrupt) */
-	0x20, 0x00,		/* MAX PACKET SIZE (32) */
+	0x40, 0x00,		/* MAX PACKET SIZE (64) */
 	0x01,			/* POLLING INTERVAL (1000Hz) */
 	/* clang-format on */
 };
