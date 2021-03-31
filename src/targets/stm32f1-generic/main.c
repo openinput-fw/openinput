@@ -7,6 +7,7 @@
 
 #include "platform/stm32f1/flash.h"
 #include "platform/stm32f1/gpio.h"
+#include "platform/stm32f1/hal/hid.h"
 #include "platform/stm32f1/hal/spi.h"
 #include "platform/stm32f1/hal/ticks.h"
 #include "platform/stm32f1/rcc.h"
@@ -19,6 +20,8 @@
 
 #include "util/data.h"
 #include "util/types.h"
+
+#include "protocol/protocol.h"
 
 #define CFG_TUSB_CONFIG_FILE "targets/stm32f1-generic/tusb_config.h"
 #include "tusb.h"
@@ -82,6 +85,24 @@ int main()
 
 	struct pixart_pmw_driver_t sensor = pixart_pmw_init((u8 *) SENSOR_FIRMWARE_BLOB, sensor_spi_hal, ticks_hal);
 #endif
+
+	struct hid_hal_t hid_hal;
+	u8 info_functions[] = {
+		OI_FUNCTION_VERSION,
+		OI_FUNCTION_FW_INFO,
+		OI_FUNCTION_SUPPORTED_FUNCTION_PAGES,
+		OI_FUNCTION_SUPPORTED_FUNCTIONS,
+	};
+
+	/* create protocol config */
+	struct protocol_config_t protocol_config;
+	memset(&protocol_config, 0, sizeof(protocol_config));
+	protocol_config.device_name = "openinput Device";
+	protocol_config.hid_hal = hid_hal_init();
+	protocol_config.functions[INFO] = info_functions;
+	protocol_config.functions_size[INFO] = sizeof(info_functions);
+
+	usb_attach_protocol_config(protocol_config);
 
 	usb_init();
 
