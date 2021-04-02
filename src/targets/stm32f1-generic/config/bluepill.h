@@ -4,6 +4,8 @@
  * SPDX-FileCopyrightText: 2021 Rafael Silva <silvagracarafael@gmail.com>
  */
 
+/* clang-format off */
+
 /* General Config */
 
 #define STM32F103xB
@@ -22,7 +24,24 @@
  * Bluepill boards are known to come with the wrong value resistor here (R10)
  * it is usually populated with a 10k or a 4.7k resistor and should be replaced with a 1.5k
  */
-#define USB_DP_PU_IO                           \
-	{                                      \
-		.port = GPIO_PORT_A, .pin = 12 \
-	}
+#define USB_DP_PU_IO                { .port = GPIO_PORT_A, .pin = 12 }
+
+/* Sensor Config */
+//#define SENSOR_ENABLED
+#define SENSOR_DRIVER               PIXART_PMW
+
+#define SENSOR_FIRMWARE_BLOB        truemove3_blob
+
+#define SENSOR_MOTION_IO            { .port = GPIO_PORT_A, .pin = 3 }
+
+#define SENSOR_INTERFACE            SPI_INTERFACE_1
+
+#define SENSOR_INTERFACE_SPEED      10000000
+
+/* o -> active low, 1 -> active high */
+#define SENSOR_INTERFACE_CS_POL     0
+#define SENSOR_INTERFACE_CS_IO      { .port = GPIO_PORT_A, .pin = 4 }
+
+#define SENSOR_INTERFACE_SCK_IO     { .port = GPIO_PORT_A, .pin = 5 }
+#define SENSOR_INTERFACE_MISO_IO    { .port = GPIO_PORT_A, .pin = 6 }
+#define SENSOR_INTERFACE_MOSI_IO    { .port = GPIO_PORT_A, .pin = 7 }
