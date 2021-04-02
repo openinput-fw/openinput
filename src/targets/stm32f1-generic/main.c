@@ -7,9 +7,15 @@
 
 #include "platform/stm32f1/flash.h"
 #include "platform/stm32f1/gpio.h"
+#include "platform/stm32f1/hal/spi.h"
+#include "platform/stm32f1/hal/ticks.h"
 #include "platform/stm32f1/rcc.h"
+#include "platform/stm32f1/spi.h"
 #include "platform/stm32f1/systick.h"
 #include "platform/stm32f1/usb.h"
+
+#include "driver/pixart/pixart_pmw.h"
+#include "pixart_blobs.h"
 
 #include "util/data.h"
 #include "util/types.h"
@@ -49,11 +55,66 @@ int main()
 	gpio_setup_pin(
 		&gpio_config, usb_dp_pu_io, GPIO_MODE_OUTPUT_50MHZ | GPIO_CNF_OUTPUT_GENERAL_PUSH_PULL, 0); /* USB DP PU */
 
+#if defined(SENSOR_ENABLED) && SENSOR_DRIVER == PIXART_PMW
+	struct gpio_pin_t sensor_motion_io = SENSOR_MOTION_IO;
+	struct gpio_pin_t sensor_cs_io = SENSOR_INTERFACE_CS_IO;
+	struct gpio_pin_t sensor_sck_io = SENSOR_INTERFACE_SCK_IO;
+	struct gpio_pin_t sensor_miso_io = SENSOR_INTERFACE_MISO_IO;
+	struct gpio_pin_t sensor_mosi_io = SENSOR_INTERFACE_MOSI_IO;
+
+	gpio_setup_pin(&gpio_config, sensor_motion_io, GPIO_MODE_INPUT | GPIO_CNF_INPUT_PULL, 1);
+
+	gpio_setup_pin(&gpio_config, sensor_cs_io, GPIO_MODE_OUTPUT_10MHZ | GPIO_CNF_OUTPUT_GENERAL_PUSH_PULL, 1);
+	gpio_setup_pin(&gpio_config, sensor_sck_io, GPIO_MODE_OUTPUT_50MHZ | GPIO_CNF_OUTPUT_ALTERNATE_PUSH_PULL, 0);
+	gpio_setup_pin(&gpio_config, sensor_miso_io, GPIO_MODE_INPUT | GPIO_CNF_INPUT_FLOATING, 0);
+	gpio_setup_pin(&gpio_config, sensor_mosi_io, GPIO_MODE_OUTPUT_50MHZ | GPIO_CNF_OUTPUT_ALTERNATE_PUSH_PULL, 0);
+#endif
+
 	gpio_apply_config(gpio_config);
+
+#if defined(SENSOR_ENABLED) && SENSOR_DRIVER == PIXART_PMW
+	spi_init_interface(SENSOR_INTERFACE, SPI_MODE3, SENSOR_INTERFACE_SPEED, SPI_MSB_FIRST);
+
+	struct spi_device_t sensor_spi_device = spi_init_device(SENSOR_INTERFACE, sensor_cs_io, SENSOR_INTERFACE_CS_POL);
+	struct spi_hal_t sensor_spi_hal = spi_hal_init(&sensor_spi_device);
+
+	struct ticks_hal_t ticks_hal = ticks_hal_init();
+
+	struct pixart_pmw_driver_t sensor = pixart_pmw_init((u8 *) SENSOR_FIRMWARE_BLOB, sensor_spi_hal, ticks_hal);
+#endif
 
 	usb_init();
 
+	struct output_report report;
+	u8 new_data = 0;
+
 	for (;;) {
 		tud_task();
+
+#if defined(SENSOR_ENABLED) && SENSOR_DRIVER == PIXART_PMW
+		if (!gpio_get(sensor_motion_io)) {
+			pixart_pmw_motion_event(&sensor);
+		}
+
+		if (sensor.motion_flag) {
+			pixart_pmw_read_motion(&sensor);
+
+			new_data = 1;
+		}
+
+		if (tud_hid_ready() && new_data) {
+			struct deltas_t deltas = pixart_pmw_get_deltas(&sensor);
+
+			/* fill report */
+			memset(&report, 0, sizeof(report));
+			report.id = OI_MOUSE_REPORT_ID;
+			report.x = deltas.dx;
+			report.y = deltas.dy;
+
+			tud_hid_report(0, &report, sizeof(report));
+
+			new_data = 0;
+		}
+#endif
 	}
 }
