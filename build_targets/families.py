@@ -7,7 +7,7 @@ import os.path
 from typing import Any, Dict, List
 
 from . import BuildConfiguration, BuildDependency
-from .dependencies import CMSISDependency, CMSISDeviceSTM32F1Dependency, TinyUSBDependency
+from .dependencies import CMSISDependency, CMSISDeviceSTM32F1Dependency, SensorBlobDependency, TinyUSBDependency
 
 
 class NativeFamily(BuildConfiguration):
@@ -117,4 +117,5 @@ class STM32F1Family(BuildConfiguration):
         ]
         return cmsis_deps + [
             TinyUSBDependency(dependencies=cmsis_deps),
+            SensorBlobDependency(),
         ]
