@@ -1,6 +1,6 @@
 /*
  * SPDX-License-Identifier: MIT
- * SPDX-FileCopyrightText: 2020 Rafael Silva <silvagracarafael@gmail.com>
+ * SPDX-FileCopyrightText: 2020 Rafael Silva <perigoso@riseup.net>
  * SPDX-FileCopyrightText: 2021 Filipe Laíns <lains@riseup.net>
  */
 

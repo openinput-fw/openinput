@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: MIT
  * SPDX-FileCopyrightText: 2021 Filipe Laíns <lains@riseup.net>
- * SPDX-FileCopyrightText: 2021 Rafael Silva <silvagracarafael@gmail.com>
+ * SPDX-FileCopyrightText: 2021 Rafael Silva <perigoso@riseup.net>
  */
 
 /* clang-format off */
