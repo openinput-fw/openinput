@@ -119,8 +119,10 @@ u8 const *tud_descriptor_device_cb(void)
 /* Invoked when received GET HID REPORT DESCRIPTOR */
 /* Application return pointer to descriptor */
 /* Descriptor contents must exist long enough for transfer to complete */
-u8 const *tud_hid_descriptor_report_cb(void)
+u8 const *tud_hid_descriptor_report_cb(u8 itf)
 {
+	(void) itf;
+
 	memcpy(desc_hid_report, oi_rdesc, sizeof(oi_rdesc)); /* protocol report descriptor */
 	memcpy(desc_hid_report + sizeof(oi_rdesc),
 	       desc_hid_mouse_report,
