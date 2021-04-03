@@ -66,6 +66,9 @@ struct pixart_pmw_driver_t pixart_pmw_init(u8 *firmware, struct spi_hal_t spi_ha
 {
 	struct pixart_pmw_driver_t driver = {};
 
+	driver.spi_hal = spi_hal;
+	driver.ticks_hal = ticks_hal;
+
 	if (!firmware)
 		return driver;
 
@@ -136,9 +139,6 @@ struct pixart_pmw_driver_t pixart_pmw_init(u8 *firmware, struct spi_hal_t spi_ha
 	pixart_pmw_write(driver, PIXART_PMW_REG_BURST, 0x01);
 
 	pixart_pmw_read_motion_burst(driver);
-
-	driver.spi_hal = spi_hal;
-	driver.ticks_hal = ticks_hal;
 
 	return driver;
 }
