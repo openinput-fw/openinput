@@ -55,3 +55,12 @@ class CMSISDeviceSTM32F1Dependency(BuildDependency):
         return [
             rel_external(self.name, 'Include'),
         ]
+
+
+class SensorBlobDependency(BuildDependency):
+    name = 'sensor-blobs'
+
+    def external_include(self) -> List[str]:
+        return [
+            rel_external(self.name),
+        ]
