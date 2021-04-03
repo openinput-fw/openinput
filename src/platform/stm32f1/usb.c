@@ -84,8 +84,9 @@ void tud_resume_cb(void)
 }
 
 /* Invoked when received GET_REPORT control request */
-u16 tud_hid_get_report_cb(u8 report_id, hid_report_type_t report_type, u8 *buffer, u16 reqlen)
+u16 tud_hid_get_report_cb(u8 itf, u8 report_id, hid_report_type_t report_type, u8 *buffer, u16 reqlen)
 {
+	(void) itf;
 	(void) report_id;
 	(void) report_type;
 	(void) buffer;
@@ -95,8 +96,9 @@ u16 tud_hid_get_report_cb(u8 report_id, hid_report_type_t report_type, u8 *buffe
 }
 
 /* Invoked when received SET_REPORT control request */
-void tud_hid_set_report_cb(u8 report_id, hid_report_type_t report_type, u8 const *buffer, u16 bufsize)
+void tud_hid_set_report_cb(u8 itf, u8 report_id, hid_report_type_t report_type, u8 const *buffer, u16 bufsize)
 {
+	(void) itf;
 	(void) report_id;
 	(void) report_type;
 	(void) buffer;
