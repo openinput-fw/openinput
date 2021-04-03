@@ -1,6 +1,6 @@
 /*
  * SPDX-License-Identifier: MIT
- * SPDX-FileCopyrightText: 2021 Rafael Silva <silvagracarafael@gmail.com>
+ * SPDX-FileCopyrightText: 2021 Rafael Silva <perigoso@riseup.net>
  */
 
 #pragma once
