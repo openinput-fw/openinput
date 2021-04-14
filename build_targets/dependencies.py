@@ -57,6 +57,15 @@ class CMSISDeviceSTM32F1Dependency(BuildDependency):
         ]
 
 
+class CMSISDeviceEFM32GG12BDependency(BuildDependency):
+    name = 'cmsis-dfp-efm32gg12b'
+
+    def external_include(self) -> List[str]:
+        return [
+            rel_external(self.name, 'Device', 'SiliconLabs', 'EFM32GG12B', 'Include'),
+        ]
+
+
 class SensorBlobDependency(BuildDependency):
     name = 'sensor-blobs'
 
