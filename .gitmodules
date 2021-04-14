@@ -10,3 +10,6 @@
 [submodule "external/tinyusb"]
 	path = external/tinyusb
 	url = https://github.com/hathach/tinyusb_src
+[submodule "external/cmsis-dfp-efm32gg12b"]
+	path = external/cmsis-dfp-efm32gg12b
+	url = https://github.com/cmsis-packs/cmsis-dfp-efm32gg12b
