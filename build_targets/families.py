@@ -7,7 +7,8 @@ import os.path
 from typing import Any, Dict, List
 
 from . import BuildConfiguration, BuildDependency
-from .dependencies import CMSISDependency, CMSISDeviceSTM32F1Dependency, SensorBlobDependency, TinyUSBDependency
+from .dependencies import (CMSISDependency, CMSISDeviceEFM32GG12BDependency, CMSISDeviceSTM32F1Dependency,
+                           SensorBlobDependency, TinyUSBDependency)
 
 
 class NativeFamily(BuildConfiguration):
@@ -118,4 +119,57 @@ class STM32F1Family(BuildConfiguration):
         return cmsis_deps + [
             TinyUSBDependency(dependencies=cmsis_deps),
             SensorBlobDependency(),
+        ]
+
+
+class EFM32GG12Family(BuildConfiguration):
+    platform = 'efm32gg'
+
+    def init(self, args: Dict[str, Any]) -> None:
+        self.toolchain = 'arm-none-eabi'
+        self.bin_extension = 'elf'
+        self.generate_bin = True
+        self.generate_hex = True
+
+    def source(self) -> List[str]:
+        return self.platform_files(
+        )
+
+    def c_flags(self) -> List[str]:
+        return [
+            '-Os',
+            '-nostdlib',
+            '-nostartfiles',
+            '-ffunction-sections',
+            '-fdata-sections',
+            '-mthumb',
+            '-mcpu=cortex-m4',
+            '-mfloat-abi=hard',
+            '-mfpu=fpv4-sp-d16',
+            '-ffreestanding',
+        ]
+
+    def ld_flags(self) -> List[str]:
+        return [
+            '-mthumb',
+            '-mcpu=cortex-m4',
+            '-mfloat-abi=hard',
+            '-mfpu=fpv4-sp-d16',
+            '-lm',
+            '-lc',
+            '-lgcc',
+            '-lnosys',
+            '-nostdlib',
+            '-nostartfiles',
+            '-fdata-sections',
+            '-ffunction-sections',
+            '--specs=nano.specs',
+            '--specs=nosys.specs',
+            '-Wl,--gc-sections',
+        ]
+
+    def dependencies(self) -> List[BuildDependency]:
+        return [
+            CMSISDependency(components=['Core']),
+            CMSISDeviceEFM32GG12BDependency(),
         ]
