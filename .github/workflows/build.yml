@@ -20,6 +20,7 @@ jobs:
           - linux-uhid
           - 'stm32f1-generic -c rival310'
           - 'stm32f1-generic -c bluepill'
+          - 'efm32gg12-generic -c sltb009a'
     steps:
     - name: Update the system and install dependencies
       run: pacman -Syu --noconfirm --noprogressbar --needed python-pip ninja gcc arm-none-eabi-gcc arm-none-eabi-binutils arm-none-eabi-newlib pkgconf readline git
