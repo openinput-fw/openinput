@@ -139,6 +139,9 @@ class EFM32GG12Family(BuildConfiguration):
             'cmu.c',
             'systick.c',
             'gpio.c',
+            'usb.c',
+            'usb_descriptors.c',
+            'hal/hid.c',
         )
 
     def c_flags(self) -> List[str]:
@@ -175,7 +178,10 @@ class EFM32GG12Family(BuildConfiguration):
         ]
 
     def dependencies(self) -> List[BuildDependency]:
-        return [
+        cmsis_deps = [
             CMSISDependency(components=['Core']),
             CMSISDeviceEFM32GG12BDependency(),
+        ]
+        return cmsis_deps + [
+            TinyUSBDependency(dependencies=cmsis_deps),
         ]
