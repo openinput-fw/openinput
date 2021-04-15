@@ -138,6 +138,7 @@ class EFM32GG12Family(BuildConfiguration):
             'emu.c',
             'cmu.c',
             'systick.c',
+            'gpio.c',
         )
 
     def c_flags(self) -> List[str]:
