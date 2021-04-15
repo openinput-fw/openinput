@@ -136,6 +136,7 @@ class EFM32GG12Family(BuildConfiguration):
         return self.platform_files(
             'startup.c',
             'emu.c',
+            'cmu.c',
         )
 
     def c_flags(self) -> List[str]:
