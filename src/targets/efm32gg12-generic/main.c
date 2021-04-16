@@ -18,7 +18,7 @@
 #define CFG_TUSB_CONFIG_FILE "targets/efm32gg12-generic/tusb_config.h"
 #include "tusb.h"
 
-int main()
+void main()
 {
 #if defined(DCDC_PRESENT) && defined(DCDC_ENABLE)
 	emu_dcdc_init(DCDC_VOLTAGE, DCDC_ACTIVE_I, DCDC_SLEEP_I, DCDC_REVERSE_I); // Init DC-DC converter
