@@ -144,5 +144,6 @@ SECTIONS
         libc.a(*)
         libm.a(*)
         libgcc.a(*)
+        libnosys.a(*)
     }
 }
