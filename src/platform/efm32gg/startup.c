@@ -36,7 +36,7 @@ void __attribute__((weak)) __libc_init_array()
 {
 }
 
-extern int main();
+extern void __attribute__((noreturn)) main();
 
 #define DEFAULT_ISR "_default_isr"
 
@@ -144,7 +144,7 @@ void _trng0_isr() __attribute__((weak, alias(DEFAULT_ISR)));
 void _qspi0_isr() __attribute__((weak, alias(DEFAULT_ISR)));
 void _pdm_isr() __attribute__((weak, alias(DEFAULT_ISR)));
 
-__attribute__((section(".isr_vector"))) void (*const g_pfnVectors[])() = {
+__attribute__((section(".isr_vector"), used)) void (*const g_pfnVectors[])() = {
 	/* Cortex-M Exception Handlers */
 	_estack,
 	_reset_isr,
