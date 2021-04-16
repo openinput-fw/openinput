@@ -38,7 +38,7 @@ struct output_report {
 	u8 button3 : 1;
 } __attribute__((__packed__));
 
-int main()
+void main()
 {
 	flash_latency_config(72000000);
 

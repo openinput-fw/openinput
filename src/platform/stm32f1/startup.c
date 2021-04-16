@@ -36,7 +36,7 @@ void __attribute__((weak)) __libc_init_array()
 {
 }
 
-extern int main();
+extern void __attribute__((noreturn)) main();
 
 #define DEFAULT_ISR "_default_isr"
 
@@ -140,7 +140,7 @@ void _dma2_channel2_isr() __attribute__((weak, alias(DEFAULT_ISR)));
 void _dma2_channel3_isr() __attribute__((weak, alias(DEFAULT_ISR)));
 void _dma2_channel4_5_isr() __attribute__((weak, alias(DEFAULT_ISR)));
 
-__attribute__((section(".isr_vector"))) void (*const g_pfnVectors[])() = {
+__attribute__((section(".isr_vector"), used)) void (*const g_pfnVectors[])() = {
 	_estack,
 	_reset_isr,
 	_nmi_isr,
