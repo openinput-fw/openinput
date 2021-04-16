@@ -74,7 +74,7 @@ const u8 desc_configuration[] = {
 	/* configuration */
 	0x09,			/* LENGTH */
 	0x02,			/* DESCRIPTOR TYPE (Configuration) */
-	0x22, 0x00,		/* TOTAL LENGTH [Configuration(9) + Interface(9) + HID(9) + Endpoint(7) = 34] */
+	0x29, 0x00,		/* TOTAL LENGTH [Configuration(9)+Interface(9)+HID(9)+Edptin(7)+Edptout(7)=41] */
 	0x01,			/* NUM INTERFACES (1) */
 	0x01,			/* CONFIG NUMBER (1) */
 	0x00,			/* STRING INDEX (null) */
@@ -85,7 +85,7 @@ const u8 desc_configuration[] = {
 	0x04,			/* DESCRIPTOR TYPE (Interface) */
 	0x00,			/* INTERFACE NO (0) */
 	0x00,			/* ALTERNATE SETTING (none) */
-	0x01,			/* NUM ENDPOINTS (1) */
+	0x02,			/* NUM ENDPOINTS (2) */
 	0x03,			/* INTERFACE CLASS (HID) */
 	0x00,			/* INTERFACE SUBCLASS (None) */
 	0x00,			/* INTERFACE PROTOCOL (None) */
@@ -106,6 +106,13 @@ const u8 desc_configuration[] = {
 	0x03,			/* ATTRIBUTES (Interrupt) */
 	0x20, 0x00,		/* MAX PACKET SIZE (32) */
 	0x01,			/* POLLING INTERVAL (1000Hz) */
+	/* Endpoint out */
+	0x07,			/* LENGTH */
+	0x05,			/* DESCRIPTOR TYPE (Endpoint) */
+	0x01,			/* ENDPOINT ADDRESS (Endpoint 1, IN) */
+	0x03,			/* ATTRIBUTES (Interrupt) */
+	0x40, 0x00,		/* MAX PACKET SIZE (64) */
+	0x0A,			/* POLLING INTERVAL (100Hz) */
 	/* clang-format on */
 };
 
