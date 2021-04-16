@@ -11,6 +11,7 @@
 #include "platform/efm32gg/cmu.h"
 #include "platform/efm32gg/emu.h"
 #include "platform/efm32gg/gpio.h"
+#include "platform/efm32gg/hal/hid.h"
 #include "platform/efm32gg/systick.h"
 #include "platform/efm32gg/usb.h"
 
@@ -48,6 +49,24 @@ int main()
 	gpio_setup_pin(&gpio_config, led_io, GPIO_MODE_WIREDAND, 0);
 
 	gpio_apply_config(gpio_config);
+
+	struct hid_hal_t hid_hal;
+	u8 info_functions[] = {
+		OI_FUNCTION_VERSION,
+		OI_FUNCTION_FW_INFO,
+		OI_FUNCTION_SUPPORTED_FUNCTION_PAGES,
+		OI_FUNCTION_SUPPORTED_FUNCTIONS,
+	};
+
+	/* create protocol config */
+	struct protocol_config_t protocol_config;
+	memset(&protocol_config, 0, sizeof(protocol_config));
+	protocol_config.device_name = "openinput Device";
+	protocol_config.hid_hal = hid_hal_init();
+	protocol_config.functions[INFO] = info_functions;
+	protocol_config.functions_size[INFO] = sizeof(info_functions);
+
+	usb_attach_protocol_config(protocol_config);
 
 	usb_init();
 
