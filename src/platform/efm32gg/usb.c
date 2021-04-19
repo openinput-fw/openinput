@@ -76,9 +76,9 @@ u16 tud_hid_get_report_cb(u8 itf, u8 report_id, hid_report_type_t report_type, u
 /* Invoked when received SET_REPORT control request */
 void tud_hid_set_report_cb(u8 itf, u8 report_id, hid_report_type_t report_type, u8 const *buffer, u16 bufsize)
 {
-	(void) itf;
 	(void) report_id;
 	(void) report_type;
 
-	protocol_dispatch(protocol_config, (u8 *) buffer, bufsize);
+	if (itf == 0)
+		protocol_dispatch(protocol_config, (u8 *) buffer, bufsize);
 }
