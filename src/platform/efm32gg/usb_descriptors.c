@@ -3,67 +3,13 @@
  * SPDX-FileCopyrightText: 2021 Rafael Silva <perigoso@riseup.net>
  */
 
+#include "util/usb_descriptors.h"
 #include "protocol/reports.h"
 #include "util/data.h"
+#include "util/hid_descriptors.h"
 
 #define CFG_TUSB_CONFIG_FILE "targets/efm32gg12-generic/tusb_config.h"
 #include "tusb.h"
-
-/* Device descriptor */
-const u8 desc_device[] = {
-	/* clang-format off */
-	0x12,				/* LENGTH (18) */
-	0x01,				/* DESCRIPTOR TYPE (Device) */
-	0x00, 0x02,			/* USB SPEC VERSION (0x0200) */
-	0x00,				/* DEVICE CLASS */
-	0x00,				/* DEVICE SUBCLASS */
-	0x00,				/* DEVICE PROTOCOL */
-	0x40,				/* MAX EP0 PACKET SIZE */
-	(u8)(USB_VID & 0x00ff),			/* VENDOR ID */
-	(u8)((USB_VID >> 8) & 0x00ff),
-	(u8)(USB_PID & 0x00ff),			/* PRODUCT ID */
-	(u8)((USB_PID >> 8) & 0x00ff),
-	0x00, 0x01,			/* DEVICE RELEASE */
-	0x01,				/* MANUFACTURER STRING INDEX */
-	0x02,				/* PRODUCT STRING INDEX */
-	0x00,				/* SERIAL STRING INDEX (None) */
-	0x01,				/* NO CONFIGURATIONS */
-	/* clang-format on */
-};
-
-/* HID Mouse report descriptor */
-const u8 desc_hid_mouse_report[] = {
-	/* clang-format off */
-	0x05, 0x01,	/* USAGE_PAGE (Generic Desktop) */
-	0x09, 0x02,	/* USAGE (Mouse) */
-	0xa1, 0x01,	/* COLLECTION (Application) */
-	0x09, 0x01,		/* USAGE (Pointer) */
-	0xa1, 0x00,		/* COLLECTION (Physical) */
-	0x85, 0x01,			/* REPORT_ID (0x01) */
-	0x05, 0x01,			/* USAGE_PAGE (Generic Desktop) */
-	0x09, 0x30,			/* USAGE (X) */
-	0x09, 0x31,			/* USAGE (Y) */
-	0x09, 0x38,			/* USAGE (WHEEL) */
-	0x15, 0x81,			/* LOGICAL_MINIMUM (-127) */
-	0x25, 0x7f,			/* LOGICAL_MAXIMUM (127) */
-	0x75, 0x08,			/* REPORT_SIZE (8) */
-	0x95, 0x03,			/* REPORT_COUNT (3) */
-	0x81, 0x06,			/* INPUT (Data,Var,Rel) */
-	0x05, 0x09,			/* USAGE_PAGE (Button) */
-	0x19, 0x01,			/* USAGE_MINIMUM (Button 1) */
-	0x29, 0x03,			/* USAGE_MAXIMUM (Button 3) */
-	0x15, 0x00,			/* LOGICAL_MINIMUM (0) */
-	0x25, 0x01,			/* LOGICAL_MAXIMUM (1) */
-	0x95, 0x03,			/* REPORT_COUNT (3) */
-	0x75, 0x01,			/* REPORT_SIZE (1) */
-	0x81, 0x02,			/* INPUT (Data,Var,Abs) */
-	0x95, 0x01,			/* REPORT_COUNT (1) */
-	0x75, 0x05,			/* REPORT_SIZE (5) */
-	0x81, 0x01,			/* INPUT (Cnst,Var,Abs) */
-	0xc0,			/* END_COLLECTION */
-	0xc0,		/* END_COLLECTION */
-	/* clang-format on */
-};
 
 /* HID Report Descriptor */
 static u8 desc_hid_report[sizeof(oi_rdesc) + sizeof(desc_hid_mouse_report)];

@@ -16,9 +16,6 @@
 
 /* USB Config */
 
-#define USB_VID 0x1D50 /* Attributed by openmoko */
-#define USB_PID 0x616A /* Attributed by openmoko */
-
 /*
  * The USB standard requires a 1.5k pullup resistor on D+
  * Bluepill boards are known to come with the wrong value resistor here (R10)

@@ -21,8 +21,3 @@
 #define DCDC_REVERSE_I  0
 
 #define REGULATOR_OUT   3300.f
-
-/* USB Config */
-
-#define USB_VID 0x1D50 /* Attributed by openmoko */
-#define USB_PID 0x616A /* Attributed by openmoko */
