@@ -11,22 +11,20 @@
 #define CFG_TUSB_CONFIG_FILE "targets/stm32f1-generic/tusb_config.h"
 #include "tusb.h"
 
-/* HID Report Descriptor */
-static u8 desc_hid_report[sizeof(oi_rdesc) + sizeof(desc_hid_mouse_report)];
-
 /* Configuration Descriptor */
 const u8 desc_configuration[] = {
 	/* clang-format off */
 	/* configuration */
 	0x09,			/* LENGTH */
 	0x02,			/* DESCRIPTOR TYPE (Configuration) */
-	0x29, 0x00,		/* TOTAL LENGTH [Configuration(9)+Interface(9)+HID(9)+Edptin(7)+Edptout(7)=41] */
-	0x01,			/* NUM INTERFACES (1) */
+	0x62, 0x00,		/* TOTAL LENGTH (98) */
+	0x03,			/* NUM INTERFACES (3) */
 	0x01,			/* CONFIG NUMBER (1) */
 	0x00,			/* STRING INDEX (null) */
 	0xA0,			/* ATTRIBUTES (Bus powered, Remote wakeup) */
 	0x32,			/* MAX POWER (100mA) */
-	/* Interface */
+
+	/* Interface 0 - openinput protocol */
 	0x09,			/* LENGTH */
 	0x04,			/* DESCRIPTOR TYPE (Interface) */
 	0x00,			/* INTERFACE NO (0) */
@@ -43,7 +41,7 @@ const u8 desc_configuration[] = {
 	0x00,			/* COUNTRY CODE (None) */
 	0x01,			/* NO DESCRIPTORS (1) */
 	0x22,			/* DESCRIPTOR TYPE (Report) */
-	sizeof(desc_hid_report),
+	sizeof(oi_rdesc),
 	0x00,			/* DESCRIPTOR LENGTH () */
 	/* Endpoint in */
 	0x07,			/* LENGTH */
@@ -51,11 +49,74 @@ const u8 desc_configuration[] = {
 	0x81,			/* ENDPOINT ADDRESS (Endpoint 1, IN) */
 	0x03,			/* ATTRIBUTES (Interrupt) */
 	0x40, 0x00,		/* MAX PACKET SIZE (64) */
-	0x01,			/* POLLING INTERVAL (1000Hz) */
+	0x0A,			/* POLLING INTERVAL (100Hz) */
 	/* Endpoint out */
 	0x07,			/* LENGTH */
 	0x05,			/* DESCRIPTOR TYPE (Endpoint) */
-	0x01,			/* ENDPOINT ADDRESS (Endpoint 1, IN) */
+	0x01,			/* ENDPOINT ADDRESS (Endpoint 1, OUT) */
+	0x03,			/* ATTRIBUTES (Interrupt) */
+	0x40, 0x00,		/* MAX PACKET SIZE (64) */
+	0x0A,			/* POLLING INTERVAL (100Hz) */
+
+
+	/* Interface 1 - HID Mouse */
+	0x09,			/* LENGTH */
+	0x04,			/* DESCRIPTOR TYPE (Interface) */
+	0x01,			/* INTERFACE NO (1) */
+	0x00,			/* ALTERNATE SETTING (none) */
+	0x01,			/* NUM ENDPOINTS (1) */
+	0x03,			/* INTERFACE CLASS (HID) */
+	0x00,			/* INTERFACE SUBCLASS (None) */
+	0x00,			/* INTERFACE PROTOCOL (None) */
+	0x00,			/* INTERFACE STRING (Null) */
+	/* HID */
+	0x09,			/* LENGTH */
+	0x21,			/* DESCRIPTOR TYPE (hid) */
+	0x11, 0x01,		/* HID VERSION (0x0111) */
+	0x00,			/* COUNTRY CODE (None) */
+	0x01,			/* NO DESCRIPTORS (1) */
+	0x22,			/* DESCRIPTOR TYPE (Report) */
+	sizeof(desc_hid_mouse_report),
+	0x00,			/* DESCRIPTOR LENGTH () */
+	/* Endpoint in */
+	0x07,			/* LENGTH */
+	0x05,			/* DESCRIPTOR TYPE (Endpoint) */
+	0x82,			/* ENDPOINT ADDRESS (Endpoint 2, IN) */
+	0x03,			/* ATTRIBUTES (Interrupt) */
+	0x40, 0x00,		/* MAX PACKET SIZE (64) */
+	0x01,			/* POLLING INTERVAL (1000Hz) */
+
+
+	/* Interface 2 - HID Keyboard */
+	0x09,			/* LENGTH */
+	0x04,			/* DESCRIPTOR TYPE (Interface) */
+	0x02,			/* INTERFACE NO (2) */
+	0x00,			/* ALTERNATE SETTING (none) */
+	0x02,			/* NUM ENDPOINTS (2) */
+	0x03,			/* INTERFACE CLASS (HID) */
+	0x00,			/* INTERFACE SUBCLASS (None) */
+	0x00,			/* INTERFACE PROTOCOL (None) */
+	0x00,			/* INTERFACE STRING (Null) */
+	/* HID */
+	0x09,			/* LENGTH */
+	0x21,			/* DESCRIPTOR TYPE (hid) */
+	0x11, 0x01,		/* HID VERSION (0x0111) */
+	0x00,			/* COUNTRY CODE (None) */
+	0x01,			/* NO DESCRIPTORS (1) */
+	0x22,			/* DESCRIPTOR TYPE (Report) */
+	sizeof(desc_hid_keyboard_report),
+	0x00,			/* DESCRIPTOR LENGTH () */
+	/* Endpoint in */
+	0x07,			/* LENGTH */
+	0x05,			/* DESCRIPTOR TYPE (Endpoint) */
+	0x83,			/* ENDPOINT ADDRESS (Endpoint 3, IN) */
+	0x03,			/* ATTRIBUTES (Interrupt) */
+	0x40, 0x00,		/* MAX PACKET SIZE (64) */
+	0x0A,			/* POLLING INTERVAL (100Hz) */
+	/* Endpoint out */
+	0x07,			/* LENGTH */
+	0x05,			/* DESCRIPTOR TYPE (Endpoint) */
+	0x03,			/* ENDPOINT ADDRESS (Endpoint 3, OUT) */
 	0x03,			/* ATTRIBUTES (Interrupt) */
 	0x40, 0x00,		/* MAX PACKET SIZE (64) */
 	0x0A,			/* POLLING INTERVAL (100Hz) */
@@ -74,14 +135,23 @@ u8 const *tud_descriptor_device_cb(void)
 /* Descriptor contents must exist long enough for transfer to complete */
 u8 const *tud_hid_descriptor_report_cb(u8 itf)
 {
-	(void) itf;
+	switch (itf) {
+		case 0:
+			return oi_rdesc;
+			break;
 
-	memcpy(desc_hid_report, oi_rdesc, sizeof(oi_rdesc)); /* protocol report descriptor */
-	memcpy(desc_hid_report + sizeof(oi_rdesc),
-	       desc_hid_mouse_report,
-	       sizeof(desc_hid_mouse_report)); /* mouse report descriptor */
+		case 1:
+			return desc_hid_mouse_report;
+			break;
 
-	return (u8 const *) desc_hid_report;
+		case 2:
+			return desc_hid_keyboard_report;
+			break;
+
+		default:
+			return NULL;
+			break;
+	}
 }
 
 /* Invoked when received GET CONFIGURATION DESCRIPTOR */

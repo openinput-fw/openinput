@@ -123,7 +123,7 @@ void main()
 			new_data = 1;
 		}
 
-		if (tud_hid_ready() && new_data) {
+		if (tud_hid_n_ready(0) && new_data) {
 			struct deltas_t deltas = pixart_pmw_get_deltas(&sensor);
 
 			/* fill report */
@@ -132,7 +132,7 @@ void main()
 			report.x = deltas.dx;
 			report.y = deltas.dy;
 
-			tud_hid_report(0, &report, sizeof(report));
+			tud_hid_n_report(1, 0, &report, sizeof(report));
 
 			new_data = 0;
 		}
