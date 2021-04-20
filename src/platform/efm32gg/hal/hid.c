@@ -5,7 +5,7 @@
 
 #include "platform/efm32gg/hal/hid.h"
 
-#define CFG_TUSB_CONFIG_FILE "targets/efm32gg12-generic/tusb_config.h"
+#define CFG_TUSB_CONFIG_FILE "targets/efm32gg12b-generic/tusb_config.h"
 #include "tusb.h"
 
 int hid_hal_send(struct hid_hal_t interface, u8 *buffer, size_t buffer_size)

@@ -8,7 +8,7 @@
 #include "platform/efm32gg/usb.h"
 #include "util/types.h"
 
-#define CFG_TUSB_CONFIG_FILE "targets/efm32gg12-generic/tusb_config.h"
+#define CFG_TUSB_CONFIG_FILE "targets/efm32gg12b-generic/tusb_config.h"
 #include "tusb.h"
 
 static struct protocol_config_t protocol_config;
