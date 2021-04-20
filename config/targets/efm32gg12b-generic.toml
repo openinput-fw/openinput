@@ -1,0 +1,6 @@
+family = 'efm32gg12b'
+has-config = true
+
+[dependencies]
+cmsis-dfp-efm32gg12b = {}
+sensor-blobs = {}

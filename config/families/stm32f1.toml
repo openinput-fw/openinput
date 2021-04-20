@@ -1,0 +1,48 @@
+toolchain = 'arm-none-eabi'
+c_flags = [
+	'-Os',
+	'-nostdlib',
+	'-nostartfiles',
+	'-ffunction-sections',
+	'-fdata-sections',
+	'-march=armv7-m',
+	'-mtune=cortex-m3',
+	'-mthumb',
+	'-mfloat-abi=soft',
+	'-ffreestanding',
+]
+ld_flags = [
+	'-lm',
+	'-lc',
+	'-lgcc',
+	'-lnosys',
+	'-nostdlib',
+	'-nostartfiles',
+	'-fdata-sections',
+	'-ffunction-sections',
+	'--specs=nano.specs',
+	'--specs=nosys.specs',
+	'-Wl,--gc-sections',
+	'-march=armv7-m',
+	'-mtune=cortex-m3',
+	'-mthumb',
+]
+source = [
+	'startup.c',
+	'exceptions.c',
+	'flash.c',
+	'rcc.c',
+	'systick.c',
+	'hal/ticks.c',
+	'gpio.c',
+	'usb.c',
+	'usb_descriptors.c',
+	'hal/hid.c',
+	'spi.c',
+	'hal/spi.c',
+]
+
+[dependencies]
+cmsis-5 = {}
+cmsis-dfp-stm32f1 = {}
+tinyusb = { target = 'st/stm32_fsdev' }

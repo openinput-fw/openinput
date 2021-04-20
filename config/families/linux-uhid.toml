@@ -1,0 +1,28 @@
+has-linker = false
+c_flags = [
+	'-pipe',
+	'-fno-plt',
+	'-fsanitize=address',
+]
+ld_flags = [
+	'-Wl,--sort-common,--as-needed,-z,relro,-z,now',
+	'-fsanitize=address',
+]
+source = [
+	'hal/hid.c',
+	'uhid.c',
+]
+
+[release]
+c_flags = [
+	'-O2',
+]
+
+[debug]
+c_flags = [
+	'-g',
+	'-fvar-tracking-assignments',
+]
+ld_flags = [
+	'-g',
+]

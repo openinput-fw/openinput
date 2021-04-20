@@ -72,24 +72,13 @@ for your target architecture.
       - Steelseries Rival 310
    - EFM32
 
-Some targets might also depend on external projects, which are included as git
-submodules. You will need to fetch the submodules.
-
-
-.. code-block:: console
-
-   $ git submodule update --init --recursive
-
-
-.. todo::
-
-   We are planning to make the build system able to fetch the submodules on its
-   own. This would allow us to only fetch the modules the build target needs.
-
 
 After having all requirements met we can build! First we will run
 ``configure.py`` to generate a ``build.ninja`` for our target and then we will
 invoke ``ninja`` to actually do the building.
+
+``configure.py`` will clone the necessary submodules by default, you can pass the
+``--no-fetch``/``-n`` option to disable this behavior.
 
 
 .. code-block:: console
