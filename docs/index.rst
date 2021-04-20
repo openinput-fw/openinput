@@ -66,7 +66,7 @@ for your target architecture.
 
 - Native (``pacman -S gcc binutils glibc``)
    - Linux UHID (``linux-uhid``)
-- ``arm-none-eabi`` (``pacman -S arm-none-eabi-gcc arm-none-eabi-bintuils arm-none-eabi-newlib``)
+- ``arm-none-eabi`` (``pacman -S arm-none-eabi-gcc arm-none-eabi-binutils arm-none-eabi-newlib``)
    - STM32F1 (``stm32f1-generic``)
       - Bluepill
       - Steelseries Rival 310
