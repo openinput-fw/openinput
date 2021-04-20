@@ -8,7 +8,7 @@
 #include "util/data.h"
 #include "util/hid_descriptors.h"
 
-#define CFG_TUSB_CONFIG_FILE "targets/efm32gg12-generic/tusb_config.h"
+#define CFG_TUSB_CONFIG_FILE "targets/efm32gg12b-generic/tusb_config.h"
 #include "tusb.h"
 
 /* Configuration Descriptor */
