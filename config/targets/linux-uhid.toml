@@ -1,0 +1,7 @@
+family = 'linux-uhid'
+c_flags = [
+	'-pthread',
+]
+ld_flags = [
+	'-lreadline',
+]
