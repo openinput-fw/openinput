@@ -10,9 +10,12 @@ Open source firmware for input devices.
 
 ### Supported Targets
 - Linux UHID (mainly for testing/emulation)
-- STM32F1 (planned)
+- STM32F1
   - Blue pill
   - Steelseries Rival 310
+- EFM32
+- SAMS70 (planned)
+- SAM3U (planned)
 
 ### Instructions
 

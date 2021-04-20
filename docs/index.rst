@@ -33,7 +33,7 @@ a `libratbag`_ driver.
 
    - Linux UHID target |:+1:|
    - Steelseries Rival 310 target |:hammer:|
-   - Custom hardware target (supporting USB full speed - 8kHz report rate)
+   - Custom hardware target (supporting USB full speed - 8kHz report rate) |:hammer:|
    - Custom wireless target (device + receiver)
 
    - libratbag_ driver (allows use in piper_) |:+1:|
@@ -70,6 +70,7 @@ for your target architecture.
    - STM32F1 (``stm32f1-generic``)
       - Bluepill
       - Steelseries Rival 310
+   - EFM32
 
 Some targets might also depend on external projects, which are included as git
 submodules. You will need to fetch the submodules.
