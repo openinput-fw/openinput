@@ -95,7 +95,7 @@ After this, you should have you shiny new object in ``build/out``.
 
    Source Code <https://github.com/openinput-fw/openinput/>
    Issue Tracker <https://github.com/openinput-fw/openinput/issues>
-   Protocol Definition <https://github.com/openinput-fw/openinput-protocol>
+   Protocol Definition <https://openinput-protocol.readthedocs.io>
 
 
 .. _libratbag: https://github.com/libratbag/libratbag
