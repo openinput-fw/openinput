@@ -5,7 +5,7 @@
 
 #include <stm32f1xx.h>
 
-void __attribute__((naked)) _hardfault_isr()
+void __attribute__((naked, aligned(4))) _hardfault_isr()
 {
 	__asm__ volatile(" tst lr, #4                                                \n"
 			 " ite eq                                                    \n"
@@ -17,7 +17,7 @@ void __attribute__((naked)) _hardfault_isr()
 			 " hardfault_trace_stack_addr: .word hardfault_trace_stack   \n");
 }
 
-void __attribute__((naked)) _memmanage_isr()
+void __attribute__((naked, aligned(4))) _memmanage_isr()
 {
 	__asm__ volatile(" tst lr, #4                                                \n"
 			 " ite eq                                                    \n"
@@ -29,7 +29,7 @@ void __attribute__((naked)) _memmanage_isr()
 			 " memmanage_trace_stack_addr: .word memmanage_trace_stack   \n");
 }
 
-void __attribute__((naked)) _busfault_isr()
+void __attribute__((naked, aligned(4))) _busfault_isr()
 {
 	__asm__ volatile(" tst lr, #4                                                \n"
 			 " ite eq                                                    \n"
@@ -41,7 +41,7 @@ void __attribute__((naked)) _busfault_isr()
 			 " busfault_trace_stack_addr: .word busfault_trace_stack     \n");
 }
 
-void __attribute__((naked)) _usagefault_isr()
+void __attribute__((naked, aligned(4))) _usagefault_isr()
 {
 	__asm__ volatile(" tst lr, #4                                                \n"
 			 " ite eq                                                    \n"
