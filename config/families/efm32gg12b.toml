@@ -38,6 +38,7 @@ source = [
 	'usb_descriptors.c',
 	'hal/hid.c',
 	'driver/key_direct.c',
+	'driver/key_matrix.c',
 ]
 
 [dependencies]
