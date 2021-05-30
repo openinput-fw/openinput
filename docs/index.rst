@@ -32,9 +32,9 @@ a `libratbag`_ driver.
 .. admonition:: Roadmap
 
    - Linux UHID target |:+1:|
-   - Steelseries Rival 310 target |:hammer:|
-   - Custom hardware target (supporting USB full speed - 8kHz report rate) |:hammer:|
-   - Custom wireless target (device + receiver)
+   - Steelseries Rival 310 target |:+1:|
+   - `Custom hardware target`_ (supporting USB full speed - 8kHz report rate) |:+1:|
+   - Custom wireless target (device + receiver) |:hammer:|
 
    - libratbag_ driver (allows use in piper_) |:+1:|
    - fwupd_ plugin (firmware updates)
@@ -98,6 +98,7 @@ After this, you should have you shiny new object in ``build/out``.
    Protocol Definition <https://openinput-protocol.readthedocs.io>
 
 
+.. _Custom hardware target: https://github.com/openinput-fw/sammy
 .. _libratbag: https://github.com/libratbag/libratbag
 .. _piper: https://github.com/libratbag/piper
 .. _fwupd: https://github.com/fwupd/fwupd
