@@ -93,6 +93,13 @@ After this, you should have you shiny new object in ``build/out``.
 .. toctree::
    :hidden:
 
+   Contributing <contributing/index>
+
+
+.. toctree::
+   :caption: External Links
+   :hidden:
+
    Source Code <https://github.com/openinput-fw/openinput/>
    Issue Tracker <https://github.com/openinput-fw/openinput/issues>
    Protocol Definition <https://openinput-protocol.readthedocs.io>
