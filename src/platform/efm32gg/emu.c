@@ -68,9 +68,9 @@ void emu_dcdc_init(float target_voltage, float max_ln_current, float max_lp_curr
 		fet_count = 16;
 
 	EMU->DCDCMISCCTRL = (EMU->DCDCMISCCTRL & ~_EMU_DCDCMISCCTRL_NFETCNT_MASK) |
-			    ((u32)(fet_count - 1) << _EMU_DCDCMISCCTRL_NFETCNT_SHIFT);
+			    ((u32) (fet_count - 1) << _EMU_DCDCMISCCTRL_NFETCNT_SHIFT);
 	EMU->DCDCMISCCTRL = (EMU->DCDCMISCCTRL & ~_EMU_DCDCMISCCTRL_PFETCNT_MASK) |
-			    ((u32)(fet_count - 1) << _EMU_DCDCMISCCTRL_PFETCNT_SHIFT);
+			    ((u32) (fet_count - 1) << _EMU_DCDCMISCCTRL_PFETCNT_SHIFT);
 
 	u8 ln_current_limit = (((max_ln_current + 40.f) * 1.5f) / (5.f * fet_count)) - 1;
 	u8 lp_current_limit = 1; /* Recommended value */

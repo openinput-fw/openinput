@@ -179,7 +179,7 @@ void cmu_init(u32 external_clock_value)
 	cmu_hfrco_calib(HFRCO_CALIB_72M | CMU_HFRCOCTRL_FINETUNINGEN, 72000000);
 
 	/* Setup the PLL */
-	u32 pllfactor = (u32)((72000000.0f / (float) external_clock_value) * 100.0f);
+	u32 pllfactor = (u32) ((72000000.0f / (float) external_clock_value) * 100.0f);
 
 	CMU->DPLLCTRL =
 		CMU_DPLLCTRL_REFSEL_HFXO | CMU_DPLLCTRL_AUTORECOVER | CMU_DPLLCTRL_EDGESEL_RISE | CMU_DPLLCTRL_MODE_FREQLL;
