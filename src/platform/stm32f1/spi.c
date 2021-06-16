@@ -127,7 +127,7 @@ u8 spi_transfer_byte(struct spi_device_t device, const u8 data)
 
 	while (!(((SPI_TypeDef *) device.interface)->SR & SPI_SR_RXNE)) continue;
 
-	return (u8)((SPI_TypeDef *) device.interface)->DR;
+	return (u8) ((SPI_TypeDef *) device.interface)->DR;
 }
 
 void spi_transfer(struct spi_device_t device, const u8 *src, u32 size, u8 *dst)
