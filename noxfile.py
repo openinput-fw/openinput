@@ -83,3 +83,6 @@ def test(session):
         '--html-details', htmlcov_index_output,
     )
     print(f'coverage report available at: file://{os.path.abspath(htmlcov_index_output)}')
+
+    # print C coverage report
+    session.run('gcovr', '-r', '.', '-b')
