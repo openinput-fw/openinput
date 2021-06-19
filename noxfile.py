@@ -44,6 +44,7 @@ def save_path(path):
 @nox.session()
 def test(session):
     htmlcov_output = os.path.join(session.virtualenv.location, 'htmlcov')
+    htmlcov_index_output = os.path.join(htmlcov_output, 'index.html')
     xmlcov_output = os.path.join(session.virtualenv.location, 'coverage.xml')
 
     if not os.path.isdir(htmlcov_output):
@@ -79,5 +80,6 @@ def test(session):
     session.run(
         'gcovr', '-r', '.', '-b',
         '--xml', xmlcov_output,
-        '--html-details', os.path.join(htmlcov_output, 'index.html'),
+        '--html-details', htmlcov_index_output,
     )
+    print(f'coverage report available at: file://{os.path.abspath(htmlcov_index_output)}')
