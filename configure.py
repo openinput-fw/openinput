@@ -448,12 +448,12 @@ class BuildSystemBuilder():
             # build output objects
             nw.comment('target')
             nw.newline()
-            out_name = '-'.join(filter(None, [
+            out_name = self._target_config.get('out-name', '-'.join(filter(None, [
                 'openinput',
                 self._target,
                 self.version.replace('.', '-'),
                 'dirty' if self._is_git_dirty() else None,
-            ]))
+            ])))
             out = nw.extension(out_name, self._bin_extension)
             if self._target_config.get('is-shared-library') is True:
                 nw.build(out, 'link', objs, variables={
