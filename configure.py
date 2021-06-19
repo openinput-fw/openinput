@@ -298,11 +298,14 @@ class BuildSystemBuilder():
                 self._family_config.get('toolchain'),
             )
 
-        if self._toolchain and self._toolchain.endswith('-'):
-            warnings.warn(
-                f'Specified `{self._toolchain}` as the cross toolchain, '
-                f'did you mean `{self._toolchain[:-1]}`?'
-            )
+        if self._toolchain:
+            if self._target_config.get('is-shared-library'):
+                _error('`is-shared-library` not available when cross compiling')
+            if self._toolchain.endswith('-'):
+                warnings.warn(
+                    f'Specified `{self._toolchain}` as the cross toolchain, '
+                    f'did you mean `{self._toolchain[:-1]}`?'
+                )
         for tool in self._REQUIRED_TOOLS:
             name = '-'.join(filter(None, [self._toolchain, tool]))
             if shutil.which(name) is None:
@@ -310,7 +313,10 @@ class BuildSystemBuilder():
 
     def _calculate_extensions(self) -> None:
         if not self._toolchain:  # native
-            self._bin_extension = 'exe' if os.name == 'nt' else ''
+            if self._target_config.get('is-shared-library'):
+                self._bin_extension = 'dll' if os.name == 'nt' else 'so'
+            else:
+                self._bin_extension = 'exe' if os.name == 'nt' else ''
             self._generate_bin = False
             self._generate_hex = False
         else:
@@ -449,7 +455,12 @@ class BuildSystemBuilder():
                 'dirty' if self._is_git_dirty() else None,
             ]))
             out = nw.extension(out_name, self._bin_extension)
-            nw.build(out, 'link', objs)
+            if self._target_config.get('is-shared-library') is True:
+                nw.build(out, 'link', objs, variables={
+                    'ld_flags': self._options['ld_flags'] + ['-shared']
+                })
+            else:
+                nw.build(out, 'link', objs)
             nw.newline()
 
             if self._generate_bin:
