@@ -4,3 +4,4 @@ build.ninja
 __pycache__
 docs/_build
 docs/out
+.nox/

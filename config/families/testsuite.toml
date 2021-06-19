@@ -1,0 +1,26 @@
+has-linker = false
+c_flags = [
+	'-pipe',
+	'-fno-plt',
+	'-fPIC',
+	'--coverage',
+]
+ld_flags = [
+	'-Wl,--sort-common,--as-needed,-z,relro,-z,now',
+	'--coverage',
+]
+source = []
+
+[release]
+c_flags = [
+	'-O2',
+]
+
+[debug]
+c_flags = [
+	'-g',
+	'-fvar-tracking-assignments',
+]
+ld_flags = [
+	'-g',
+]
