@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: MIT
 
+import contextlib
 import glob
 import os
 import os.path
@@ -28,6 +29,18 @@ def install_dependencies(session, dependencies):
         print('no dependencies to install')
 
 
+@contextlib.contextmanager
+def save_path(path):
+    if os.path.exists(path):
+        os.rename(path, f'{path}.bak')
+        try:
+            yield
+        finally:
+            os.rename(f'{path}.bak', path)
+    else:
+        yield
+
+
 @nox.session()
 def test(session):
     htmlcov_output = os.path.join(session.virtualenv.location, 'htmlcov')
@@ -51,8 +64,9 @@ def test(session):
         os.remove(file)
 
     # build testsuite
-    session.run('python', 'configure.py', 'testsuite')
-    session.run('ninja', external=True)
+    with save_path('build.ninja'):
+        session.run('python', 'configure.py', 'testsuite')
+        session.run('ninja', external=True)
 
     # run tests
     session.run(
