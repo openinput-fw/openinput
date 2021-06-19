@@ -4,6 +4,8 @@
 
 ![check](https://github.com/openinput-fw/openinput/workflows/check/badge.svg)
 ![build](https://github.com/openinput-fw/openinput/workflows/build/badge.svg)
+![test](https://github.com/openinput-fw/openinput/workflows/test/badge.svg)
+[![codecov](https://codecov.io/gh/openinput-fw/openinput/branch/main/graph/badge.svg?token=aVVYxo5tUf)](https://codecov.io/gh/openinput-fw/openinput)
 [![Documentation Status](https://readthedocs.org/projects/openinput/badge/?version=latest)](https://openinput.readthedocs.io/en/latest/?badge=latest)
 
 Open source firmware for input devices.
