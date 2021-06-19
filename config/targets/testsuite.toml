@@ -1,0 +1,3 @@
+family = 'testsuite'
+is-shared-library = true
+out-name = 'libtestsuite'
