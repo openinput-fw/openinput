@@ -1,0 +1,30 @@
+name: test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux
+    steps:
+    - name: Update the system and install dependencies
+      run: pacman -Syu --noconfirm --noprogressbar --needed python-pip ninja gcc git
+
+    - name: Install nox
+      run: pip install nox
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Run tests
+      run: nox
+
+    - uses: codecov/codecov-action@v1
+      if: ${{ always() }}
