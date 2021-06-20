@@ -7,6 +7,10 @@
 
 #include "util/types.h"
 
+#define VENDOR_ID  0x1D50
+#define PRODUCT_ID 0x616A
+#define RELEASE	   0x0001
+
 /* Device descriptor */
 static const u8 desc_device[] = {
 	/* clang-format off */
