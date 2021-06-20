@@ -185,6 +185,9 @@ int main(void)
 	for (;;) {
 		/* process shell - user action */
 		line = readline("# ");
+		if (!line)
+			goto exit;
+
 		add_history(line);
 		arg = strtok(line, " ");
 
