@@ -17,6 +17,7 @@ struct uhid_data_t {
 };
 
 int uhid_open(struct uhid_data_t *data);
+void uhid_close(struct uhid_data_t data);
 int uhid_create(struct uhid_data_t data, struct uhid_create2_req request);
 int uhid_read_event(struct uhid_data_t data, struct uhid_event *event);
 void uhid_wait_for_kernel_start(struct uhid_data_t data);

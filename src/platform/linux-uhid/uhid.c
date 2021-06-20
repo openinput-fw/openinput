@@ -56,6 +56,12 @@ int uhid_open(struct uhid_data_t *data)
 	return 0;
 }
 
+void uhid_close(struct uhid_data_t data)
+{
+	close(data.uhid_fd);
+	close(data.epoll_fd);
+}
+
 int uhid_create(struct uhid_data_t data, struct uhid_create2_req request)
 {
 	struct uhid_event event = {UHID_CREATE2, .u.create2 = request};
