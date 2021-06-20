@@ -24,6 +24,7 @@
 #include "protocol/protocol.h"
 #include "protocol/reports.h"
 #include "util/hid_descriptors.h"
+#include "util/usb_descriptors.h"
 
 static char *usage = "commands:\n"
 		     "\thelp               \t\tshows this help message\n"
@@ -121,8 +122,9 @@ int main(void)
 	rdesc_size += sizeof(desc_hid_mouse_report);
 	create.rd_size = rdesc_size;
 	create.bus = BUS_USB;
-	create.vendor = 0x9999;
-	create.product = 0x9999;
+	create.vendor = VENDOR_ID;
+	create.product = PRODUCT_ID;
+	create.version = RELEASE;
 	ret = uhid_create(uhid, create);
 	if (ret)
 		goto exit;
