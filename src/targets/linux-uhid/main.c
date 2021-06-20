@@ -119,7 +119,7 @@ int main(void)
 	struct output_report report;
 	struct uhid_create2_req create;
 
-	pthread_t uhid_dispatch_thread;
+	pthread_t uhid_dispatch_thread = 0;
 	struct uhid_dispatch_args_t args;
 	int uhid_dispatch_exit = 0;
 	unsigned int rdesc_size = 0;
@@ -176,7 +176,10 @@ int main(void)
 	args.uhid = uhid;
 	args.config = config;
 	args.exit = &uhid_dispatch_exit;
-	pthread_create(&uhid_dispatch_thread, NULL, uhid_dispatch, &args);
+	if (pthread_create(&uhid_dispatch_thread, NULL, uhid_dispatch, &args)) {
+		uhid_dispatch_thread = 0;
+		goto exit;
+	}
 
 	/* main loop */
 	for (;;) {
@@ -260,7 +263,8 @@ int main(void)
 
 exit:
 	uhid_dispatch_exit = 1;
-	pthread_join(uhid_dispatch_thread, NULL);
+	if (uhid_dispatch_thread)
+		pthread_join(uhid_dispatch_thread, NULL);
 
 	free(line);
 	close(uhid.epoll_fd);
