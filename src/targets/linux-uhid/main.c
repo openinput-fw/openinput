@@ -120,7 +120,7 @@ int main(void)
 	       sizeof(desc_hid_mouse_report)); /* mouse report descriptor */
 	rdesc_size += sizeof(desc_hid_mouse_report);
 	create.rd_size = rdesc_size;
-	create.bus = 0x03;
+	create.bus = BUS_USB;
 	create.vendor = 0x9999;
 	create.product = 0x9999;
 	ret = uhid_create(uhid, create);
