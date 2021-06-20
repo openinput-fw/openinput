@@ -23,51 +23,7 @@
 #include "platform/linux-uhid/uhid.h"
 #include "protocol/protocol.h"
 #include "protocol/reports.h"
-
-#define OI_MOUSE_REPORT_ID 0x01
-
-static const u8 rdesc[] = {
-	/* clang-format off */
-	0x05, 0x01,	/* USAGE_PAGE (Generic Desktop) */
-	0x09, 0x02,	/* USAGE (Mouse) */
-	0xa1, 0x01,	/* COLLECTION (Application) */
-	0x09, 0x01,		/* USAGE (Pointer) */
-	0xa1, 0x00,		/* COLLECTION (Physical) */
-	0x85, 0x01,			/* REPORT_ID (0x01) */
-	0x05, 0x01,			/* USAGE_PAGE (Generic Desktop) */
-	0x09, 0x30,			/* USAGE (X) */
-	0x09, 0x31,			/* USAGE (Y) */
-	0x09, 0x38,			/* USAGE (WHEEL) */
-	0x15, 0x81,			/* LOGICAL_MINIMUM (-127) */
-	0x25, 0x7f,			/* LOGICAL_MAXIMUM (127) */
-	0x75, 0x08,			/* REPORT_SIZE (8) */
-	0x95, 0x03,			/* REPORT_COUNT (3) */
-	0x81, 0x06,			/* INPUT (Data,Var,Rel) */
-	0x05, 0x09,			/* USAGE_PAGE (Button) */
-	0x19, 0x01,			/* USAGE_MINIMUM (Button 1) */
-	0x29, 0x03,			/* USAGE_MAXIMUM (Button 3) */
-	0x15, 0x00,			/* LOGICAL_MINIMUM (0) */
-	0x25, 0x01,			/* LOGICAL_MAXIMUM (1) */
-	0x95, 0x03,			/* REPORT_COUNT (3) */
-	0x75, 0x01,			/* REPORT_SIZE (1) */
-	0x81, 0x02,			/* INPUT (Data,Var,Abs) */
-	0x95, 0x01,			/* REPORT_COUNT (1) */
-	0x75, 0x05,			/* REPORT_SIZE (5) */
-	0x81, 0x01,			/* INPUT (Cnst,Var,Abs) */
-	0xc0,			/* END_COLLECTION */
-	0xc0,		/* END_COLLECTION */
-	/* clang-format on */
-};
-
-struct output_report {
-	u8 id;
-	s8 x;
-	s8 y;
-	s8 wheel;
-	u8 button1 : 1;
-	u8 button2 : 1;
-	u8 button3 : 1;
-} __attribute__((__packed__));
+#include "util/hid_descriptors.h"
 
 static char *usage = "commands:\n"
 		     "\thelp               \t\tshows this help message\n"
@@ -116,7 +72,7 @@ void *uhid_dispatch(void *thread_args)
 int main(void)
 {
 	struct uhid_data_t uhid;
-	struct output_report report;
+	struct mouse_report report;
 	struct uhid_create2_req create;
 
 	pthread_t uhid_dispatch_thread = 0;
@@ -159,8 +115,10 @@ int main(void)
 	strcpy(create.name, config.device_name);
 	memcpy(create.rd_data, oi_rdesc, sizeof(oi_rdesc)); /* protocol report descriptor */
 	rdesc_size += sizeof(oi_rdesc);
-	memcpy(create.rd_data + rdesc_size, rdesc, sizeof(rdesc)); /* mouse report descriptor */
-	rdesc_size += sizeof(rdesc);
+	memcpy(create.rd_data + rdesc_size,
+	       desc_hid_mouse_report,
+	       sizeof(desc_hid_mouse_report)); /* mouse report descriptor */
+	rdesc_size += sizeof(desc_hid_mouse_report);
 	create.rd_size = rdesc_size;
 	create.bus = 0x03;
 	create.vendor = 0x9999;
@@ -245,7 +203,7 @@ int main(void)
 
 			/* fill report */
 			memset(&report, 0, sizeof(report));
-			report.id = OI_MOUSE_REPORT_ID;
+			report.id = MOUSE_REPORT_ID;
 			if (axis == 'X')
 				report.x = value;
 			else if (axis == 'Y')
