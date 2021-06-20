@@ -267,8 +267,7 @@ exit:
 		pthread_join(uhid_dispatch_thread, NULL);
 
 	free(line);
-	close(uhid.epoll_fd);
-	close(uhid.uhid_fd);
+	uhid_close(uhid);
 
 	return ret;
 }
