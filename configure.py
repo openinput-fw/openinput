@@ -446,7 +446,7 @@ class BuildSystemBuilder():
                 'openinput',
                 self._target,
                 self.version.replace('.', '-'),
-                'dirty' if self._is_git_dirty else None,
+                'dirty' if self._is_git_dirty() else None,
             ]))
             out = nw.extension(out_name, self._bin_extension)
             nw.build(out, 'link', objs)
