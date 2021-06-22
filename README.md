@@ -2,7 +2,7 @@
 
 <img src="docs/assets/logo.svg" alt="" width="20%" align="right">
 
-![check](https://github.com/openinput-fw/openinput/workflows/check/badge.svg)
+![lint](https://github.com/openinput-fw/openinput/workflows/lint/badge.svg)
 ![build](https://github.com/openinput-fw/openinput/workflows/build/badge.svg)
 ![test](https://github.com/openinput-fw/openinput/workflows/test/badge.svg)
 [![codecov](https://codecov.io/gh/openinput-fw/openinput/branch/main/graph/badge.svg?token=aVVYxo5tUf)](https://codecov.io/gh/openinput-fw/openinput)
