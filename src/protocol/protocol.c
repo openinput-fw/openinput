@@ -71,7 +71,7 @@ void protocol_dispatch(struct protocol_config_t config, u8 *buffer, size_t buffe
 
 	if (msg.id == OI_REPORT_SHORT && buffer_size != OI_REPORT_SHORT_SIZE)
 		return;
-	if (msg.id == OI_REPORT_LONG && buffer_size != OI_REPORT_LONG_SIZE)
+	else if (msg.id == OI_REPORT_LONG && buffer_size != OI_REPORT_LONG_SIZE)
 		return;
 	else
 		return;
