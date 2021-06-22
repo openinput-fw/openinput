@@ -44,6 +44,7 @@
 
 /* supported functions enum */
 enum supported_pages_index {
+	/* IMPORTANT: also update tests/wrapper/pages.py! */
 	INFO,
 	GIMMICKS,
 	DEBUG,

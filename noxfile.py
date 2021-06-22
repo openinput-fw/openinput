@@ -41,6 +41,16 @@ def save_path(path):
         yield
 
 
+@contextlib.contextmanager
+def cd(*path_parts):
+    old_cwd = os.getcwd()
+    os.chdir(os.path.join(*path_parts))
+    try:
+        yield
+    finally:
+        os.chdir(old_cwd)
+
+
 @nox.session()
 def test(session):
     htmlcov_output = os.path.join(session.virtualenv.location, 'htmlcov')
@@ -68,12 +78,22 @@ def test(session):
     with save_path('build.ninja'):
         session.run('python', 'configure.py', 'testsuite')
         session.run('ninja', external=True)
+    out_path = os.path.abspath(os.path.join('build', 'testsuite', 'out'))
+
+    # build and install python testsuite wrapper
+    with cd('tests', 'wrapper'):
+        session.run('python', 'setup.py', 'develop', env={
+            'LDFLAGS': f'-L{out_path}',
+        })
 
     # run tests
     session.run(
         'python', '-m', 'pytest',
         '--showlocals', '-ra', '--durations=10', '--durations-min=1.0',
         'tests/', *session.posargs,
+        env={
+            'LD_LIBRARY_PATH': out_path,
+        }
     )
 
     # generate C coverage reports
