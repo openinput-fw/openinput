@@ -86,23 +86,24 @@ def test(session):
             'LDFLAGS': f'-L{out_path}',
         })
 
-    # run tests
-    session.run(
-        'python', '-m', 'pytest',
-        '--showlocals', '-ra', '--durations=10', '--durations-min=1.0',
-        'tests/', *session.posargs,
-        env={
-            'LD_LIBRARY_PATH': out_path,
-        }
-    )
+    try:
+        # run tests
+        session.run(
+            'python', '-m', 'pytest',
+            '--showlocals', '-ra', '--durations=10', '--durations-min=1.0',
+            'tests/', *session.posargs,
+            env={
+                'LD_LIBRARY_PATH': out_path,
+            }
+        )
+    finally:
+        # generate C coverage reports
+        session.run(
+            'gcovr', '-r', '.', '-b',
+            '--xml', xmlcov_output,
+            '--html-details', htmlcov_index_output,
+        )
+        print(f'coverage report available at: file://{os.path.abspath(htmlcov_index_output)}')
 
-    # generate C coverage reports
-    session.run(
-        'gcovr', '-r', '.', '-b',
-        '--xml', xmlcov_output,
-        '--html-details', htmlcov_index_output,
-    )
-    print(f'coverage report available at: file://{os.path.abspath(htmlcov_index_output)}')
-
-    # print C coverage report
-    session.run('gcovr', '-r', '.', '-b')
+        # print C coverage report
+        session.run('gcovr', '-r', '.', '-b')
