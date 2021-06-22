@@ -20,8 +20,40 @@ typedef struct {
 
 int hal_hid_send(struct hid_hal_t interface, u8 *buffer, size_t buffer_size)
 {
-	//DeviceObject *self = interface.drv_data;
-	return 0;
+	int rc = 0;
+	DeviceObject *self = interface.drv_data;
+	PyObject *callback, *bytes, *list;
+	PyGILState_STATE state;
+
+	callback = PyObject_GetAttrString((PyObject *) self, "hid_send");
+	if (!callback) {
+		PyErr_Clear();
+		return rc;
+	}
+
+	if (!PyCallable_Check(callback)) {
+		PyErr_SetString(PyExc_TypeError, "hid_send should be callable");
+		rc = ENOEXEC;
+		goto error;
+	}
+
+	bytes = PyBytes_FromStringAndSize((char *) buffer, buffer_size);
+	if (!bytes)
+		goto error;
+
+	list = PySequence_List(bytes);
+	if (!list)
+		goto error_bytes;
+
+	state = PyGILState_Ensure();
+	PyObject_CallOneArg(callback, list);
+	PyGILState_Release(state);
+
+error_bytes:
+	Py_DECREF(bytes);
+error:
+	Py_DECREF(callback);
+	return rc;
 }
 
 /* Device class methods */
