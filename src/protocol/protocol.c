@@ -73,6 +73,8 @@ void protocol_dispatch(struct protocol_config_t config, u8 *buffer, size_t buffe
 		return;
 	if (msg.id == OI_REPORT_LONG && buffer_size != OI_REPORT_LONG_SIZE)
 		return;
+	else
+		return;
 
 	if (!protocol_is_supported(config, msg.function_page, msg.function)) {
 		protocol_send_error(config, msg, unsupported_error);
