@@ -77,11 +77,8 @@ static int Device_init(DeviceObject *self, PyObject *args, PyObject *kw)
 		/* get page, convert it to bytes, and fill the functions array */
 
 		page = PyList_GetItem(functions, page_index);
-
-		if (!page) {
-			PyErr_SetString(PyExc_ValueError, "Expecting a list element (page) but got none");
+		if (!page)
 			goto error;
-		}
 
 		page_bytes = PyBytes_FromObject(page);
 		if (!page_bytes)
