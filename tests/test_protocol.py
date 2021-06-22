@@ -1,23 +1,10 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2021 Filipe Laíns <lains@riseup.net>
 
-import pages
-import pytest
-import testsuite
 
+def test_dispatch(basic_device):
+    basic_device.protocol_dispatch([0x03, 0x02, 0x01])  # unrelated
+    basic_device.protocol_dispatch([0x20])  # invalid length short
+    basic_device.protocol_dispatch([0x21])  # invalid length long
 
-@pytest.fixture()
-def device():
-    return testsuite.Device(
-        name='test device',
-        functions={
-            pages.Info.VERSION,
-            pages.Info.FW_INFO,
-            pages.Info.SUPPORTED_FUNCTION_PAGES,
-            pages.Info.SUPPORTED_FUNCTIONS,
-        },
-    )
-
-
-def test_something(device):
-    device.protocol_dispatch([0x10])
+    basic_device.hid_send.assert_not_called()
