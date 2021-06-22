@@ -284,9 +284,7 @@ class BuildSystemBuilder():
     def _populate_vendor_options(self) -> None:
         self._options['c_flags'] += [
             fr'-DOI_VENDOR=\"{self._vendor}\"',
-            r'-DOI_VERSION=\"{}\"'.format(
-                f'{self.version}.dirty' if self._is_git_dirty() else self.version
-            ),
+            fr'-DOI_VERSION=\"{self.full_version}\"',
         ]
 
     def _validate_toolchain(self) -> None:
@@ -470,14 +468,15 @@ class BuildSystemBuilder():
                 nw.build(nw.extension(out_name, 'hex'), 'hex', out)
                 nw.newline()
 
-    def _is_git_dirty(self) -> Optional[bool]:
+    @staticmethod
+    def _is_git_dirty() -> Optional[bool]:
         try:
             return bool(subprocess.check_output(['git', 'diff', '--stat']).decode().strip())
         except FileNotFoundError:
             return None
 
-    @functools.cached_property
-    def version(self) -> str:
+    @staticmethod
+    def calculate_version() -> str:
         try:
             tag_commit = subprocess.check_output(['git', 'rev-list', '--tags', '--max-count=1']).decode().strip()
             if tag_commit:
@@ -490,6 +489,14 @@ class BuildSystemBuilder():
             )
         except FileNotFoundError:
             return 'UNKNOWN'
+
+    @functools.cached_property
+    def version(self) -> str:
+        return self.calculate_version()
+
+    @functools.cached_property
+    def full_version(self) -> str:
+        return f'{self.version}.dirty' if self._is_git_dirty() else self.version
 
     def print_summary(self) -> None:
         print(
