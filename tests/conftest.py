@@ -1,17 +1,31 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2021 Filipe Laíns <lains@riseup.net>
 
-import ctypes
-import os.path
+import unittest.mock
 
+import pages
 import pytest
-
-
-testsuite_out = os.path.abspath(os.path.join(
-    __file__, '..', '..', 'build', 'testsuite', 'out',
-))
+import testsuite
 
 
 @pytest.fixture()
-def testlib():
-    return ctypes.cdll.LoadLibrary(os.path.join(testsuite_out, 'testsuite.so'))
+def device(request):
+    return testsuite.Device(
+        name='test device',
+        functions=request.param,
+    )
+
+
+@pytest.fixture()
+def basic_device():
+    device = testsuite.Device(
+        name='basic test device',
+        functions={
+            pages.Info.VERSION,
+            pages.Info.FW_INFO,
+            pages.Info.SUPPORTED_FUNCTION_PAGES,
+            pages.Info.SUPPORTED_FUNCTIONS,
+        },
+    )
+    device.hid_send = unittest.mock.MagicMock()
+    return device
