@@ -161,15 +161,19 @@ void protocol_info_fw_info(struct protocol_config_t config, struct oi_report_t m
 	msg.id = OI_REPORT_LONG;
 	switch (msg.data[0]) {
 		case 0: /* fw vendor */
+			memset(msg.data, 0, sizeof(msg.data));
 			snprintf(msg.data, sizeof(msg.data), "%s", OI_VENDOR);
 			break;
 		case 1: /* fw version */
+			memset(msg.data, 0, sizeof(msg.data));
 			snprintf(msg.data, sizeof(msg.data), "%s", OI_VERSION);
 			break;
 		case 2: /* device name */
+			memset(msg.data, 0, sizeof(msg.data));
 			snprintf(msg.data, sizeof(msg.data), "%s", config.device_name);
 			break;
 		default:
+			memset(msg.data, 0, sizeof(msg.data));
 			error.args.invalid_value.position = 0;
 			protocol_send_error(config, msg, error);
 			return;
