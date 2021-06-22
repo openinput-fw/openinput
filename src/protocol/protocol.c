@@ -69,12 +69,20 @@ void protocol_dispatch(struct protocol_config_t config, u8 *buffer, size_t buffe
 
 	memcpy(&msg, buffer, buffer_size);
 
-	if (msg.id == OI_REPORT_SHORT && buffer_size != OI_REPORT_SHORT_SIZE)
-		return;
-	else if (msg.id == OI_REPORT_LONG && buffer_size != OI_REPORT_LONG_SIZE)
-		return;
-	else
-		return;
+	switch (msg.id) {
+		case OI_REPORT_SHORT:
+			if (buffer_size != OI_REPORT_SHORT_SIZE)
+				return;
+			break;
+
+		case OI_REPORT_LONG:
+			if (buffer_size != OI_REPORT_LONG_SIZE)
+				return;
+			break;
+
+		default:
+			return;
+	}
 
 	if (!protocol_is_supported(config, msg.function_page, msg.function)) {
 		protocol_send_error(config, msg, unsupported_error);
