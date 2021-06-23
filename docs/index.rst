@@ -91,9 +91,11 @@ After this, you should have you shiny new object in ``build/out``.
 
 
 .. toctree::
+   :caption: Development
    :hidden:
 
    Contributing <contributing/index>
+   Reference <reference/index>
 
 
 .. toctree::
