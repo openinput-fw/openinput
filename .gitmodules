@@ -13,3 +13,6 @@
 [submodule "external/cmsis-dfp-efm32gg12b"]
 	path = external/cmsis-dfp-efm32gg12b
 	url = https://github.com/cmsis-packs/cmsis-dfp-efm32gg12b
+[submodule "external/cmsis-dfp-sams70"]
+	path = external/cmsis-dfp-sams70
+	url = https://github.com/cmsis-packs/cmsis-dfp-sams70
