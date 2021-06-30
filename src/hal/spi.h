@@ -8,7 +8,10 @@
 #include "util/types.h"
 
 struct spi_hal_t {
+	/* bidirectional byte transfer */
 	u8 (*transfer)(struct spi_hal_t interface, u8 data);
+	/* select/unselect device */
 	void (*select)(struct spi_hal_t interface, u8 state);
+	/* arbitrary user data */
 	void *drv_data;
 };

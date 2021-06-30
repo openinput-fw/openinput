@@ -8,7 +8,10 @@
 #include "util/types.h"
 
 struct ticks_hal_t {
+	/* wait for x milisecs */
 	void (*delay_ms)(u32 ticks);
+	/* wait for x microsecs */
 	void (*delay_us)(u32 ticks);
+	/* arbitrary user data */
 	void *drv_data;
 };
