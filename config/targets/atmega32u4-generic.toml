@@ -1,0 +1,10 @@
+family = 'avr'
+has-config = true
+c_flags = [
+    '-mmcu=atmega32u4',
+]
+ld_flags = [
+    '-mmcu=atmega32u4',
+]
+
+[dependencies]
