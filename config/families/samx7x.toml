@@ -1,0 +1,37 @@
+toolchain = 'arm-none-eabi'
+c_flags = [
+	'-Os',
+	'-nostdlib',
+	'-nostartfiles',
+	'-ffunction-sections',
+	'-fdata-sections',
+	'-mthumb',
+	'-mcpu=cortex-m7',
+	'-mfloat-abi=hard',
+	'-mfpu=fpv5-d16',
+	'-ffreestanding',
+]
+ld_flags = [
+	'-mthumb',
+	'-mcpu=cortex-m7',
+	'-mfloat-abi=hard',
+	'-mfpu=fpv5-d16',
+	'-lm',
+	'-lc',
+	'-lgcc',
+	'-lnosys',
+	'-nostdlib',
+	'-nostartfiles',
+	'-fdata-sections',
+	'-ffunction-sections',
+	'--specs=nano.specs',
+	'--specs=nosys.specs',
+	'-Wl,--gc-sections',
+]
+source = [
+	'startup.c',
+]
+
+[dependencies]
+cmsis-5 = {}
+#tinyusb = { target = 'microchip/samx7x' }
