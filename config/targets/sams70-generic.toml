@@ -1,0 +1,5 @@
+family = 'samx7x'
+has-config = true
+
+[dependencies]
+cmsis-dfp-sams70 = {}
