@@ -142,6 +142,7 @@ class TinyUSBDependency(Dependency, name='tinyusb'):
             'cmsis-5',
             'cmsis-dfp-stm32f1',
             'cmsis-dfp-efm32gg12b',
+            'cmsis-dfp-sams70',
         }
 
 
@@ -177,6 +178,17 @@ class CMSISDeviceEFM32GG12BDependency(Dependency, name='cmsis-dfp-efm32gg12b'):
         }
         self.external_include = {
             self.base_path / 'Device' / 'SiliconLabs' / 'EFM32GG12B' / 'Include',
+        }
+
+
+class CMSISDeviceSAMS70Dependency(Dependency, name='cmsis-dfp-sams70'):
+    def __init__(self, location: BuildLocation) -> None:
+        super().__init__(location)
+        self.dependencies = {
+            'cmsis-5',
+        }
+        self.external_include = {
+            self.base_path / 'sams70b' / 'include',
         }
 
 
