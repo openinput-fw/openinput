@@ -1,1 +1,1 @@
-stm32f103cb.ld
+../stm32f1/stm32f103cb.ld

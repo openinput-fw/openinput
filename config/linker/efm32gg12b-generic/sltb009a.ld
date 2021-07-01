@@ -1,1 +1,1 @@
-efm32gg12bxxxf1024.ld
+../efm32gg12b/efm32gg12bxxxf1024.ld
