@@ -1,0 +1,18 @@
+toolchain = 'avr'
+has-linker = false
+c_flags = [
+	'-Os',
+    '-fpack-struct',
+    '-fshort-enums',
+	'-ffunction-sections',
+	'-fdata-sections',
+]
+ld_flags = [
+	'-fdata-sections',
+	'-ffunction-sections',
+	'-Wl,--gc-sections',
+]
+source = [
+]
+
+[dependencies]
