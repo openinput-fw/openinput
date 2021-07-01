@@ -1,0 +1,1 @@
+../samx7x/samx7xx20.ld
