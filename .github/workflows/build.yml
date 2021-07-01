@@ -27,6 +27,7 @@ jobs:
           - 'stm32f1-generic -c rival310'
           - 'stm32f1-generic -c bluepill'
           - 'efm32gg12b-generic -c sltb009a'
+          - 'sams70-generic -c big-sammy'
     steps:
     - name: Update the system and install dependencies
       run: pacman -Syu --noconfirm --noprogressbar --needed python-pip ninja gcc arm-none-eabi-gcc arm-none-eabi-binutils arm-none-eabi-newlib pkgconf readline git
