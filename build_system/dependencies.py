@@ -147,6 +147,26 @@ class TinyUSBDependency(Dependency, name='tinyusb'):
 
 
 @dataclasses.dataclass(init=False)
+class LufaDependency(Dependency, name='lufa'):
+    def __init__(self, location: BuildLocation) -> None:
+        super().__init__(location)
+
+        src_path = self.base_path / 'LUFA/Drivers/USB'
+
+        for path in src_path.rglob('*.c'):
+            self.source.add(path)
+
+        self._include = [
+            'LUFA/Common'
+            'LUFA/Driver/USB'
+        ]
+        self._external_include = [
+            'LUFA/Common'
+            'LUFA/Driver/USB'
+        ]
+
+
+@dataclasses.dataclass(init=False)
 class CMSIS5Dependency(Dependency, name='cmsis-5'):
     components: List[str]
 

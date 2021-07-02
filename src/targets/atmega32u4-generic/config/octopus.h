@@ -7,7 +7,9 @@
 
 /* Clock Config */
 
-#define F_CPU 16000000UL
+#define ARCH    AVR8
+#define F_CPU   16000000UL
+#define F_USB   F_CPU
 
 /* Sensor Config */
 
