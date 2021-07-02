@@ -162,5 +162,11 @@ After this we can squash the fixup commit with the original commit by rebasing.
    page`_ of the git documentation.
 
 
+.. toctree::
+   :hidden:
+
+   structure
+
+
 .. _fixup commits: https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---fixupamendrewordltcommitgt
 .. _Rebasing page: https://git-scm.com/book/en/v2/Git-Branching-Rebasing
