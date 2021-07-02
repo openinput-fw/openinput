@@ -27,7 +27,7 @@ be an unique logical change, and should be acompanied with an appropriate
 description.
 
 
-.. admonition::
+.. admonition:: Hint
    :class: hint
 
    Look at the current git history to have a better idea of what is supposed to
@@ -51,7 +51,7 @@ use the one the original logical change belongs to.
 any non-obvious missing context.
 
 
-.. admonition::
+.. admonition:: Hint
    :class: hint
 
    If you are not sure what to use as the ``component`` prefix, look at the git
@@ -74,7 +74,7 @@ See the following `example <https://github.com/openinput-fw/openinput/commit/b46
       Signed-off-by: Filipe Laíns <lains@riseup.net>
 
 
-.. admonition::
+.. admonition:: Hint
    :class: hint
 
    When unsure how to structure your commit or what description to use, please
@@ -155,7 +155,7 @@ After this we can squash the fixup commit with the original commit by rebasing.
    git rebase --autosquash --interactive origin/main
 
 
-.. admonition::
+.. admonition:: Hint
    :class: hint
 
    If you are new to rebases, we recommend you to have a look at the `Rebasing
