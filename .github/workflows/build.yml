@@ -28,7 +28,7 @@ jobs:
           - 'stm32f1-generic -c bluepill'
           - 'efm32gg12b-generic -c sltb009a'
           - 'sams70-generic -c big-sammy'
-          - 'atmega32u4-generic -c sample'
+          - 'atmega32u4-generic -c octopus'
     steps:
     - name: Update the system and install dependencies
       run: pacman -Syu --noconfirm --noprogressbar --needed python-pip ninja gcc arm-none-eabi-gcc arm-none-eabi-binutils arm-none-eabi-newlib avr-gcc avr-binutils avr-libc pkgconf readline git
