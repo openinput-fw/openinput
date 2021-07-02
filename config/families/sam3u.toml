@@ -28,7 +28,7 @@ ld_flags = [
 	'-mthumb',
 ]
 source = [
-#	'startup.c',
+	'startup.c',
 ]
 
 [dependencies]
