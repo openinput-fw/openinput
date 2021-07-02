@@ -166,6 +166,7 @@ After this we can squash the fixup commit with the original commit by rebasing.
    :hidden:
 
    structure
+   porting
 
 
 .. _fixup commits: https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---fixupamendrewordltcommitgt
