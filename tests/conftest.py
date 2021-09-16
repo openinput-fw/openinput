@@ -2,7 +2,6 @@
 # SPDX-FileCopyrightText: 2021 Filipe Laíns <lains@riseup.net>
 
 import contextlib
-import importlib.util
 import os
 import os.path
 import unittest.mock
@@ -10,6 +9,8 @@ import unittest.mock
 import pages
 import pytest
 import testsuite
+
+import build_system
 
 
 root_dir = os.path.abspath(os.path.join(__file__, '..', '..'))
@@ -23,15 +24,6 @@ def cd(*path_paths):
         yield
     finally:
         os.chdir(old_cwd)
-
-
-def import_file(name, path):
-    spec = importlib.util.spec_from_file_location(name, path)
-    if not spec.loader:
-        raise ImportError(f'Unable to import `{path}`: no loader')
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)  # type: ignore
-    return module
 
 
 @pytest.fixture()
@@ -59,8 +51,4 @@ def basic_device():
 
 @pytest.fixture()
 def fw_version():
-    with cd(root_dir):
-        configure = import_file('configure', 'configure.py')
-        version = configure.BuildSystemBuilder.calculate_version()
-        is_dirty = configure.BuildSystemBuilder._is_git_dirty()
-    return f'{version}.dirty' if is_dirty else version
+    return build_system.VersionInfo.from_git().full_string
