@@ -3,41 +3,42 @@
 
 from __future__ import annotations
 
+import dataclasses
 import os.path
 import pathlib
 import subprocess
-import typing
 import warnings
 
-from typing import Any, Dict, List, Optional, Set, Type, Union
+from typing import Any, ClassVar, Dict, List, Optional, Set, Type
 
-from . import ninja
-
-
-if typing.TYPE_CHECKING:
-    import ninja_writter
-
-
-_PATH_LIST = List[Union[str, pathlib.Path]]
+from . import BuildLocation
+from .ninja import NinjaBuilder
 
 
 class DependencyError(Exception):
     pass
 
 
+@dataclasses.dataclass(init=False)
 class Dependency():
-    NAME: Optional[str] = None
+    name: ClassVar[str]
+    location: BuildLocation
+    dependencies: Set[str]
+    optional_dependencies: Set[str]
+    source: Set[pathlib.Path]
+    include: Set[pathlib.Path]
+    external_include: Set[pathlib.Path]
 
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        if not self.NAME:
-            raise ValueError(f"Dependency doesn't have a name: {self.__class__.__name__}")
+    def __init_subclass__(cls, name: str) -> None:
+        cls.name = name
 
-        self._base_path = pathlib.Path('external') / self.NAME
-        self._dependencies: List[str] = []
-        self._optional_dependencies: List[str] = []
-        self._source: _PATH_LIST = []
-        self._include: _PATH_LIST = []
-        self._external_include: _PATH_LIST = []
+    def __init__(self, location: BuildLocation) -> None:
+        self.location = location
+        self.dependencies = set()
+        self.optional_dependencies = set()
+        self.source = set()
+        self.include = set()
+        self.external_include = set()
 
     @classmethod
     def from_name(cls, name: str, *args: Any, **kwargs: Any) -> Dependency:
@@ -46,168 +47,142 @@ class Dependency():
     @classmethod
     def class_from_name(cls, name: str) -> Type[Dependency]:
         for subclass in cls.__subclasses__():
-            if subclass.NAME == name:
+            if subclass.name == name:
                 return subclass
         raise ValueError(f'Could not find dependency: {name}')
 
     @classmethod
     def fetch_submodule(cls) -> None:
         try:
-            subprocess.check_output(['git', 'submodule', 'update', '--init', f'external/{cls.NAME}'])
+            subprocess.check_output(['git', 'submodule', 'update', '--init', f'external/{cls.name}'])
         except FileNotFoundError:
-            warnings.warn(f'Failed to fetch dependency: {cls.NAME}')
+            warnings.warn(f'Failed to fetch dependency: {cls.name}')
+
+    @property
+    def base_path(self) -> pathlib.Path:
+        return self.location.source / 'external' / self.name
 
     def write_ninja(
         self,
-        nw: ninja_writter.Writter,
-        dep_dic: Dict[str, Dependency],
-        target_dir: str,
-        config: Optional[str],
+        nb: NinjaBuilder,
+        dependency_dictionary: Dict[str, Dependency],
+        target_dir: pathlib.Path,
+        config: Optional[pathlib.Path],
     ) -> List[str]:
         if not self.source:
-            nw.comment(f'{self.NAME} has no objects')
-            nw.newline()
+            nb.writer.comment(f'{self.name} has no objects')
+            nb.writer.newline()
             return []
 
         c_include_flags = {
-            f'-I{path}' for path in self.include
+            f'-I{nb.path(path)}' for path in self.include
         }
-        c_include_flags.add(f'-I{target_dir}')
+        c_include_flags.add(f'-I{nb.path(target_dir)}')
 
         for dep in self.dependencies:
-            if dep not in dep_dic:
-                raise ValueError(f'Dependency `{dep}` required by `{self.NAME}` but not specified')
+            if dep not in dependency_dictionary:
+                raise ValueError(f'Dependency `{dep}` required by `{self.name}` but not specified')
             c_include_flags.update({
-                f'-I{path}'
-                for path in dep_dic[dep].external_include
+                f'-I{nb.path(path)}'
+                for path in dependency_dictionary[dep].external_include
             })
 
         for dep in self.optional_dependencies:
             # these dependencies will be included if found
-            if dep in dep_dic:
+            if dep in dependency_dictionary:
                 c_include_flags.update({
-                    f'-I{nw.root(path)}'
-                    for path in dep_dic[dep].external_include
+                    f'-I{nb.path(path)}'
+                    for path in dependency_dictionary[dep].external_include
                 })
 
         if config:
-            c_include_flags.add(f'-include {config}')
+            c_include_flags.add(f'-include {nb.path(config)}')
 
-        nw.comment(f'{self.NAME} objects')
-        nw.newline()
+        nb.writer.comment(f'{self.name} objects')
+        nb.writer.newline()
 
         objs: List[str] = []
         for file in self.source:
-            objs += nw.cc_abs(file, variables=[
+            objs += nb.cc(file, variables=[
                 ('c_include_flags', list(c_include_flags)),
             ])
-        nw.newline()
+        nb.writer.newline()
 
         return objs
 
-    def ninja_objects(self) -> Set[str]:
-        return {ninja.Writer.built(file) for file in self._source}
 
-    @property
-    def base_path(self) -> pathlib.Path:
-        return self._base_path
+@dataclasses.dataclass(init=False)
+class TinyUSBDependency(Dependency, name='tinyusb'):
+    target: str
 
-    @property
-    def dependencies(self) -> Set[str]:
-        return set(self._dependencies)
-
-    @property
-    def optional_dependencies(self) -> Set[str]:
-        return set(self._optional_dependencies)
-
-    @property
-    def source(self) -> Set[str]:
-        ''' Source files '''
-        return {str(self.base_path / path) for path in self._source}
-
-    @property
-    def include(self) -> Set[str]:
-        ''' Paths that need to be included to build the dependency source '''
-        return {str(self.base_path / path) for path in self._include}
-
-    @property
-    def external_include(self) -> Set[str]:
-        ''' Paths that need to be included to use the dependency '''
-        return {str(self.base_path / path) for path in self._external_include}
-
-
-class TinyUSBDependency(Dependency):
-    NAME = 'tinyusb'
-
-    def __init__(self, target: str) -> None:
-        super().__init__()
+    def __init__(self, location: BuildLocation, target: str) -> None:
+        super().__init__(location)
 
         src_path = self.base_path / 'src'
         portable_path = src_path / 'portable'
-        target_path = portable_path.joinpath(target.replace('/', os.path.sep))
+        target_path = portable_path / target.replace('/', os.path.sep)
 
-        self._source = []
+        self.target = target
+
         for path in src_path.rglob('*.c'):
             if path.is_relative_to(target_path):
                 pass
             elif path.is_relative_to(portable_path):  # not our target!
                 continue
-            self._source.append(
-                path.relative_to(self.base_path),
-            )
+            self.source.add(path)
 
-        self._include = [
-            'src'
-        ]
-        self._external_include = [
-            'src'
-        ]
-        self._optional_dependencies = [
+        self.include = {
+            src_path,
+            self.location.code,
+        }
+        self.external_include = {
+            src_path,
+        }
+        self.optional_dependencies = {
             'cmsis-5',
             'cmsis-dfp-stm32f1',
             'cmsis-dfp-efm32gg12b',
-        ]
+        }
 
 
-class CMSIS5Dependency(Dependency):
-    NAME = 'cmsis-5'
+@dataclasses.dataclass(init=False)
+class CMSIS5Dependency(Dependency, name='cmsis-5'):
+    components: List[str]
 
-    def __init__(self, components: List[str] = ['Core']) -> None:
-        super().__init__()
-        self._components = components
-        self._external_include = [
-            os.path.join('CMSIS', component, 'Include')
-            for component in self._components
-        ]
-
-
-class CMSISDeviceSTM32F1Dependency(Dependency):
-    NAME = 'cmsis-dfp-stm32f1'
-
-    def __init__(self) -> None:
-        super().__init__()
-        self._dependencies = ['cmsis-5']
-        self._external_include = [
-            'Include',
-        ]
+    def __init__(self, location: BuildLocation, components: List[str] = ['Core']) -> None:
+        super().__init__(location)
+        self.components = components
+        self.external_include = {
+            self.base_path / 'CMSIS' / component / 'Include'
+            for component in self.components
+        }
 
 
-class CMSISDeviceEFM32GG12BDependency(Dependency):
-    NAME = 'cmsis-dfp-efm32gg12b'
+class CMSISDeviceSTM32F1Dependency(Dependency, name='cmsis-dfp-stm32f1'):
+    def __init__(self, location: BuildLocation) -> None:
+        super().__init__(location)
+        self.dependencies = {
+            'cmsis-5',
+        }
+        self.external_include = {
+            self.base_path / 'Include',
+        }
 
-    def __init__(self) -> None:
-        super().__init__()
-        self._dependencies = ['cmsis-5']
-        self._external_include = [
-            os.path.join('Device', 'SiliconLabs', 'EFM32GG12B', 'Include'),
-        ]
+
+class CMSISDeviceEFM32GG12BDependency(Dependency, name='cmsis-dfp-efm32gg12b'):
+    def __init__(self, location: BuildLocation) -> None:
+        super().__init__(location)
+        self.dependencies = {
+            'cmsis-5',
+        }
+        self.external_include = {
+            self.base_path / 'Device' / 'SiliconLabs' / 'EFM32GG12B' / 'Include',
+        }
 
 
-class SensorBlobDependency(Dependency):
-    NAME = 'sensor-blobs'
-
-    def __init__(self) -> None:
-        super().__init__()
-        self._external_include = [
-            '.',
-        ]
+class SensorBlobDependency(Dependency, name='sensor-blobs'):
+    def __init__(self, location: BuildLocation) -> None:
+        super().__init__(location)
+        self.external_include = {
+            self.base_path,
+        }
