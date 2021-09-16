@@ -18,6 +18,7 @@ Open source firmware for input devices.
 - EFM32
 - SAMS70 (planned)
 - SAM3U (planned)
+- LPC11U3x (planned)
 
 ### Instructions
 
