@@ -63,7 +63,7 @@ def test(session):
     install_dependencies(session, {
         # build system
         'ninja_syntax',
-        'toml',
+        'tomli',
         # tests
         'pytest',
         # coverage
