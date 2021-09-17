@@ -34,6 +34,7 @@ u8 *protocol_get_functions(struct protocol_config_t config, u8 function_page, si
 			return config.functions[i];
 		}
 	}
+	*functions_size = 0;
 	return NULL;
 }
 
