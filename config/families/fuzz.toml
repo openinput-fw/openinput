@@ -1,0 +1,13 @@
+has-linker = false
+c_flags = [
+	'-fsanitize=fuzzer,address',
+	'-pipe',
+	'-fno-plt',
+	'-fPIC',
+	'-g',
+]
+ld_flags = [
+	'-fsanitize=fuzzer,address',
+	'-g',
+]
+source = []
