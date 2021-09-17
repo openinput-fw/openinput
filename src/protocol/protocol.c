@@ -64,8 +64,8 @@ void protocol_dispatch(struct protocol_config_t config, u8 *buffer, size_t buffe
 	};
 	int ret;
 
-	if (buffer_size < 1)
-		/* needs at least a report ID */
+	if (buffer_size < 1 || buffer_size > sizeof(msg))
+		/* we need at least a report ID, and a packet that fits the struct  */
 		return;
 
 	memcpy(&msg, buffer, buffer_size);
