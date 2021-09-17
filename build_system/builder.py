@@ -137,7 +137,7 @@ class Builder:
     def write_ninja(self, file: str = 'build.ninja') -> None:
         with NinjaBuilder.from_path(file, self._location, self._settings, self._target) as nb:
             nb.write_header(sys.argv[0])
-            nb.write_variables(self._details, self._dependencies)
+            nb.write_variables(self._details, self._settings, self._dependencies)
             nb.write_rules()
 
             objs: List[str] = []

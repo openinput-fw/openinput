@@ -97,7 +97,12 @@ class NinjaBuilder:
         self.writer.variable('ninja_required_version', '1.3')
         self.writer.newline()
 
-    def write_variables(self, details: BuildDetails, dependencies: Dict[str, Dependency]) -> None:
+    def write_variables(
+        self,
+        details: BuildDetails,
+        settings: BuildSettings,
+        dependencies: Dict[str, Dependency],
+    ) -> None:
         self.writer.comment('variables')
         self.writer.newline()
 
@@ -106,7 +111,7 @@ class NinjaBuilder:
             self.writer.variable(placeholder, path)
 
         # tools
-        self.writer.variable('cc', self.tool_name('gcc'))
+        self.writer.variable('cc', self.tool_name(settings.compiler))
         self.writer.variable('ar', self.tool_name('ar'))
         self.writer.variable('objcopy', self.tool_name('objcopy'))
         self.writer.variable('size', self.tool_name('size'))
