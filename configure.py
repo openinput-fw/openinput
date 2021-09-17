@@ -127,6 +127,13 @@ if __name__ == '__main__':
         help='override toolchain prefix (eg. arm-none-eabi)',
     )
     parser.add_argument(
+        '--compiler',
+        '-p',
+        default='gcc',
+        choices=('gcc', 'clang'),
+        help='compiler to use',
+    )
+    parser.add_argument(
         '--debug',
         '-d',
         action='store_true',
@@ -180,7 +187,10 @@ if __name__ == '__main__':
                 args.config if 'config' in args else None,
                 'firmware',
             ),
-            build_system.BuildSettings('debug' if args.debug else 'release'),
+            build_system.BuildSettings(
+                mode='debug' if args.debug else 'release',
+                compiler=args.compiler,
+            ),
             build_system.VendorInfo(),
             build_system.VersionInfo.from_git(),
         )
