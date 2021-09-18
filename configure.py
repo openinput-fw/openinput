@@ -150,6 +150,7 @@ if __name__ == '__main__':
         help='target firmware',
         metavar='TARGET',
     )
+    # XXX: Add key to target_args to be ignored after adding new arguments!
 
     location = build_system.BuildLocation(
         pathlib.Path(__file__).absolute().parent,
@@ -172,6 +173,20 @@ if __name__ == '__main__':
             )
 
     args = parser.parse_args()
+    # XXX: This isn't great but we don't have a better way AFAIK.
+    target_args = {
+        key: value
+        for key, value in vars(args).items()
+        if key not in (
+            'builddir',
+            'toolchain',
+            'compiler',
+            'debug',
+            'no_fetch',
+            'target',
+            'config',
+        )
+    }
 
     if not args.target:
         # ask for target if it was not specified
@@ -183,9 +198,10 @@ if __name__ == '__main__':
         builder = build_system.builder.Builder(
             build_system.BuildLocation(location.source, args.builddir),
             build_system.TargetInfo(
-                args.target,
-                args.config if 'config' in args else None,
-                'firmware',
+                name=args.target,
+                config=args.config if 'config' in args else None,
+                type='firmware',
+                args=target_args,
             ),
             build_system.BuildSettings(
                 mode='debug' if args.debug else 'release',
