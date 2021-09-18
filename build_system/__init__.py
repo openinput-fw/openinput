@@ -324,7 +324,7 @@ class BuildDetails:
             )
 
         # XXX: We should get a better mechanism to do this.
-        if target.name == 'fuzz':
+        if target.name == 'fuzz' and 'engine' in target.args:
             self.c_flags.append(target.args['engine'])
             self.ld_flags.append(target.args['engine'])
 
