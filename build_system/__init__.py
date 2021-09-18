@@ -10,9 +10,12 @@ import pathlib
 import subprocess
 import sys
 
-from typing import Any, Dict, Iterable, List, Literal, Mapping, Optional, Set
+from typing import Any, Dict, Iterable, List, Literal, Mapping, Optional, Set, Union
 
 import tomli
+
+
+_Path = Union[os.PathLike[str], str]
 
 
 @dataclasses.dataclass(init=False)
@@ -25,12 +28,12 @@ class BuildLocation:
     source: pathlib.Path
     build: pathlib.Path
 
-    def __init__(self, source: os.PathLike[str], build: os.PathLike[str]):
+    def __init__(self, source: _Path, build: _Path):
         self.source = self._relative_path_builder(source)
         self.build = self._relative_path_builder(build)
 
     @staticmethod
-    def _relative_path_builder(path: os.PathLike[str]) -> pathlib.Path:
+    def _relative_path_builder(path: _Path) -> pathlib.Path:
         path = pathlib.Path(path).absolute()
         try:
             return path.relative_to(os.getcwd())
