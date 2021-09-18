@@ -320,6 +320,11 @@ class BuildDetails:
                 location.code / 'targets' / target.name / 'config' / f'{target.config}.h'
             )
 
+        # XXX: We should get a better mechanism to do this.
+        if target.name == 'fuzz':
+            self.c_flags.append(target.args['engine'])
+            self.ld_flags.append(target.args['engine'])
+
         self.c_flags += [
             fr'-DOI_VENDOR=\"{vendor.name}\"',
             fr'-DOI_VERSION=\"{version.full_string}\"',
