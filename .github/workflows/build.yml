@@ -42,3 +42,23 @@ jobs:
 
     - name: Build
       run: ninja
+
+  compile-oss-fuzz:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux
+    steps:
+    - name: Update the system and install dependencies
+      run: pacman -Syu --noconfirm --noprogressbar --needed python-pip ninja clang git
+
+    - name: Install ninja_syntax
+      run: pip install ninja_syntax tomli
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Configure
+      run: ./configure-oss-fuzz.py
+
+    - name: Build
+      run: ninja
