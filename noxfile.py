@@ -4,6 +4,7 @@ import contextlib
 import glob
 import os
 import os.path
+import pathlib
 import pickle
 import subprocess
 
@@ -107,3 +108,26 @@ def test(session):
 
         # print C coverage report
         session.run('gcovr', '-r', '.', '-b')
+
+
+@nox.session()
+def fuzz(session):
+    install_dependencies(session, {
+        # build system
+        'ninja_syntax',
+        'tomli',
+    })
+
+    # build testsuite
+    with save_path('build.ninja'):
+        session.run('python', 'configure.py', '--compiler', 'clang', 'fuzz')
+        session.run('ninja', external=True)
+    fuzz_exe = pathlib.Path('build', 'fuzz', 'out', 'fuzz').absolute()
+
+    # run fuzzer
+    session.run(
+        os.fspath(fuzz_exe),
+        '-seed=1', '-max_total_time=60',
+        '-print_pcs=1', '-print_final_stats=1',
+        external=True,
+    )
