@@ -171,6 +171,14 @@ if __name__ == '__main__':
                 help='device configuration name',
                 required=True,
             )
+        elif target == 'fuzz':  # XXX: We should get a better mechanism to do this.
+            target_parser.add_argument(
+                '--engine',
+                '-e',
+                type=str,
+                default='-fsanitize=fuzzer,address',
+                help='fuzzing engine',
+            )
 
     args = parser.parse_args()
     # XXX: This isn't great but we don't have a better way AFAIK.
