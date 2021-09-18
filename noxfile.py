@@ -111,7 +111,8 @@ def test(session):
 
 
 @nox.session()
-def fuzz(session):
+@nox.parametrize('sanitizer', ('address', 'memory', 'undefined'))
+def fuzz(session, sanitizer):
     install_dependencies(session, {
         # build system
         'ninja_syntax',
@@ -120,7 +121,12 @@ def fuzz(session):
 
     # build testsuite
     with save_path('build.ninja'):
-        session.run('python', 'configure.py', '--compiler', 'clang', 'fuzz')
+        session.run(
+            'python', 'configure.py',
+            '--compiler', 'clang',
+            'fuzz',
+            f'--engine=-fsanitize=fuzzer,{sanitizer}',
+        )
         session.run('ninja', external=True)
     fuzz_exe = pathlib.Path('build', 'fuzz', 'out', 'fuzz').absolute()
 
