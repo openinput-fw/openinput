@@ -9,7 +9,7 @@ import shutil
 import sys
 import warnings
 
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Type
 
 from . import BuildDetails, BuildLocation, BuildSettings, ConfigLoader, TargetInfo, VendorInfo, VersionInfo
 from .dependencies import Dependency
@@ -134,8 +134,12 @@ class Builder:
         file_name = '.'.join(filter(None, [self._out_name, extension]))
         return pathlib.Path('out', file_name)
 
-    def write_ninja(self, file: str = 'build.ninja') -> None:
-        with NinjaBuilder.from_path(file, self._location, self._settings, self._target) as nb:
+    def write_ninja(
+        self,
+        file: str = 'build.ninja',
+        ninja_build_cls: Type[NinjaBuilder] = NinjaBuilder,
+    ) -> None:
+        with ninja_build_cls.from_path(file, self._location, self._settings, self._target) as nb:
             nb.write_header(sys.argv[0])
             nb.write_variables(self._details, self._settings, self._dependencies)
             nb.write_rules()
