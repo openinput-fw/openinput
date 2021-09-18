@@ -93,6 +93,7 @@ class TargetInfo:
     name: str
     config: Optional[str] = None
     type: Literal['firmware', 'bootloader'] = 'firmware'
+    args: Mapping[str, Any] = dataclasses.field(default_factory=dict)
 
 
 @dataclasses.dataclass
