@@ -118,7 +118,7 @@ class NinjaBuilder:
 
         # flags
         self.writer.variable('c_flags', details.c_flags)
-        self.writer.variable('c_include_flags', ' '.join([
+        self.writer.variable('c_include_flags', [
             f'-I{self.path(self._location.code)}'
         ] + [
             f'-include {self.path(path)}' for path in details.include_files
@@ -126,7 +126,7 @@ class NinjaBuilder:
             f'-I{self.path(path)}'
             for dep in dependencies.values()
             for path in dep.external_include
-        ]))
+        ])
         self.writer.variable('ld_flags', details.ld_flags + ([
             f'-L{self.path(details.linker_dir)}',
             f'-T{details.linker.relative_to(details.linker_dir)}',
