@@ -39,6 +39,13 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: archlinux
+    strategy:
+      fail-fast: false
+      matrix:
+        sanitizer:
+          - address
+          - memory
+          - undefined
     steps:
     - name: Update the system and install dependencies
       run: pacman -Syu --noconfirm --noprogressbar --needed python-pip ninja clang git
@@ -50,7 +57,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Run fuzzing session
-      run: nox -s fuzz
+      run: nox -s "fuzz(sanitizer='${{ matrix.sanitizer }}')"
 
     - name: Archive crashes
       uses: actions/upload-artifact@v2
