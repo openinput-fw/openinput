@@ -119,7 +119,7 @@ def fuzz(session, sanitizer):
         'tomli',
     })
 
-    # build testsuite
+    # build fuzz target
     with save_path('build.ninja'):
         session.run(
             'python', 'configure.py',
