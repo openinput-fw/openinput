@@ -7,4 +7,4 @@
 
 /* General Config */
 
-#define __SAMS70J20B__
+#define __SAMS70J19B__
