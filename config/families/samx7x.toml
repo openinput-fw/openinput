@@ -30,7 +30,8 @@ ld_flags = [
 ]
 source = [
 	'startup.c',
-	'pmc.c'
+	'pmc.c',
+	'systick.c',
 ]
 
 [dependencies]
