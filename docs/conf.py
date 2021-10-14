@@ -50,7 +50,7 @@ exclude_patterns = []
 html_theme = 'furo'
 html_title = 'openinput'
 html_logo = 'assets/logo.svg'
-html_favicon = 'assets/logo.svg'
+html_favicon = 'assets/logo_icon.svg'
 html_theme_options = {
     'sidebar_hide_name': True,
 }
