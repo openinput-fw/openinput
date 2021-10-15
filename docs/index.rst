@@ -99,6 +99,13 @@ After this, you should have you shiny new object in ``build/out``.
 
 
 .. toctree::
+   :caption: Official Hardware
+   :hidden:
+
+   Big-sammy <https://big-sammy.readthedocs.io>
+
+
+.. toctree::
    :caption: External Links
    :hidden:
 
