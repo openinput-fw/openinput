@@ -42,7 +42,7 @@ extern void __attribute__((noreturn)) main();
 
 void _reset_isr()
 {
-	u32 *src, *dst;
+	volatile u32 *src, *dst;
 
 	src = &_sidata;
 	dst = &_sdata;
