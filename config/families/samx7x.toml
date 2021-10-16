@@ -30,6 +30,7 @@ ld_flags = [
 ]
 source = [
 	'startup.c',
+	'wdt.c',
 	'pmc.c',
 	'systick.c',
 ]
