@@ -24,3 +24,17 @@ void eefc_config_waitstates(u32 frequency)
 	else
 		EFC->EEFC_FMR = (EFC->EEFC_FMR & ~EEFC_FMR_FWS_Msk) | (6 << EEFC_FMR_FWS_Pos);
 }
+
+void eefc_tcm_disable()
+{
+	/* TCM Size Configuration */
+	EFC->EEFC_FCR = (EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FCMD_CGPB | EEFC_FCR_FARG(8));
+	EFC->EEFC_FCR = (EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FCMD_CGPB | EEFC_FCR_FARG(7));
+
+	__DSB();
+	__ISB();
+	SCB->ITCMCR &= ~(uint32_t) (1UL);
+	SCB->DTCMCR &= ~(uint32_t) SCB_DTCMCR_EN_Msk;
+	__DSB();
+	__ISB();
+}
