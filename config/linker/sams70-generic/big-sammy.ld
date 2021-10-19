@@ -1,1 +1,1 @@
-../samx7x/samx7xx20.ld
+../samx7x/samx7xx19.ld
