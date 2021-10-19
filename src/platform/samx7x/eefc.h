@@ -10,3 +10,5 @@
 #include "util/types.h"
 
 void eefc_config_waitstates(u32 frequency);
+
+void eefc_tcm_disable();
