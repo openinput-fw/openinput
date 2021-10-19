@@ -34,6 +34,7 @@ source = [
 	'eefc.c',
 	'pmc.c',
 	'systick.c',
+	'exceptions.c',
 ]
 
 [dependencies]
