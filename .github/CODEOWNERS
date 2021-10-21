@@ -3,8 +3,8 @@ configure.py	@FFY00
 build_system/	@FFY00
 
 # docs
-README.md	@FFY00
-docs/		@FFY00
+README.md	@FFY00 @perigoso
+docs/		@FFY00 @perigoso
 
 # CI
 .github/			@FFY00
@@ -37,7 +37,10 @@ config/families/stm32f1/	@perigoso @FFY00
 
 src/platform/efm32gg/		@perigoso
 src/platform/efm32gg12b/	@perigoso
-config/families/efm32gg12b/	@perigoso @FFY00
+config/families/efm32gg12b/	@perigoso
+
+src/platform/samx7x/		@perigoso
+config/families/samx7x/		@perigoso
 
 # targets
 src/targets/linux-uhid/		@FFY00
@@ -46,5 +49,8 @@ config/targets/linux-uhid/	@FFY00
 src/targets/stm32f1-generic/	@perigoso @FFY00
 config/targets/stm32f1-generic/	@perigoso @FFY00
 
-src/targets/efm32gg12b-generic/	@perigoso
+src/targets/efm32gg12b-generic/		@perigoso
 config/targets/efm32gg12b-generic/	@perigoso
+
+src/targets/sams70-generic/		@perigoso
+config/targets/sams70-generic/	@perigoso
