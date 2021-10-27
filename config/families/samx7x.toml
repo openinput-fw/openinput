@@ -38,6 +38,7 @@ source = [
 	'pio.c',
 	'usb.c',
 	'usb_descriptors.c',
+	'hal/hid.c',
 ]
 
 [dependencies]
