@@ -22,7 +22,7 @@ void main()
 
 	eefc_tcm_disable();
 
-	pmc_init(12000000UL, 0UL);
+	pmc_init(EXTERNAL_CLOCK_VALUE, 0UL);
 	pmc_init_usb();
 	pmc_update_clock_tree();
 
