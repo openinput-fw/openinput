@@ -453,7 +453,7 @@ void pmc_init(u32 hfxo_freq, u32 lfxo_freq)
 	while (!(PMC->PMC_SR & PMC_SR_MOSCSELS_Msk)) continue;
 
 	/* 300 MHz */
-	pmc_enable_pllack(1, 25);
+	pmc_enable_pllack(1, (300000000UL / pmc_clock_tree.hfxo_freq));
 
 	while (!pmc_pllack_is_locked()) continue;
 
