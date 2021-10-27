@@ -30,3 +30,18 @@ static const u8 desc_device[] = {
 	0x01,				/* NO CONFIGURATIONS */
 	/* clang-format on */
 };
+
+/* Per USB specs: high speed capable device must report device_qualifier and other_speed_configuration */
+static const u8 desc_device_qualifier[] = {
+	/* clang-format off */
+	0x0A,				/* LENGTH (10) */
+	0x06,				/* DESCRIPTOR TYPE (Device qualifier) */
+	0x00, 0x02,			/* USB SPEC VERSION (0x0200) */
+	0x00,				/* DEVICE CLASS */
+	0x00,				/* DEVICE SUBCLASS */
+	0x00,				/* DEVICE PROTOCOL */
+	0x40,				/* MAX EP0 PACKET SIZE */
+	0x01,				/* NO CONFIGURATIONS */
+	0x00,				/* RESERVED */
+	/* clang-format on */
+};

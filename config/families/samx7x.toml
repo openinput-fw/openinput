@@ -36,8 +36,10 @@ source = [
 	'systick.c',
 	'exceptions.c',
 	'pio.c',
+	'usb.c',
+	'usb_descriptors.c',
 ]
 
 [dependencies]
 cmsis-5 = {}
-#tinyusb = { target = 'microchip/samx7x' }
+tinyusb = { target = 'microchip/samx7x' }
