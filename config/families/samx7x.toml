@@ -40,6 +40,7 @@ source = [
 	'qspi.c',
 	'usb_descriptors.c',
 	'hal/hid.c',
+	'hal/spi.c',
 ]
 
 [dependencies]
