@@ -29,8 +29,6 @@
 
 void main()
 {
-	wdt_disable();
-
 	eefc_tcm_disable();
 
 	pmc_init(EXTERNAL_CLOCK_VALUE, 0UL);
@@ -38,6 +36,8 @@ void main()
 	pmc_update_clock_tree();
 
 	systick_init();
+
+	wdt_disable();
 
 	pio_init();
 
