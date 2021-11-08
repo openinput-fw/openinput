@@ -25,8 +25,7 @@ void usb_init()
 	pmc_peripheral_clock_gate(USBHS_CLOCK_ID, 1); // Enable peripheral clock
 
 	/* Wait for the clock to be usable */
-	while (!(USBHS->USBHS_SR & USBHS_SR_CLKUSABLE_Msk))
-		;
+	while (!(USBHS->USBHS_SR & USBHS_SR_CLKUSABLE_Msk)) continue;
 
 	/* Init USB stack */
 	tusb_init(); /* USB Stack handles the rest of the peripheral init */

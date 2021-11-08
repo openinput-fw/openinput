@@ -83,8 +83,7 @@ void pmc_switch_mainck_to_xtal(u32 bypass, u32 xtal_startup_time)
 				CKGR_MOR_MOSCXTST(xtal_startup_time);
 
 		/* Wait the Xtal to stabilize */
-		while (!(PMC->PMC_SR & PMC_SR_MOSCXTS_Msk))
-			;
+		while (!(PMC->PMC_SR & PMC_SR_MOSCXTS_Msk)) continue;
 
 		PMC->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL_Msk;
 	}
