@@ -2,3 +2,9 @@ source = [
 	'protocol/protocol.c',
 	'driver/pixart/pixart_pmw.c',
 ]
+c_flags = [
+	'-fdiagnostics-color',
+]
+ld_flags = [
+	'-fdiagnostics-color',
+]
