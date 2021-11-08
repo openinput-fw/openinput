@@ -45,18 +45,6 @@ enum pmc_pck_id_t {
 	PMC_PCK_TC0 = 7,
 };
 
-/*
- * SPDX-License-Identifier: MIT
- * SPDX-FileCopyrightText: 2021 Rafael Silva <perigoso@riseup.net>
- */
-
-#include <sam.h>
-
-#include "util/data.h"
-
-#include "platform/samx7x/eefc.h"
-#include "platform/samx7x/pmc.h"
-
 static struct pmc_clock_tree_t pmc_clock_tree;
 
 void pmc_switch_sclk_to_32kxtal(u8 bypass);
