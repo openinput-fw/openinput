@@ -16,6 +16,7 @@ Open source firmware for input devices.
   - Blue pill
   - Steelseries Rival 310
 - EFM32
+  - sltb009a
 - SAMS70
   - big-sammy
 - SAM3U (planned)
