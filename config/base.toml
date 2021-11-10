@@ -1,5 +1,6 @@
 source = [
 	'protocol/protocol.c',
+	'util/partition/partition.c',
 	'driver/pixart/pixart_pmw.c',
 ]
 c_flags = [
