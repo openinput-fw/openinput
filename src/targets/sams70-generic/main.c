@@ -21,11 +21,14 @@
 #include "pixart_blobs.h"
 
 #include "util/hid_descriptors.h"
+#include "util/partition/partition.h"
 
 #include "protocol/protocol.h"
 
 #define CFG_TUSB_CONFIG_FILE "targets/sams70-generic/tusb_config.h"
 #include "tusb.h"
+
+extern u32 _partition_table_addr;
 
 void main()
 {
@@ -40,6 +43,15 @@ void main()
 	wdt_disable();
 
 	pio_init();
+
+	const struct partition_table_t *partition_table = partition_table_read((void *) _partition_table_addr);
+
+	if (partition_table) {
+		const struct partition_table_entry_t *sensor_blob = partition_from_type(partition_table, PARTITION_TYPE_BLOB);
+
+		if (sensor_blob) {
+		}
+	}
 
 #if defined(SENSOR_ENABLED) && SENSOR_DRIVER == PIXART_PMW
 	struct pio_pin_t sensor_motion_io = SENSOR_MOTION_IO;

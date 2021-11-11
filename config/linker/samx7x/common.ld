@@ -6,6 +6,9 @@ _min_stack_size = 0x400;
 /* Initial stack pointer (must be 8 byte aligned) */
 _estack = (ORIGIN(ram) + LENGTH(ram)) & ~7;
 
+_partition_table_size = 0x100;
+_partition_table_addr = ORIGIN(rom) + LENGTH(rom) - _partition_table_size;
+
 SECTIONS
 {
     /* ISR Vectors */
