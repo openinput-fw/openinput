@@ -1,6 +1,7 @@
 source = [
 	'protocol/protocol.c',
 	'driver/pixart/pixart_pmw.c',
+	'util/log.c',
 ]
 c_flags = [
 	'-fdiagnostics-color',
