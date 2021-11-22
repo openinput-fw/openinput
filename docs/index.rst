@@ -103,6 +103,7 @@ After this, you should have you shiny new object in ``build/out``.
    :hidden:
 
    Big-sammy <https://big-sammy.readthedocs.io>
+   Sammy <https://sammy.readthedocs.io>
 
 
 .. toctree::
