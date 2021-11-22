@@ -35,6 +35,7 @@ source = [
 	'pmc.c',
 	'systick.c',
 	'exceptions.c',
+	'log.c',
 	'pio.c',
 	'usb.c',
 	'qspi.c',
