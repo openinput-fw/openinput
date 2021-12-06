@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2021 Rafael Silva <perigoso@riseup.net>
 
 import argparse
 import os
