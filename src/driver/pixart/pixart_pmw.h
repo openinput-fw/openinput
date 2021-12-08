@@ -23,7 +23,7 @@ struct pixart_pmw_driver_t {
 	struct ticks_hal_t ticks_hal;
 };
 
-struct pixart_pmw_driver_t pixart_pmw_init(u8 *firmware, struct spi_hal_t spi_hal, struct ticks_hal_t ticks_hal);
+struct pixart_pmw_driver_t pixart_pmw_init(const u8 *firmware, struct spi_hal_t spi_hal, struct ticks_hal_t ticks_hal);
 
 void pixart_pmw_read_motion(struct pixart_pmw_driver_t *driver);
 

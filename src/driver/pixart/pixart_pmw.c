@@ -111,7 +111,7 @@ void pixart_pmw_write(struct pixart_pmw_driver_t driver, u8 address, u8 value)
 	driver.ticks_hal.delay_us(160);
 }
 
-void pixart_pmw_upload_srom(struct pixart_pmw_driver_t driver, u8 *firmware)
+void pixart_pmw_upload_srom(struct pixart_pmw_driver_t driver, const u8 *firmware)
 {
 	pixart_pmw_write(driver, PIXART_PMW_REG_SROM_EN, PIXART_PMW_SROM_DWNLD_CMD); /* Initialize SROM download */
 
@@ -154,7 +154,7 @@ struct motion_burst_t pixart_pmw_read_motion_burst(struct pixart_pmw_driver_t dr
 	return motion_burst;
 }
 
-struct pixart_pmw_driver_t pixart_pmw_init(u8 *firmware, struct spi_hal_t spi_hal, struct ticks_hal_t ticks_hal)
+struct pixart_pmw_driver_t pixart_pmw_init(const u8 *firmware, struct spi_hal_t spi_hal, struct ticks_hal_t ticks_hal)
 {
 	struct pixart_pmw_driver_t driver = {};
 
