@@ -80,6 +80,15 @@ SECTIONS
         PROVIDE_HIDDEN(__fini_array_end = .);
     } > rom
 
+	.partition_table :
+	{
+        _stable = .;
+
+		*(.table)           /* .data sections */
+        *(.table*)          /* .data* sections */
+
+	} > table
+
     /* RAM Data */
     _sidata = LOADADDR(.data);
 

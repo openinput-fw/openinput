@@ -17,8 +17,6 @@
 #define SENSOR_ENABLED
 #define SENSOR_DRIVER               PIXART_PMW
 
-#define SENSOR_FIRMWARE_BLOB        pmw3360_blob
-
 #define SENSOR_MOTION_IO            { .port = PIO_PORT_B, .pin = 3 }
 
 #define SENSOR_INTERFACE_SPEED      1000000
