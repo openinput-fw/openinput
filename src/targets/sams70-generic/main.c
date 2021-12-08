@@ -63,7 +63,7 @@ void main()
 
 	struct ticks_hal_t ticks_hal = ticks_hal_init();
 
-	struct pixart_pmw_driver_t sensor = pixart_pmw_init((u8 *) SENSOR_FIRMWARE_BLOB, sensor_spi_hal, ticks_hal);
+	struct pixart_pmw_driver_t sensor = pixart_pmw_init((const u8 *) SENSOR_FIRMWARE_BLOB, sensor_spi_hal, ticks_hal);
 #endif
 
 	struct hid_hal_t hid_hal;
