@@ -18,14 +18,16 @@
 #include "platform/samx7x/wdt.h"
 
 #include "driver/pixart/pixart_pmw.h"
-#include "pixart_blobs.h"
 
 #include "util/hid_descriptors.h"
+#include "util/partition/partition.h"
 
 #include "protocol/protocol.h"
 
 #define CFG_TUSB_CONFIG_FILE "targets/sams70-generic/tusb_config.h"
 #include "tusb.h"
+
+extern u32 _stable;
 
 void main()
 {
@@ -40,6 +42,14 @@ void main()
 	wdt_disable();
 
 	pio_init();
+
+	const struct partition_table_t *partition_table = partition_table_read((void *) &_stable);
+
+	const struct partition_table_entry_t *sensor_blob = partition_from_type(partition_table, PARTITION_TYPE_BLOB);
+
+	/* could not find sensor blob, halt */
+	if (!sensor_blob)
+		while (1) continue;
 
 #if defined(SENSOR_ENABLED) && SENSOR_DRIVER == PIXART_PMW
 	struct pio_pin_t sensor_motion_io = SENSOR_MOTION_IO;
@@ -63,7 +73,7 @@ void main()
 
 	struct ticks_hal_t ticks_hal = ticks_hal_init();
 
-	struct pixart_pmw_driver_t sensor = pixart_pmw_init((const u8 *) SENSOR_FIRMWARE_BLOB, sensor_spi_hal, ticks_hal);
+	struct pixart_pmw_driver_t sensor = pixart_pmw_init((const u8 *) sensor_blob->start_addr, sensor_spi_hal, ticks_hal);
 #endif
 
 	struct hid_hal_t hid_hal;

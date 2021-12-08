@@ -3,4 +3,3 @@ has-config = true
 
 [dependencies]
 cmsis-dfp-sams70 = {}
-sensor-blobs = {}
