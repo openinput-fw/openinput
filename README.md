@@ -21,6 +21,7 @@ Open source firmware for input devices.
   - big-sammy
 - SAM3U (planned)
 - LPC11U3x (planned)
+- LPC552x (planned)
 
 ### Instructions
 
