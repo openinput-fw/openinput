@@ -1,0 +1,38 @@
+/* spi read call function type */
+typedef s32_t (*spiffs_read)(u32_t addr, u32_t size, u8_t *dst);
+/* spi write call function type */
+typedef s32_t (*spiffs_write)(u32_t addr, u32_t size, u8_t *src);
+/* spi erase call function type */
+typedef s32_t (*spiffs_erase)(u32_t addr, u32_t size);
+
+// spiffs spi configuration struct
+typedef struct {
+  // physical read function
+  spiffs_read hal_read_f;
+  // physical write function
+  spiffs_write hal_write_f;
+  // physical erase function
+  spiffs_erase hal_erase_f;
+#if SPIFFS_SINGLETON == 0
+  // physical size of the spi flash
+  u32_t phys_size;
+  // physical offset in spi flash used for spiffs,
+  // must be on block boundary
+  u32_t phys_addr;
+  // physical size when erasing a block
+  u32_t phys_erase_block;
+
+  // logical size of a block, must be on physical
+  // block size boundary and must never be less than
+  // a physical block
+  u32_t log_block_size;
+  // logical size of a page, must be at least
+  // log_block_size / 8
+  u32_t log_page_size;
+
+#endif
+#if SPIFFS_FILEHDL_OFFSET
+  // an integer offset added to each file handle
+  u16_t fh_ix_offset;
+#endif
+} spiffs_config;
