@@ -16,6 +16,18 @@ All HALs have a void pointer ``drv_data`` field, which can be used by the
 implementer to store internal data, which may be needed to perform tasks.
 
 
+BLOCKDEV
+********
+
+The ``BLOCKDEV`` HAL provides the functionality required to interact with storage
+devices with a block device topology.
+
+
+.. literalinclude:: ../../src/hal/blockdev.h
+   :language: c
+   :lines: 10-
+
+
 HID
 ***
 
