@@ -121,6 +121,8 @@ class NinjaBuilder:
         self.writer.variable('c_include_flags', [
             f'-I{self.path(self._location.code)}'
         ] + [
+            f'-I{self.path(self._location.code / "targets" / self._target.name)}'
+        ] + [
             f'-include {self.path(path)}' for path in details.include_files
         ] + [
             f'-I{self.path(path)}'
