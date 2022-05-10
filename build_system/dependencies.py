@@ -152,18 +152,20 @@ class LufaDependency(Dependency, name='lufa'):
         super().__init__(location)
 
         src_path = self.base_path / 'LUFA/Drivers/USB'
+        common_path = self.base_path / 'LUFA/Common'
 
         for path in src_path.rglob('*.c'):
             self.source.add(path)
 
-        self._include = [
-            'LUFA/Common'
-            'LUFA/Driver/USB'
-        ]
-        self._external_include = [
-            'LUFA/Common'
-            'LUFA/Driver/USB'
-        ]
+        self.include = {
+            src_path,
+            common_path,
+            self.location.code,
+        }
+        self.external_include = {
+            src_path,
+            common_path,
+        }
 
 
 @dataclasses.dataclass(init=False)
