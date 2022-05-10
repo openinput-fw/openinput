@@ -13,6 +13,9 @@ ld_flags = [
 	'-Wl,--gc-sections',
 ]
 source = [
+	'boot.c',
+	'usb.c',
+	'usb_descriptors.c',
 ]
 
 [dependencies]

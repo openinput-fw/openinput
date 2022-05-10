@@ -2,6 +2,7 @@ family = 'avr'
 has-config = true
 c_flags = [
     '-mmcu=atmega32u4',
+	'-DUSE_LUFA_CONFIG_HEADER',
 ]
 ld_flags = [
     '-mmcu=atmega32u4',
