@@ -445,7 +445,7 @@ void pmc_init(u32 hfxo_freq, u32 lfxo_freq)
 	pmc_clock_tree.lfrco_freq = 32000UL;
 
 	/* Configure flash waitstates */
-	eefc_config_waitstates(150000000);
+	eefc_set_waitstates(150000000);
 
 	pmc_osc_enable(OSC_MAINCK_XTAL);
 
