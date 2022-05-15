@@ -11,7 +11,7 @@
 #include "util/types.h"
 
 /* Device descriptor */
-const u8 PROGMEM desc_device[] = {
+const u8 __attribute__((__progmem__)) desc_device[] = {
 	/* clang-format off */
 	0x12,				/* LENGTH (18) */
 	0x01,				/* DESCRIPTOR TYPE (Device) */
@@ -30,7 +30,7 @@ const u8 PROGMEM desc_device[] = {
 	/* clang-format on */
 };
 
-const u8 PROGMEM oi_rdesc[] = {
+const u8 __attribute__((__progmem__)) oi_rdesc[] = {
 	/* clang-format off */
 	/* short report */
 	0x06, 0x00, 0xff,	/* USAGE_PAGE (Vendor Page) */
@@ -64,7 +64,7 @@ const u8 PROGMEM oi_rdesc[] = {
 };
 
 /* HID Mouse report descriptor */
-const u8 PROGMEM desc_hid_mouse_report[] = {
+const u8 __attribute__((__progmem__)) desc_hid_mouse_report[] = {
 	/* clang-format off */
 	0x05, 0x01,	/* USAGE_PAGE (Generic Desktop) */
 	0x09, 0x02,	/* USAGE (Mouse) */
@@ -98,7 +98,7 @@ const u8 PROGMEM desc_hid_mouse_report[] = {
 };
 
 /* HID keyboard report descriptor */
-const u8 PROGMEM desc_hid_keyboard_report[] = {
+const u8 __attribute__((__progmem__)) desc_hid_keyboard_report[] = {
 	/* clang-format off */
 	0x05, 0x01,	/* USAGE_PAGE (Generic Desktop) */
 	0x09, 0x06,	/* USAGE (keyboard) */
@@ -142,7 +142,7 @@ const u8 PROGMEM desc_hid_keyboard_report[] = {
 	/* clang-format on */
 };
 
-const u8 PROGMEM oi_hid_desc[] = {
+const u8 __attribute__((__progmem__)) oi_hid_desc[] = {
 	/* HID */
 	0x09, /* LENGTH */
 	0x21, /* DESCRIPTOR TYPE (hid) */
@@ -155,7 +155,7 @@ const u8 PROGMEM oi_hid_desc[] = {
 	0x00, /* DESCRIPTOR LENGTH () */
 };
 
-const u8 PROGMEM mouse_hid_desc[] = {
+const u8 __attribute__((__progmem__)) mouse_hid_desc[] = {
 	/* HID */
 	0x09, /* LENGTH */
 	0x21, /* DESCRIPTOR TYPE (hid) */
@@ -168,7 +168,7 @@ const u8 PROGMEM mouse_hid_desc[] = {
 	0x00, /* DESCRIPTOR LENGTH () */
 };
 
-const u8 PROGMEM keyboard_hid_desc[] = {
+const u8 __attribute__((__progmem__)) keyboard_hid_desc[] = {
 	/* HID */
 	0x09, /* LENGTH */
 	0x21, /* DESCRIPTOR TYPE (hid) */
@@ -182,7 +182,7 @@ const u8 PROGMEM keyboard_hid_desc[] = {
 };
 
 /* Configuration Descriptor */
-const u8 PROGMEM desc_configuration[] = {
+const u8 __attribute__((__progmem__)) desc_configuration[] = {
 	/* clang-format off */
 	/* configuration */
 	0x09,			/* LENGTH */
@@ -223,11 +223,10 @@ const u8 PROGMEM desc_configuration[] = {
 	/* Endpoint out */
 	0x07,			/* LENGTH */
 	0x05,			/* DESCRIPTOR TYPE (Endpoint) */
-	0x01,			/* ENDPOINT ADDRESS (Endpoint 1, OUT) */
+	0x02,			/* ENDPOINT ADDRESS (Endpoint 2, OUT) */
 	0x03,			/* ATTRIBUTES (Interrupt) */
 	0x40, 0x00,		/* MAX PACKET SIZE (64) */
 	0x0A,			/* POLLING INTERVAL (100Hz) */
-
 
 	/* Interface 1 - HID Mouse */
 	0x09,			/* LENGTH */
@@ -251,7 +250,7 @@ const u8 PROGMEM desc_configuration[] = {
 	/* Endpoint in */
 	0x07,			/* LENGTH */
 	0x05,			/* DESCRIPTOR TYPE (Endpoint) */
-	0x82,			/* ENDPOINT ADDRESS (Endpoint 2, IN) */
+	0x83,			/* ENDPOINT ADDRESS (Endpoint 3, IN) */
 	0x03,			/* ATTRIBUTES (Interrupt) */
 	0x40, 0x00,		/* MAX PACKET SIZE (64) */
 	0x01,			/* POLLING INTERVAL (1000Hz) */
@@ -279,14 +278,14 @@ const u8 PROGMEM desc_configuration[] = {
 	/* Endpoint in */
 	0x07,			/* LENGTH */
 	0x05,			/* DESCRIPTOR TYPE (Endpoint) */
-	0x83,			/* ENDPOINT ADDRESS (Endpoint 3, IN) */
+	0x84,			/* ENDPOINT ADDRESS (Endpoint 4, IN) */
 	0x03,			/* ATTRIBUTES (Interrupt) */
 	0x40, 0x00,		/* MAX PACKET SIZE (64) */
 	0x0A,			/* POLLING INTERVAL (100Hz) */
 	/* Endpoint out */
 	0x07,			/* LENGTH */
 	0x05,			/* DESCRIPTOR TYPE (Endpoint) */
-	0x03,			/* ENDPOINT ADDRESS (Endpoint 3, OUT) */
+	0x05,			/* ENDPOINT ADDRESS (Endpoint 5, OUT) */
 	0x03,			/* ATTRIBUTES (Interrupt) */
 	0x40, 0x00,		/* MAX PACKET SIZE (64) */
 	0x0A,			/* POLLING INTERVAL (100Hz) */
@@ -294,9 +293,9 @@ const u8 PROGMEM desc_configuration[] = {
 };
 
 /* String Descriptors */
-const USB_Descriptor_String_t PROGMEM lang_str = USB_STRING_DESCRIPTOR_ARRAY(LANGUAGE_ID_ENG);
-const USB_Descriptor_String_t PROGMEM manu_str = USB_STRING_DESCRIPTOR(L"Openinput");
-const USB_Descriptor_String_t PROGMEM prod_str = USB_STRING_DESCRIPTOR(L"Openinput Device");
+const USB_Descriptor_String_t __attribute__((__progmem__)) PROGMEM lang_str = USB_STRING_DESCRIPTOR_ARRAY(LANGUAGE_ID_ENG);
+const USB_Descriptor_String_t __attribute__((__progmem__)) PROGMEM manu_str = USB_STRING_DESCRIPTOR(L"Openinput");
+const USB_Descriptor_String_t __attribute__((__progmem__)) PROGMEM prod_str = USB_STRING_DESCRIPTOR(L"Openinput Device");
 
 /**
  * This function is called by the library when in device mode, and must be overridden (see LUFA library "USB Descriptors"
@@ -379,21 +378,4 @@ u16 CALLBACK_USB_GetDescriptor(const u16 w_value, const u16 w_index, const void 
 
 	*descriptor_address = addr;
 	return size;
-}
-
-/** Event handler for the USB_ConfigurationChanged event. This is fired when the host sets the current configuration
- *  of the USB device after enumeration, and configures the keyboard and mouse device endpoints.
- */
-void EVENT_USB_Device_ConfigurationChanged(void)
-{
-	/* Setup Openinput Report Endpoints */
-	Endpoint_ConfigureEndpoint(0x81, EP_TYPE_INTERRUPT, 0x40, 1); // IN
-	Endpoint_ConfigureEndpoint(0x01, EP_TYPE_INTERRUPT, 0x40, 1); // OUT
-
-	/* Setup Mouse HID Report Endpoint */
-	Endpoint_ConfigureEndpoint(0x82, EP_TYPE_INTERRUPT, 0x40, 1); // IN
-
-	/* Setup Keyboard HID Report Endpoints */
-	Endpoint_ConfigureEndpoint(0x83, EP_TYPE_INTERRUPT, 0x40, 1); // IN
-	Endpoint_ConfigureEndpoint(0x03, EP_TYPE_INTERRUPT, 0x40, 1); // OUT
 }
