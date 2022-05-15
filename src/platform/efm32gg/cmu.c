@@ -62,7 +62,7 @@ void cmu_ushfrco_calib(u8 enable, u32 calibration, u32 target_frequency)
 	cmu_clock_tree.ushfrco_freq = target_frequency;
 }
 
-void cmu_auxhfrco_calib(uint8_t enable, u32 calibration, u32 target_frequency)
+void cmu_auxhfrco_calib(u8 enable, u32 calibration, u32 target_frequency)
 {
 	if (!enable) {
 		CMU->OSCENCMD = CMU_OSCENCMD_AUXHFRCODIS;
@@ -93,8 +93,8 @@ void cmu_hfxo_startup_calib(u16 ib_trim, u16 c_tune)
 
 	CMU->HFXOSTARTUPCTRL =
 		(CMU->HFXOSTARTUPCTRL & ~(_CMU_HFXOSTARTUPCTRL_CTUNE_MASK | _CMU_HFXOSTARTUPCTRL_IBTRIMXOCORE_MASK)) |
-		(((uint32_t) c_tune << _CMU_HFXOSTARTUPCTRL_CTUNE_SHIFT) & _CMU_HFXOSTARTUPCTRL_CTUNE_MASK) |
-		(((uint32_t) ib_trim << _CMU_HFXOSTARTUPCTRL_IBTRIMXOCORE_SHIFT) & _CMU_HFXOSTARTUPCTRL_IBTRIMXOCORE_MASK);
+		(((u32) c_tune << _CMU_HFXOSTARTUPCTRL_CTUNE_SHIFT) & _CMU_HFXOSTARTUPCTRL_CTUNE_MASK) |
+		(((u32) ib_trim << _CMU_HFXOSTARTUPCTRL_IBTRIMXOCORE_SHIFT) & _CMU_HFXOSTARTUPCTRL_IBTRIMXOCORE_MASK);
 }
 
 void cmu_hfxo_steady_calib(u16 ib_trim, u16 c_tune)
@@ -105,18 +105,17 @@ void cmu_hfxo_steady_calib(u16 ib_trim, u16 c_tune)
 	CMU->HFXOSTEADYSTATECTRL =
 		(CMU->HFXOSTEADYSTATECTRL &
 		 ~(_CMU_HFXOSTEADYSTATECTRL_CTUNE_MASK | _CMU_HFXOSTEADYSTATECTRL_IBTRIMXOCORE_MASK)) |
-		(((uint32_t) c_tune << _CMU_HFXOSTEADYSTATECTRL_CTUNE_SHIFT) & _CMU_HFXOSTEADYSTATECTRL_CTUNE_MASK) |
-		(((uint32_t) ib_trim << _CMU_HFXOSTEADYSTATECTRL_IBTRIMXOCORE_SHIFT) &
-		 _CMU_HFXOSTEADYSTATECTRL_IBTRIMXOCORE_MASK);
+		(((u32) c_tune << _CMU_HFXOSTEADYSTATECTRL_CTUNE_SHIFT) & _CMU_HFXOSTEADYSTATECTRL_CTUNE_MASK) |
+		(((u32) ib_trim << _CMU_HFXOSTEADYSTATECTRL_IBTRIMXOCORE_SHIFT) & _CMU_HFXOSTEADYSTATECTRL_IBTRIMXOCORE_MASK);
 }
 
-void cmu_lfxo_calib(uint8_t c_tune)
+void cmu_lfxo_calib(u8 c_tune)
 {
 	if (CMU->STATUS & CMU_STATUS_LFXOENS)
 		return;
 
 	float c_load = LFXO_CTUNE_TO_PF(c_tune) / 2.f;
-	uint8_t gain = 0;
+	u8 gain = 0;
 
 	if (c_load <= 6.f)
 		gain = 0;
@@ -130,8 +129,8 @@ void cmu_lfxo_calib(uint8_t c_tune)
 		return;
 
 	CMU->LFXOCTRL = (CMU->LFXOCTRL & ~(_CMU_LFXOCTRL_GAIN_MASK | _CMU_LFXOCTRL_TUNING_MASK)) |
-			((uint32_t) gain << _CMU_LFXOCTRL_GAIN_SHIFT) |
-			(((uint32_t) c_tune << _CMU_LFXOCTRL_TUNING_SHIFT) & _CMU_LFXOCTRL_TUNING_MASK);
+			((u32) gain << _CMU_LFXOCTRL_GAIN_SHIFT) |
+			(((u32) c_tune << _CMU_LFXOCTRL_TUNING_SHIFT) & _CMU_LFXOCTRL_TUNING_MASK);
 }
 
 void cmu_init(u32 external_clock_value)

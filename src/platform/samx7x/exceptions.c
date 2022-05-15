@@ -5,6 +5,8 @@
 
 #include <sam.h>
 
+#include "util/types.h"
+
 void __attribute__((naked, aligned(4))) _hardfault_isr()
 {
 	__asm__ volatile(" tst lr, #4                                        \n"
@@ -53,25 +55,25 @@ void __attribute__((naked, aligned(4))) _usagefault_isr()
 			 " usagefault_trace_stack_addr: .word usagefault_trace_stack \n");
 }
 
-void hardfault_trace_stack(uint32_t *pulFaultStackAddress)
+void hardfault_trace_stack(u32 *pulFaultStackAddress)
 {
 	(void) pulFaultStackAddress;
 	while (1) continue;
 }
 
-void memmanage_trace_stack(uint32_t *pulFaultStackAddress)
+void memmanage_trace_stack(u32 *pulFaultStackAddress)
 {
 	(void) pulFaultStackAddress;
 	while (1) continue;
 }
 
-void busfault_trace_stack(uint32_t *pulFaultStackAddress)
+void busfault_trace_stack(u32 *pulFaultStackAddress)
 {
 	(void) pulFaultStackAddress;
 	while (1) continue;
 }
 
-void usagefault_trace_stack(uint32_t *pulFaultStackAddress)
+void usagefault_trace_stack(u32 *pulFaultStackAddress)
 {
 	(void) pulFaultStackAddress;
 	while (1) continue;

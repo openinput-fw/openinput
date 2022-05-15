@@ -49,7 +49,7 @@ void _usb_wakeup_isr()
 
 /* TinyUSB port* */
 
-void dcd_connect(uint8_t rhport)
+void dcd_connect(u8 rhport)
 {
 	(void) rhport;
 
@@ -58,7 +58,7 @@ void dcd_connect(uint8_t rhport)
 	gpio_set(usb_dp_pu_io, 1);
 }
 
-void dcd_disconnect(uint8_t rhport)
+void dcd_disconnect(u8 rhport)
 {
 	(void) rhport;
 
