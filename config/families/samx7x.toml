@@ -42,6 +42,7 @@ source = [
 	'hal/hid.c',
 	'hal/spi.c',
 	'hal/ticks.c',
+	'hal/blockdev.c',
 ]
 
 [dependencies]

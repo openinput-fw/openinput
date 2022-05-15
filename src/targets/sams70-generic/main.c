@@ -7,6 +7,7 @@
 #include "util/types.h"
 
 #include "platform/samx7x/eefc.h"
+#include "platform/samx7x/hal/blockdev.h"
 #include "platform/samx7x/hal/hid.h"
 #include "platform/samx7x/hal/spi.h"
 #include "platform/samx7x/hal/ticks.h"
@@ -31,6 +32,7 @@ extern u32 _stable;
 
 void main()
 {
+	eefc_init();
 	eefc_tcm_disable();
 
 	pmc_init(EXTERNAL_CLOCK_VALUE, 0UL);
@@ -46,6 +48,18 @@ void main()
 	const struct partition_table_t *partition_table = partition_table_read((void *) &_stable);
 
 	const struct partition_table_entry_t *sensor_blob = partition_from_type(partition_table, PARTITION_TYPE_BLOB);
+
+	const struct partition_table_entry_t *nvs_data = partition_from_type(partition_table, PARTITION_TYPE_NVS);
+
+	// static struct blockdev_drv_t nvs_block_drv;
+	// nvs_block_drv.start_addr = nvs_data->start_addr;
+	// nvs_block_drv.size = (nvs_data->end_addr - nvs_data->start_addr);
+	// struct blockdev_hal_t data_blockdev_hal = blockdev_hal_init_eefc(&nvs_block_drv);
+
+	// data_blockdev_hal.erase(data_blockdev_hal, 0);
+	// u8 buffer[512];
+	// memset(buffer, 0x5A, 512);
+	// data_blockdev_hal.write(data_blockdev_hal, 0, 16, buffer, 496);
 
 	/* could not find sensor blob, halt */
 	if (!sensor_blob)
@@ -118,8 +132,8 @@ void main()
 			/* fill report */
 			memset(&report, 0, sizeof(report));
 			report.id = MOUSE_REPORT_ID;
-			report.x = 1;
-			report.y = 0;
+			report.x = deltas.dx;
+			report.y = deltas.dy;
 
 			tud_hid_n_report(1, 0, &report, sizeof(report));
 
