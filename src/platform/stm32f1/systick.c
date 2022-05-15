@@ -47,7 +47,7 @@ void delay_ms(u32 ticks)
 {
 	NONATOMIC_BLOCK(NONATOMIC_RESTORESTATE)
 	{
-		uint64_t start_tick = system_tick;
+		u64 start_tick = system_tick;
 
 		while ((system_tick - start_tick) < ticks) continue;
 	}

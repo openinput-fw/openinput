@@ -117,10 +117,10 @@ struct cmu_clock_tree_t {
 void cmu_config_waitstates(u32 frequency);
 void cmu_hfrco_calib(u32 calibration, u32 target_frequency);
 void cmu_ushfrco_calib(u8 enable, u32 calibration, u32 target_frequency);
-void cmu_auxhfrco_calib(uint8_t enable, u32 calibration, u32 target_frequency);
+void cmu_auxhfrco_calib(u8 enable, u32 calibration, u32 target_frequency);
 void cmu_hfxo_startup_calib(u16 ib_trim, u16 c_tune);
 void cmu_hfxo_steady_calib(u16 ib_trim, u16 c_tune);
-void cmu_lfxo_calib(uint8_t c_tune);
+void cmu_lfxo_calib(u8 c_tune);
 void cmu_init(u32 external_clock_value);
 void cmu_update_clock_tree();
 struct cmu_clock_tree_t cmu_get_clock_tree();
