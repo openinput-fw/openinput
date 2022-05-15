@@ -80,16 +80,7 @@ SECTIONS
         PROVIDE_HIDDEN(__fini_array_end = .);
     } > rom
 
-	.partition_table :
-	{
-        _stable = .;
-
-		*(.table)           /* .data sections */
-        *(.table*)          /* .data* sections */
-
-	} > table
-
-    /* RAM Data */
+    /* RAM */
     _sidata = LOADADDR(.data);
 
     .data :
@@ -97,6 +88,8 @@ SECTIONS
         . = ALIGN(4);
         _sdata = .;        /* create a global symbol at data start */
 
+        *(.ramfunc)
+		*(.ramfunc.*)
         *(.data)           /* .data sections */
         *(.data*)          /* .data* sections */
 
@@ -122,6 +115,16 @@ SECTIONS
 
     PROVIDE(end = _ebss);
     PROVIDE(_end = _ebss);
+
+	/* Partition Table */
+	.partition_table :
+	{
+        _stable = .;
+
+		*(.table)           /* .data sections */
+        *(.table*)          /* .data* sections */
+
+	} > table
 
     /* Ensure minimum stack & heap */
     .min_heap_stack :
