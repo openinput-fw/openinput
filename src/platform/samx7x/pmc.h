@@ -84,4 +84,4 @@ void pmc_peripheral_clock_gate(u8 id, u8 enable);
 void pmc_init(u32 hfxo_freq, u32 lfxo_freq);
 void pmc_init_usb();
 void pmc_update_clock_tree();
-struct pmc_clock_tree_t pmc_get_clock_tree();
+const struct pmc_clock_tree_t *pmc_get_clock_tree();

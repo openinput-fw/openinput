@@ -574,7 +574,7 @@ void pmc_update_clock_tree()
 	}
 }
 
-struct pmc_clock_tree_t pmc_get_clock_tree()
+const struct pmc_clock_tree_t *pmc_get_clock_tree()
 {
-	return pmc_clock_tree;
+	return (const struct pmc_clock_tree_t *) &pmc_clock_tree;
 }

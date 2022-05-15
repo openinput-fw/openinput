@@ -13,7 +13,7 @@
 
 void qspi_init_interface(enum qspi_mode mode, u32 frequency)
 {
-	struct pmc_clock_tree_t clock_tree = pmc_get_clock_tree();
+	const struct pmc_clock_tree_t *clock_tree = pmc_get_clock_tree();
 
 	/* Enable peripheral clock */
 	pmc_peripheral_clock_gate(QSPI_CLOCK_ID, 1); // Enable peripheral clock
@@ -23,7 +23,7 @@ void qspi_init_interface(enum qspi_mode mode, u32 frequency)
 	/* Configure control SPI peripheral */
 	QSPI->QSPI_MR = QSPI_MR_NBBITS_8_BIT | QSPI_MR_SMM_SPI;
 
-	QSPI->QSPI_SCR = QSPI_SCR_SCBR((clock_tree.mck_freq / frequency) - 1);
+	QSPI->QSPI_SCR = QSPI_SCR_SCBR((clock_tree->mck_freq / frequency) - 1);
 
 	/* Configure control SPI peripheral */
 	switch (mode) {

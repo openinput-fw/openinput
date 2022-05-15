@@ -21,9 +21,9 @@ void _systick_isr()
 
 void systick_init()
 {
-	struct pmc_clock_tree_t clock_tree = pmc_get_clock_tree();
+	const struct pmc_clock_tree_t *clock_tree = pmc_get_clock_tree();
 
-	systick_clock_freq = clock_tree.fclk_freq;
+	systick_clock_freq = clock_tree->fclk_freq;
 
 	/* ms tick initialization */
 	SysTick->LOAD = (systick_clock_freq / 1000) - 1;
