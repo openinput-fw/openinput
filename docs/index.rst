@@ -87,7 +87,7 @@ invoke ``ninja`` to actually do the building.
    $ ninja
 
 
-After this, you should have you shiny new object in ``build/out``.
+After this, you should have your shiny new object in ``build/out``.
 
 
 .. toctree::
