@@ -36,7 +36,10 @@ jobs:
       run: pip install ninja_syntax
 
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3.0.2
+
+    - name: Container permissions
+      run: git config --global --add safe.directory '*'
 
     - name: Configure
       run: ./configure.py ${{ matrix.target }}
@@ -56,7 +59,10 @@ jobs:
       run: pip install ninja_syntax tomli
 
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3.0.2
+
+    - name: Container permissions
+      run: git config --global --add safe.directory '*'
 
     - name: Configure
       run: ./configure-oss-fuzz.py

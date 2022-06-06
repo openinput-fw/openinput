@@ -27,12 +27,15 @@ jobs:
       run: pip install nox
 
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3.0.2
+
+    - name: Container permissions
+      run: git config --global --add safe.directory '*'
 
     - name: Run tests
       run: nox -s test
 
-    - uses: codecov/codecov-action@v1
+    - uses: codecov/codecov-action@v3.1.0
       if: ${{ always() }}
 
   fuzz:
@@ -54,12 +57,15 @@ jobs:
       run: pip install nox
 
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3.0.2
+
+    - name: Container permissions
+      run: git config --global --add safe.directory '*'
 
     - name: Run fuzzing session
       run: nox -s "fuzz(sanitizer='${{ matrix.sanitizer }}')"
 
     - name: Archive crashes
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3.1.0
       with:
         path: crash-*
