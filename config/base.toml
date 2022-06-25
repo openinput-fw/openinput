@@ -2,6 +2,7 @@ source = [
 	'protocol/protocol.c',
 	'util/partition/partition.c',
 	'driver/pixart/pixart_pmw.c',
+	'key_actions/key_actions.c',
 ]
 c_flags = [
 	'-fdiagnostics-color',

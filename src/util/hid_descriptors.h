@@ -59,7 +59,6 @@ struct keyboard_report {
 	u8 modifiers;
 	u8 reserved;
 	u8 keys[6];
-	u8 leds : 5;
 } __attribute__((__packed__));
 
 /* HID keyboard report descriptor */
