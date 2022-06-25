@@ -29,6 +29,7 @@ ld_flags = [
 ]
 source = [
 	'startup.c',
+	'wdt.c',
 ]
 
 [dependencies]
