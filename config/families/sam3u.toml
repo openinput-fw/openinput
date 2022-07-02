@@ -32,6 +32,7 @@ source = [
 	'eefc.c',
 	'wdt.c',
 	'pmc.c',
+	'exceptions.c',
 ]
 
 [dependencies]
