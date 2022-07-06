@@ -35,8 +35,6 @@ enum pio_mux_t {
 enum pio_pull_t {
 	PIO_PULL_NONE = 0x0,
 	PIO_PULL_UP = 0x1, // bit 1
-	PIO_PULL_DOWN = 0x2, // bit 2
-	PIO_PULL_BOTH = 0x3,
 };
 
 enum pio_direction_t {

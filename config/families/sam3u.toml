@@ -1,5 +1,6 @@
 toolchain = 'arm-none-eabi'
 c_flags = [
+	'-g',
 	'-Os',
 	'-nostdlib',
 	'-nostartfiles',
@@ -12,6 +13,7 @@ c_flags = [
 	'-ffreestanding',
 ]
 ld_flags = [
+	'-g',
 	'-lm',
 	'-lc',
 	'-lgcc',
@@ -32,6 +34,8 @@ source = [
 	'eefc.c',
 	'wdt.c',
 	'pmc.c',
+	'pio.c',
+	'systick.c',
 	'exceptions.c',
 ]
 

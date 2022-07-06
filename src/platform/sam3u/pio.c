@@ -148,7 +148,7 @@ void pio_config(
 
 void pio_peripheral_mux(struct pio_pin_t pin, enum pio_mux_t mux)
 {
-	_PIO_PERI_MUX_SELECT(pin.port, pin.pin, mux);
+	_PIO(pin.port)->PIO_ABSR = (_PIO(pin.port)->PIO_ABSR & ~BIT(pin.pin)) | (mux << pin.pin);
 }
 
 void pio_peripheral_control(struct pio_pin_t pin, u8 enable)
@@ -176,11 +176,6 @@ void pio_pull(struct pio_pin_t pin, enum pio_pull_t pull)
 		_PIO(pin.port)->PIO_PUER = BIT(pin.pin);
 	else
 		_PIO(pin.port)->PIO_PUDR = BIT(pin.pin);
-
-	if (pull & PIO_PULL_DOWN)
-		_PIO(pin.port)->PIO_PPDER = BIT(pin.pin);
-	else
-		_PIO(pin.port)->PIO_PPDDR = BIT(pin.pin);
 }
 
 void pio_set(struct pio_pin_t pin, u8 state)
