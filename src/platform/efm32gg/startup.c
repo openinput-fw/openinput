@@ -144,83 +144,84 @@ void _trng0_isr() __attribute__((weak, alias(DEFAULT_ISR)));
 void _qspi0_isr() __attribute__((weak, alias(DEFAULT_ISR)));
 void _pdm_isr() __attribute__((weak, alias(DEFAULT_ISR)));
 
+/* Vector table */
 __attribute__((section(".isr_vector"), used)) void (*const g_pfnVectors[])() = {
 	/* Cortex-M Exception Handlers */
-	_estack,
-	_reset_isr,
-	_nmi_isr,
-	_hardfault_isr,
-	_memmanage_isr,
-	_busfault_isr,
-	_usagefault_isr,
-	0,
-	0,
-	0,
-	0,
-	_svc_isr,
-	_debugmon_isr,
-	0,
-	_pendsv_isr,
-	_systick_isr,
+	_estack, /* Stack pointer */
+	_reset_isr, /* Reset */
+	_nmi_isr, /* Non-maskable interrupt */
+	_hardfault_isr, /* Hard fault */
+	_memmanage_isr, /*  */
+	_busfault_isr, /* Bus Fault */
+	_usagefault_isr, /* Usage fault */
+	0, /* Reserved */
+	0, /* Reserved */
+	0, /* Reserved */
+	0, /* Reserved */
+	_svc_isr, /* SVCall */
+	_debugmon_isr, /* Debug Monitor */
+	0, /* Reserved */
+	_pendsv_isr, /* PendSV */
+	_systick_isr, /* System tick */
 	/* External interrupts */
-	_emu_isr,
-	_wdog0_isr,
-	_ldma_isr,
-	_gpio_even_isr,
-	_smu_isr,
-	_timer0_isr,
-	_usart0_rx_isr,
-	_usart0_tx_isr,
-	_acmp0_1_isr,
-	_adc0_isr,
-	_idac0_isr,
-	_i2c0_isr,
-	_i2c1_isr,
-	_gpio_odd_isr,
-	_timer1_isr,
-	_timer2_isr,
-	_timer3_isr,
-	_usart1_rx_isr,
-	_usart1_tx_isr,
-	_usart2_rx_isr,
-	_usart2_tx_isr,
-	_uart0_rx_isr,
-	_uart0_tx_isr,
-	_uart1_rx_isr,
-	_uart1_tx_isr,
-	_leuart0_isr,
-	_leuart1_isr,
-	_letimer0_isr,
-	_pcnt0_isr,
-	_pcnt1_isr,
-	_pcnt2_isr,
-	_rtcc_isr,
-	_cmu_isr,
-	_msc_isr,
-	_crypto0_isr,
-	_cryotimer_isr,
-	_fpueh_isr,
-	_usart3_rx_isr,
-	_usart3_tx_isr,
-	_usart4_rx_isr,
-	_usart4_tx_isr,
-	_wtimer0_isr,
-	_wtimer1_isr,
-	_vdac0_isr,
-	_csen_isr,
-	_lesense_isr,
-	_ebi_isr,
-	_acmp2_3_isr,
-	_adc1_isr,
-	_lcd_isr,
-	_sdio_isr,
-	_can0_isr,
-	_can1_isr,
-	_usb_isr,
-	_rtc_isr,
-	_wdog1_isr,
-	_letimer1_isr,
-	_trng0_isr,
-	_qspi0_isr,
-	_pdm_isr,
+	_emu_isr, /* 0 Energy management unit */
+	_wdog0_isr, /* 1 Watch dog timer 0 */
+	_ldma_isr, /* 2 Linked DMA */
+	_gpio_even_isr, /* 3 Even numbered GPIO interrupt */
+	_smu_isr, /* 4 */
+	_timer0_isr, /* 5 */
+	_usart0_rx_isr, /* 6 */
+	_usart0_tx_isr, /* 7 */
+	_acmp0_1_isr, /* 8 */
+	_adc0_isr, /* 9 */
+	_idac0_isr, /* 10 */
+	_i2c0_isr, /* 11 */
+	_i2c1_isr, /* 12 */
+	_gpio_odd_isr, /* 13 Odd numbered GPIO interrupt */
+	_timer1_isr, /* 14 Timer counter 1 */
+	_timer2_isr, /* 15 Timer counter 2 */
+	_timer3_isr, /* 16 Timer counter 3 */
+	_usart1_rx_isr, /* 17 */
+	_usart1_tx_isr, /* 18 */
+	_usart2_rx_isr, /* 19 */
+	_usart2_tx_isr, /* 20 */
+	_uart0_rx_isr, /* 21 */
+	_uart0_tx_isr, /* 22 */
+	_uart1_rx_isr, /* 23 */
+	_uart1_tx_isr, /* 24 */
+	_leuart0_isr, /* 25 */
+	_leuart1_isr, /* 26 */
+	_letimer0_isr, /* 27 */
+	_pcnt0_isr, /* 28 */
+	_pcnt1_isr, /* 29 */
+	_pcnt2_isr, /* 30 */
+	_rtcc_isr, /* 31 */
+	_cmu_isr, /* 32 */
+	_msc_isr, /* 33 */
+	_crypto0_isr, /* 34 */
+	_cryotimer_isr, /* 35 */
+	_fpueh_isr, /* 36 */
+	_usart3_rx_isr, /* 37 */
+	_usart3_tx_isr, /* 38 */
+	_usart4_rx_isr, /* 39 */
+	_usart4_tx_isr, /* 40 */
+	_wtimer0_isr, /* 41 */
+	_wtimer1_isr, /* 42 */
+	_vdac0_isr, /* 43 Digital to analog coverter */
+	_csen_isr, /* 44 */
+	_lesense_isr, /* 45 Low energy sensor interface */
+	_ebi_isr, /* 46 External bus interface */
+	_acmp2_3_isr, /* 47 Analog comparator 2 & 3 */
+	_adc1_isr, /* 48 ADC channel 1 */
+	_lcd_isr, /* 49 LCd Driver */
+	_sdio_isr, /* 50 */
+	_can0_isr, /* 51 */
+	_can1_isr, /* 52 */
+	_usb_isr, /* 53 USB controller */
+	_rtc_isr, /* 54 */
+	_wdog1_isr, /* 55 Watchdog timer 1 */
+	_letimer1_isr, /* 56 Low energy timer 1 */
+	_trng0_isr, /* 57 True random number generator */
+	_qspi0_isr, /* 58 Quad SPI flash controller */
+	_pdm_isr, /* 59 PDM interface */
 };

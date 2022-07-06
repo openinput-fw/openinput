@@ -16,3 +16,6 @@
 [submodule "external/cmsis-dfp-sams70"]
 	path = external/cmsis-dfp-sams70
 	url = https://github.com/cmsis-packs/cmsis-dfp-sams70
+[submodule "external/cmsis-dfp-sam3u"]
+	path = external/cmsis-dfp-sam3u
+	url = https://github.com/cmsis-packs/cmsis-dfp-sam3u

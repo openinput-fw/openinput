@@ -14,10 +14,6 @@ enum pio_port_t {
 #if defined(PIOC)
 	PIO_PORT_C = 2,
 #endif
-	PIO_PORT_D = 3,
-#if defined(PIOE)
-	PIO_PORT_E = 4,
-#endif
 };
 
 struct pio_pin_t {
@@ -28,13 +24,11 @@ struct pio_pin_t {
 enum pio_mux_t {
 	PIO_MUX_A = 0,
 	PIO_MUX_B = 1,
-	PIO_MUX_C = 2,
-	PIO_MUX_D = 3,
 };
 
 enum pio_pull_t {
 	PIO_PULL_NONE = 0x0,
-	PIO_PULL_UP = 0x1, // bit 1
+	PIO_PULL_UP = 0x1,
 };
 
 enum pio_direction_t {
@@ -44,9 +38,7 @@ enum pio_direction_t {
 
 enum pio_config_flags_t {
 	PIO_OPEN_DRAIN = 0x4, // bit 3
-	PIO_HIGH_DRIVE = 0x8, // bit 4
 	PIO_FILTER = 0x10, // bit 5
-	PIO_SLOW_FILTER = 0x20, // bit 6
 	PIO_PERIPHERAL_CTRL = 0x40, // bit 7
 };
 

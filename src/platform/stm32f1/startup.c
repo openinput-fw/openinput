@@ -140,89 +140,92 @@ void _dma2_channel2_isr() __attribute__((weak, alias(DEFAULT_ISR)));
 void _dma2_channel3_isr() __attribute__((weak, alias(DEFAULT_ISR)));
 void _dma2_channel4_5_isr() __attribute__((weak, alias(DEFAULT_ISR)));
 
+/* Vector table */
 __attribute__((section(".isr_vector"), used)) void (*const g_pfnVectors[])() = {
-	_estack,
-	_reset_isr,
-	_nmi_isr,
-	_hardfault_isr,
-	_memmanage_isr,
-	_busfault_isr,
-	_usagefault_isr,
-	0,
-	0,
-	0,
-	0,
-	_svc_isr,
-	_debugmon_isr,
-	0,
-	_pendsv_isr,
-	_systick_isr,
-	_wwdg_isr,
-	_pvd_isr,
-	_tamper_stamp_isr,
-	_rtc_isr,
-	_flash_isr,
-	_rcc_isr,
-	_exti0_isr,
-	_exti1_isr,
-	_exti2_isr,
-	_exti3_isr,
-	_exti4_isr,
-	_dma1_channel1_isr,
-	_dma1_channel2_isr,
-	_dma1_channel3_isr,
-	_dma1_channel4_isr,
-	_dma1_channel5_isr,
-	_dma1_channel6_isr,
-	_dma1_channel7_isr,
-	_adc1_2_isr,
-	_usb_hp_can_tx_isr,
-	_usb_lp_can_rx0_isr,
-	_can_rx1_isr,
-	_can_sce_isr,
-	_exti9_5_isr,
-	_tim1_brk_isr,
-	_tim1_up_isr,
-	_tim1_trg_com_isr,
-	_tim1_cc_isr,
-	_tim2_isr,
-	_tim3_isr,
-	_tim4_isr,
-	_i2c1_ev_isr,
-	_i2c1_er_isr,
-	_i2c2_ev_isr,
-	_i2c2_er_isr,
-	_spi1_isr,
-	_spi2_isr,
-	_usart1_isr,
-	_usart2_isr,
-	_usart3_isr,
-	_exti15_10_isr,
-	_rtc_alarm_isr,
-	_usb_wakeup_isr,
-	_tim8_brk_isr,
-	_tim8_up_isr,
-	_tim8_trg_com_isr,
-	_tim8_cc_isr,
-	_adc3_isr,
-	_fsmc_isr,
-	_sdio_isr,
-	_tim5_isr,
-	_spi3_isr,
-	_uart4_isr,
-	_uart5_isr,
-	_tim6_isr,
-	_tim7_isr,
-	_dma2_channel1_isr,
-	_dma2_channel2_isr,
-	_dma2_channel3_isr,
-	_dma2_channel4_5_isr,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
+	/* Cortex-M Exception Handlers */
+	_estack, /* Stack pointer */
+	_reset_isr, /* Reset */
+	_nmi_isr, /* Non-maskable interrupt */
+	_hardfault_isr, /* Hard fault */
+	_memmanage_isr, /*  */
+	_busfault_isr, /* Bus Fault */
+	_usagefault_isr, /* Usage fault */
+	0, /* Reserved */
+	0, /* Reserved */
+	0, /* Reserved */
+	0, /* Reserved */
+	_svc_isr, /* SVCall */
+	_debugmon_isr, /* Debug Monitor */
+	0, /* Reserved */
+	_pendsv_isr, /* PendSV */
+	_systick_isr, /* System tick */
+	/* External interrupts */
+	_wwdg_isr, /* 0 */
+	_pvd_isr, /* 1 */
+	_tamper_stamp_isr, /* 2 */
+	_rtc_isr, /* 3 Real time clock */
+	_flash_isr, /* 4 Flash controller */
+	_rcc_isr, /* 5 */
+	_exti0_isr, /* 6 */
+	_exti1_isr, /* 7 */
+	_exti2_isr, /* 8 */
+	_exti3_isr, /* 9 */
+	_exti4_isr, /* 10 */
+	_dma1_channel1_isr, /* 11 */
+	_dma1_channel2_isr, /* 12 */
+	_dma1_channel3_isr, /* 13 */
+	_dma1_channel4_isr, /* 14 */
+	_dma1_channel5_isr, /* 15 */
+	_dma1_channel6_isr, /* 16 */
+	_dma1_channel7_isr, /* 17 */
+	_adc1_2_isr, /* 18 ADC Channel 1 & 2 */
+	_usb_hp_can_tx_isr, /* 19 USB high priority / CAN tx */
+	_usb_lp_can_rx0_isr, /* 20 USB low priority / CAN rx0 */
+	_can_rx1_isr, /* 21 CAN rx1 */
+	_can_sce_isr, /* 22 */
+	_exti9_5_isr, /* 23 */
+	_tim1_brk_isr, /* 24 */
+	_tim1_up_isr, /* 25 */
+	_tim1_trg_com_isr, /* 26 */
+	_tim1_cc_isr, /* 27 */
+	_tim2_isr, /* 28 */
+	_tim3_isr, /* 29 */
+	_tim4_isr, /* 30 */
+	_i2c1_ev_isr, /* 31 */
+	_i2c1_er_isr, /* 32 */
+	_i2c2_ev_isr, /* 33 */
+	_i2c2_er_isr, /* 34 */
+	_spi1_isr, /* 35 */
+	_spi2_isr, /* 36 */
+	_usart1_isr, /* 37 */
+	_usart2_isr, /* 38 */
+	_usart3_isr, /* 39 */
+	_exti15_10_isr, /* 40 */
+	_rtc_alarm_isr, /* 41 */
+	_usb_wakeup_isr, /* 42 */
+	_tim8_brk_isr, /* 43 */
+	_tim8_up_isr, /* 44 */
+	_tim8_trg_com_isr, /* 45 */
+	_tim8_cc_isr, /* 46 */
+	_adc3_isr, /* 47 */
+	_fsmc_isr, /* 48 */
+	_sdio_isr, /* 49 */
+	_tim5_isr, /* 50 */
+	_spi3_isr, /* 51 */
+	_uart4_isr, /* 52 */
+	_uart5_isr, /* 53 */
+	_tim6_isr, /* 54 */
+	_tim7_isr, /* 55 */
+	_dma2_channel1_isr, /* 56 */
+	_dma2_channel2_isr, /* 57 */
+	_dma2_channel3_isr, /* 58 */
+	_dma2_channel4_5_isr, /* 59 */
+	0, /* Reserved */
+	0, /* Reserved */
+	0, /* Reserved */
+	0, /* Reserved */
+	0, /* Reserved */
+	0, /* Reserved */
+	0, /* Reserved */
+	0, /* Reserved */
 };
